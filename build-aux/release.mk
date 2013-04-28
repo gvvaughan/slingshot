@@ -99,10 +99,13 @@ ChangeLog:
 
 EXTRA_DIST +=						\
 	.travis.yml					\
+	travis.yml.in					\
 	GNUmakefile					\
 	$(_build-aux)/release.mk			\
 	$(gitlog_to_changelog)				\
 	$(NOTHING_ELSE)
+
+all-am: .travis.yml
 
 
 ## -------- ##

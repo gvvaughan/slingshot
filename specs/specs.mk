@@ -21,15 +21,15 @@
 ## Specs. ##
 ## ------ ##
 
-SPECL  = src/specl
+SPECL = specl
 
 specl_SPECS =						\
 	$(srcdir)/specs/package_spec.yaml		\
 	$(NOTHING_ELSE)
 
 check_local += specs-check-local
-specs-check-local: $(SPECL) $(specl_SPECS) $(specl_LUASPECS)
-	$(AM_V_at)$(LUA) $(SPECL) $(SPECL_OPTS) $(specl_SPECS)
+specs-check-local: $(specl_SPECS) $(specl_LUASPECS)
+	$(AM_V_at)$(SPECL) $(SPECL_OPTS) $(specl_SPECS)
 
 
 ## ------------- ##

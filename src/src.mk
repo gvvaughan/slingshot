@@ -45,7 +45,7 @@ docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 
 EXTRA_DIST +=						\
 	build-aux/mkrockspecs				\
-	docs/mkrockspecs.1.in				\
+	docs/mkrockspecs.1				\
 	$(NOTHING_ELSE)
 
 
