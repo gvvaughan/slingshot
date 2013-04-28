@@ -64,6 +64,10 @@ make use of into your project, and checking them in:
    a wrapper for `rockspecs.mk`, as a starter for your own Makefile.am.
  * `travis.yml.in`:
    configuration for the free gitub Travis CI service.
+ * `.autom4te.cfg`:
+   some autotools configuration to avoid the annoying `autom4te.cache`
+   directory that gets dropped everywhere.  You can copy this to
+   `~/.autom4te.cfg` to turn off the cache globally.
 
 In addition to the files above, slingshot expects you to maintain your
 release notes in a GNU format NEWS file, such as the one used by
