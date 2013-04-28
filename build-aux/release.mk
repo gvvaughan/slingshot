@@ -101,6 +101,7 @@ ChangeLog:
 # Travis CI is finicky about this, and will likely need tweaking
 # to cope with missing any of these if you decide to omit them).
 release_extra_dist ?=					\
+	.autom4te.cfg					\
 	.travis.yml					\
 	GNUmakefile					\
 	bootstrap					\
