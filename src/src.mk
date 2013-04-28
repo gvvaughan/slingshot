@@ -25,9 +25,9 @@ bin_SCRIPTS += build-aux/mkrockspecs
 
 man_MANS += docs/mkrockspecs.1
 
-docs/mkrockspecs.1.in: build-aux/mkrockspecs Makefile
+docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 	@test -d docs || mkdir docs
-## Exit gracefully if mkrockspecs.1.in is not writeable, such as during distcheck!
+## Exit gracefully if mkrockspecs.1 is not writeable, such as during distcheck!
 	$(AM_V_GEN)if ( touch $@.w && rm -f $@.w; ) >/dev/null 2>&1; \
 	then						\
 	  builddir='$(builddir)'			\
@@ -35,8 +35,8 @@ docs/mkrockspecs.1.in: build-aux/mkrockspecs Makefile
 	    $(HELP2MAN)					\
 	      '--output=$@'				\
 	      '--no-info'				\
-	      '--name=Specl'				\
-	      src/specl;				\
+	      '--name=Slingshot'			\
+	      build-aux/mkrockspecs;			\
 	fi
 
 

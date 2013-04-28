@@ -98,4 +98,5 @@ announcements taken from the NEWS file using woger.
 [gnu autoconf archive]: http://gnu.org/s/autoconf-archive
 [lua]:        http://www.lua.org
 [luarocks]:   http://www.luarocks.org
+[slingshot]:  http://github.org/gvvaughan/slingshot
 [yaml]:       http//yaml.org

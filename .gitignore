@@ -10,7 +10,6 @@
 .deps
 .dirstamp
 .libs
-.travis.yml
 /build-aux/mkrockspecs
 /ChangeLog
 /Makefile
