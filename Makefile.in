@@ -96,7 +96,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.      #
 # ==================================================================== #
 
-# This file is suitable for use from a portable Makeflie, you might
+# This file is suitable for use from a portable Makefile, you might
 # include it into the top-level Makefile.am with:
 #
 #   include build-aux/rockspecs.mk
@@ -351,6 +351,7 @@ ROCKSPECS_DEPS = \
 set_LUA_BINDIR = LUA_BINDIR=`which $(LUA) |$(SED) 's|/[^/]*$$||'`
 LUA_INCDIR = `cd $$LUA_BINDIR/../include && pwd`
 LUA_LIBDIR = `cd $$LUA_BINDIR/../lib && pwd`
+old_NEWS_hash = 029d8b9d09eb823d8398365c4942be1d
 all: all-am
 
 .SUFFIXES:

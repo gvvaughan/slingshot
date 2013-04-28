@@ -65,7 +65,7 @@ Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
   end,
 
   ["--version"] = function ()
-    print [[mkrockspecs (slingshot) 1
+    print [[mkrockspecs (slingshot) 2
 Written by Gary V. Vaughan <gary@gnu.org>, 2013
 
 Copyright (C) 2013, Gary V. Vaughan

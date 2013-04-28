@@ -10,7 +10,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -96,12 +96,22 @@ ChangeLog:
 	  rm -f '$@'; mv '$@T' '$@';			\
 	fi
 
-EXTRA_DIST +=						\
+# Override this in GNUmakefile if you don't want to automatically
+# redistribute all the maintainer support files (take care that
+# Travis CI is finicky about this, and will likely need tweaking
+# to cope with missing any of these if you decide to omit them).
+release_extra_dist ?=					\
 	.travis.yml					\
-	travis.yml.in					\
 	GNUmakefile					\
+	bootstrap					\
+	bootstrap.conf					\
+	travis.yml.in					\
+	$(NOTHING_ELSE)
+
+EXTRA_DIST +=						\
 	$(_build-aux)/release.mk			\
 	$(gitlog_to_changelog)				\
+	$(release_extra_dist)				\
 	$(NOTHING_ELSE)
 
 all-am: .travis.yml
@@ -125,10 +135,51 @@ release-type = $(call member-check,RELEASE_TYPE,$(RELEASE_TYPES))
 # Use it like this, eg:
 #				make RELEASE_TYPE=beta
 .PHONY: release
-release: 
+release:
 	$(AM_V_GEN)$(MAKE) $(release-type)
 	$(AM_V_GEN)$(MAKE) push
 	$(AM_V_GEN)$(MAKE) mail
+
+submodule-checks ?= no-submodule-changes public-submodule-commit
+
+.PHONY: no-submodule-changes
+no-submodule-changes:
+	$(AM_V_GEN)if test -d $(srcdir)/.git				\
+		&& git --version >/dev/null 2>&1; then			\
+	  diff=$$(cd $(srcdir) && git submodule -q foreach		\
+		  git diff-index --name-only HEAD)			\
+	    || exit 1;							\
+	  case $$diff in '') ;;						\
+	    *) echo '$(ME): submodule files are locally modified:';	\
+		echo "$$diff"; exit 1;; esac;				\
+	else								\
+	  : ;								\
+	fi
+
+# Ensure that each sub-module commit we're using is public.
+# Without this, it is too easy to tag and release code that
+# cannot be built from a fresh clone.
+.PHONY: public-submodule-commit
+public-submodule-commit:
+	$(AM_V_GEN)if test -d $(srcdir)/.git				\
+		&& git --version >/dev/null 2>&1; then			\
+	  cd $(srcdir) &&						\
+	  git submodule --quiet foreach					\
+	      test '"$$(git rev-parse "$$sha1")"'			\
+	      = '"$$(git merge-base origin "$$sha1")"'			\
+	    || { echo '$(ME): found non-public submodule commit' >&2;	\
+		 exit 1; };						\
+	else								\
+	  : ;								\
+	fi
+# This rule has a high enough utility/cost ratio that it should be a
+# dependent of "check" by default.  However, some of us do occasionally
+# commit a temporary change that deliberately points to a non-public
+# submodule commit, and want to be able to use rules like "make check".
+# In that case, run e.g., "make check gl_public_submodule_commit="
+# to disable this test.
+gl_public_submodule_commit ?= public-submodule-commit
+check: $(gl_public_submodule_commit)
 
 # These targets do all the file shuffling necessary for a release, but
 # purely locally, so you can rewind and redo before pushing anything
@@ -136,7 +187,7 @@ release:
 #
 #				make beta
 .PHONY: alpha beta stable
-alpha beta stable:
+alpha beta stable: $(submodule-checks)
 	$(AM_V_GEN)test $@ = stable &&					\
 	  { echo $(VERSION) |$(EGREP) '^[0-9]+(\.[0-9]+)*$$' >/dev/null	\
 	    || { echo "invalid version string: $(VERSION)" 1>&2; exit 1;};}\
@@ -149,22 +200,6 @@ alpha beta stable:
 	$(AM_V_at)$(MAKE) check
 	$(AM_V_at)$(MAKE) $(release-prep-hook) RELEASE_TYPE=$@
 	$(AM_V_at)$(MAKE) check-in-release-branch
-
-push:
-	$(AM_V_at)$(GIT) push origin master
-	$(AM_V_at)$(GIT) push origin release
-	$(AM_V_at)$(GIT) push origin v$(VERSION)
-	$(AM_V_at)$(GIT) push origin release-v$(VERSION)
-
-mail:
-	$(AM_V_at)cat ~/announce-$(my_distdir)				\
-	  | mail -s '[ANN] $(PACKAGE) $(VERSION) released' --		\
-	    lua-l@lists.lua.org
-	$(AM_V_at)printf '%s\n'						\
-	  'Rockspec for $(PACKAGE) version $(VERSION) attached.'	\
-	  | mail -a $(package_rockspec)					\
-	    -s '[ANN] $(PACKAGE) $(VERSION) released; rockspec attached' -- \
-	    luarocks-developers@lists.sourceforge.net
 
 prev-version-check:
 	$(AM_V_at)if test -z "`$(GIT) ls-files $(prev_version_file)`";	\
@@ -252,7 +287,7 @@ update-old-NEWS-hash: NEWS
 ANNOUNCE_ENV	 = LUA_INIT= LUA_PATH='$(abs_srcdir)/?-git-1.rockspec'
 ANNOUNCE_PRINT	 = $(ANNOUNCE_ENV) $(LUA) -l$(PACKAGE) -e
 
-announcement: NEWS
+announcement: NEWS $(scm_rockspec)
 # Not $(AM_V_GEN) since the output of this command serves as
 # announcement message: else, it would start with " GEN announcement".
 	$(AM_V_at)printf '%s\n'						\
@@ -261,14 +296,14 @@ announcement: NEWS
 	$(AM_V_at)printf '\n'
 	$(AM_V_at)$(SED) -n						\
 	    -e '/^\* Noteworthy changes in release $(PREV_VERSION)/q'	\
-	    -e p NEWS |$(SED) -e 1,2d 
+	    -e p NEWS |$(SED) -e 1,2d
 	$(AM_V_at)printf '%s\n'	''					\
 	  'Install it as luarock xxxx (see http://luarocks.org/repositories/rocks)' \
 	  '' 'Most simply:' ''						\
 	  '  luarocks install $(PACKAGE)' ''				\
 	  '(You may need to wait a while after this announcement lands before the' \
 	  'rocks are available).' ''
-	$(AM_V_at)$(ANNOUNCE_PRINT) 					\
+	$(AM_V_at)$(ANNOUNCE_PRINT)					\
 	  'print ("$(PACKAGE)'\''s home page is at " .. description.homepage)'
 
 
@@ -291,14 +326,13 @@ git-clean-files  = `printf -- '-e %s ' $(_save-files)`
 grep-clean-files = `printf -- '%s|' $(_save-files) |$(list-to-rexp)`
 
 # Switch to (or create) 'release' branch, remove all files, except the
-# newly generated dist tarball (and .travis.yml, because travis expects
-# that file on all active branches), then unpack the dist tarball and
-# check in all the files it creates, and tag that as the next release.
+# newly generated dist tarball, then unpack the dist tarball and check
+# in all the files it creates, and tag that as the next release.
 # Github creates automatic zipballs of tagged git revisions, so we can
 # safely use this tag in the rockspecs we distribute.
 .PHONY: check-in-release-branch
 check-in-release-branch:
-	$(AM_V_GEN)$(GCO) -b release 2>/dev/null || $(GCO) release
+	$(AM_V_GEN)$(GCO) -b release v1 2>/dev/null || $(GCO) release
 	$(AM_V_at)$(GIT) pull origin release 2>/dev/null || true
 	$(AM_V_at)$(GIT) clean -dfx $(git-clean-files)
 	$(AM_V_at)remove_re=$(grep-clean-files);			\
@@ -310,3 +344,21 @@ check-in-release-branch:
 	$(AM_V_at)$(GIT) commit -s -a -m "Release v$(VERSION)."
 	$(AM_V_at)$(GIT) tag -s -a -m "Full source $(VERSION) release" release-v$(VERSION)
 	$(AM_V_at)$(GCO) $(branch)
+
+.PHONY: push
+push:
+	$(AM_V_at)$(GIT) push origin master
+	$(AM_V_at)$(GIT) push origin release
+	$(AM_V_at)$(GIT) push origin v$(VERSION)
+	$(AM_V_at)$(GIT) push origin release-v$(VERSION)
+
+.PHONY: mail
+mail:
+	$(AM_V_at)cat ~/announce-$(my_distdir)				\
+	  | mail -s '[ANN] $(PACKAGE) $(VERSION) released' --		\
+	    lua-l@lists.lua.org
+	$(AM_V_at)printf '%s\n'						\
+	  'Rockspec for $(PACKAGE) version $(VERSION) attached.'	\
+	  | mail -a $(package_rockspec)					\
+	    -s '[ANN] $(PACKAGE) $(VERSION) released; rockspec attached' -- \
+	    luarocks-developers@lists.sourceforge.net

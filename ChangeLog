@@ -1,8 +1,49 @@
 2013-04-28  Gary V. Vaughan  <gary@gnu.org>
 
-	Release v1.
+	Release version 2
+	* NEWS: Record release date.
+
+	maint: News updated.
+	* NEWS: updated.
+
+	release: add submodule checks to release rules.
+	* build-aux/release.mk (no-submodule-changes): Make sure we can't
+	accidentally release with unchecked-in submodule changes.
+	(public-submodule-commit): Make sure we can't accidentally release
+	with unpushed local submodule changes.
+	(submodule-checks): List them.
+	(release): Run the checks.
+
+	sanity: port over gnulib sanity checking rules.
+	* build-aux/sanity.mk: Sanity checks from gnulib maint.mk.
+	* README.md: Document it.
+	* GNUmakefile: Include it.
+	(distcheck): Run sanity checks too.
+	(ME): Fix typo found by sanity checks.
+	* build-aux/release.mk: Fix whitespace errors found by sanity
+	checks.
+	* build-aux/rockspecs.mk: Fix typo found by sanity checks.
+
+	release: add maintainer support scripts to distribution by default.
+	* build-aux/release.mk (release_extra_dist): List all the support
+	scripts used by release.mk.
+	(EXTRA_DIST): Append them.
+
+	release: add .PHONY tag to push and mail targets.
+	* build-aux/release.mk (push, mail): Move to end of file. Add
+	.PHONY tag.
+
+	release: ensure git rockspec is available for announcement.
+	* build-aux/release.mk (announcement): Add depedency on scm_rockspec.
+
+	release: create new release branch at v1 tag.
+	* build-aux/release.mk (check-in-release-branch): If there is no
+	release branch yet, create the new at the v1 tag rather than the
+	current HEAD of master (which is probably a post-release admin-
+	istrivia commit).
 
 	maint: post-release administrivia.
+	* configure.ac (AC_INIT): Bump version to 2 for next release.
 	* NEWS: Add header line for next release.
 	* .prev-version: Record previous version.
 	* ./Makefile.am (old_NEWS_hash): Auto-update.

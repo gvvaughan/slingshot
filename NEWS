@@ -1,0 +1,30 @@
+Slingshot NEWS - User visible changes.
+
+* Noteworthy changes in release 2 (2013-04-28) [beta]
+
+** New Features:
+
+  - No longer depend on `woger`.
+  - New `mail` wrapper script to provide a POSIX mail API wrapped
+    around mutt.  Currently Mac OS X specific (which is the main
+    system that doesn't ship a POSIX mail compatible command).
+  - Split local and origin rules to support, eg:
+      $ make beta
+      ...manually check local trees...
+      $ make push
+      ...manually check github zipball and released rockspec files...
+      ...maunally edit ~/announce-<package>-<version>...
+      $ make mail
+  - Port of gnulib project sanity checks hooked into release
+    rules by `include build-aux/sanity.mk`.
+
+** Bugs Fixed:
+
+  - Newly created release branch is now branched from the v1 tag rather
+    than the "Post-release administrivia" commit.
+  - Include maintainer support files in release, so that Travis CI has
+    everything it needs to work on the release branch too.
+
+* Noteworthy changes in release 1 (2013-04-28) [beta]
+
+** Initial proof-of concept for shared Lua RockSpec framework.
