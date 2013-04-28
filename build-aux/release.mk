@@ -150,22 +150,6 @@ alpha beta stable:
 	$(AM_V_at)$(MAKE) $(release-prep-hook) RELEASE_TYPE=$@
 	$(AM_V_at)$(MAKE) check-in-release-branch
 
-push:
-	$(AM_V_at)$(GIT) push origin master
-	$(AM_V_at)$(GIT) push origin release
-	$(AM_V_at)$(GIT) push origin v$(VERSION)
-	$(AM_V_at)$(GIT) push origin release-v$(VERSION)
-
-mail:
-	$(AM_V_at)cat ~/announce-$(my_distdir)				\
-	  | mail -s '[ANN] $(PACKAGE) $(VERSION) released' --		\
-	    lua-l@lists.lua.org
-	$(AM_V_at)printf '%s\n'						\
-	  'Rockspec for $(PACKAGE) version $(VERSION) attached.'	\
-	  | mail -a $(package_rockspec)					\
-	    -s '[ANN] $(PACKAGE) $(VERSION) released; rockspec attached' -- \
-	    luarocks-developers@lists.sourceforge.net
-
 prev-version-check:
 	$(AM_V_at)if test -z "`$(GIT) ls-files $(prev_version_file)`";	\
 	then								\
@@ -309,3 +293,21 @@ check-in-release-branch:
 	$(AM_V_at)$(GIT) commit -s -a -m "Release v$(VERSION)."
 	$(AM_V_at)$(GIT) tag -s -a -m "Full source $(VERSION) release" release-v$(VERSION)
 	$(AM_V_at)$(GCO) $(branch)
+
+.PHONY: push
+push:
+	$(AM_V_at)$(GIT) push origin master
+	$(AM_V_at)$(GIT) push origin release
+	$(AM_V_at)$(GIT) push origin v$(VERSION)
+	$(AM_V_at)$(GIT) push origin release-v$(VERSION)
+
+.PHONY: mail
+mail:
+	$(AM_V_at)cat ~/announce-$(my_distdir)				\
+	  | mail -s '[ANN] $(PACKAGE) $(VERSION) released' --		\
+	    lua-l@lists.lua.org
+	$(AM_V_at)printf '%s\n'						\
+	  'Rockspec for $(PACKAGE) version $(VERSION) attached.'	\
+	  | mail -a $(package_rockspec)					\
+	    -s '[ANN] $(PACKAGE) $(VERSION) released; rockspec attached' -- \
+	    luarocks-developers@lists.sourceforge.net
