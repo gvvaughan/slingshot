@@ -31,7 +31,7 @@
 ## LuaRocks. ##
 ## --------- ##
 
-# This file is suitable for use from a portable Makeflie, you might
+# This file is suitable for use from a portable Makefile, you might
 # include it into the top-level Makefile.am with:
 #
 #   include build-aux/rockspecs.mk

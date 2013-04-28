@@ -2,6 +2,10 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features:
+
+  - Port of gnulib project sanity checks hooked into release
+    rules by `include build-aux/sanity.mk`.
 
 * Noteworthy changes in release 1 (2013-04-28) [beta]
 

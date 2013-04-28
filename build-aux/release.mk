@@ -10,7 +10,7 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -135,7 +135,7 @@ release-type = $(call member-check,RELEASE_TYPE,$(RELEASE_TYPES))
 # Use it like this, eg:
 #				make RELEASE_TYPE=beta
 .PHONY: release
-release: 
+release:
 	$(AM_V_GEN)$(MAKE) $(release-type)
 	$(AM_V_GEN)$(MAKE) push
 	$(AM_V_GEN)$(MAKE) mail
@@ -255,14 +255,14 @@ announcement: NEWS $(scm_rockspec)
 	$(AM_V_at)printf '\n'
 	$(AM_V_at)$(SED) -n						\
 	    -e '/^\* Noteworthy changes in release $(PREV_VERSION)/q'	\
-	    -e p NEWS |$(SED) -e 1,2d 
+	    -e p NEWS |$(SED) -e 1,2d
 	$(AM_V_at)printf '%s\n'	''					\
 	  'Install it as luarock xxxx (see http://luarocks.org/repositories/rocks)' \
 	  '' 'Most simply:' ''						\
 	  '  luarocks install $(PACKAGE)' ''				\
 	  '(You may need to wait a while after this announcement lands before the' \
 	  'rocks are available).' ''
-	$(AM_V_at)$(ANNOUNCE_PRINT) 					\
+	$(AM_V_at)$(ANNOUNCE_PRINT)					\
 	  'print ("$(PACKAGE)'\''s home page is at " .. description.homepage)'
 
 
