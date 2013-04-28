@@ -252,7 +252,7 @@ update-old-NEWS-hash: NEWS
 ANNOUNCE_ENV	 = LUA_INIT= LUA_PATH='$(abs_srcdir)/?-git-1.rockspec'
 ANNOUNCE_PRINT	 = $(ANNOUNCE_ENV) $(LUA) -l$(PACKAGE) -e
 
-announcement: NEWS
+announcement: NEWS $(scm_rockspec)
 # Not $(AM_V_GEN) since the output of this command serves as
 # announcement message: else, it would start with " GEN announcement".
 	$(AM_V_at)printf '%s\n'						\
