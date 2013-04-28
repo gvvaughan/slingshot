@@ -280,7 +280,7 @@ grep-clean-files = `printf -- '%s|' $(_save-files) |$(list-to-rexp)`
 .PHONY: check-in-release-branch
 check-in-release-branch:
 	$(AM_V_GEN)$(GCO) -b release 2>/dev/null || $(GCO) release
-	$(AM_V_at)$(GIT) pull origin release || true
+	$(AM_V_at)$(GIT) pull origin release 2>/dev/null || true
 	$(AM_V_at)$(GIT) clean -dfx $(git-clean-files)
 	$(AM_V_at)remove_re=$(grep-clean-files);			\
 	    $(GIT) rm -f `$(GIT) ls-files |$(EGREP) -v "$$remove_re"`
