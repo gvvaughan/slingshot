@@ -31,12 +31,11 @@ docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 	$(AM_V_GEN)if ( touch $@.w && rm -f $@.w; ) >/dev/null 2>&1; \
 	then						\
 	  builddir='$(builddir)'			\
-	  $(srcdir)/build-aux/missing --run		\
-	    $(HELP2MAN)					\
-	      '--output=$@'				\
-	      '--no-info'				\
-	      '--name=Slingshot'			\
-	      build-aux/mkrockspecs;			\
+	  $(HELP2MAN)					\
+	    '--output=$@'				\
+	    '--no-info'					\
+	    '--name=Slingshot'				\
+	    build-aux/mkrockspecs;			\
 	fi
 
 
