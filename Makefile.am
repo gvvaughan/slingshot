@@ -65,3 +65,5 @@ check-local: $(check_local)
 ## ------------- ##
 
 install-exec-hook: $(install_exec_hooks)
+
+old_NEWS_hash = 029d8b9d09eb823d8398365c4942be1d
