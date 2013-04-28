@@ -140,13 +140,54 @@ release:
 	$(AM_V_GEN)$(MAKE) push
 	$(AM_V_GEN)$(MAKE) mail
 
+submodule-checks ?= no-submodule-changes public-submodule-commit
+
+.PHONY: no-submodule-changes
+no-submodule-changes:
+	$(AM_V_GEN)if test -d $(srcdir)/.git				\
+		&& git --version >/dev/null 2>&1; then			\
+	  diff=$$(cd $(srcdir) && git submodule -q foreach		\
+		  git diff-index --name-only HEAD)			\
+	    || exit 1;							\
+	  case $$diff in '') ;;						\
+	    *) echo '$(ME): submodule files are locally modified:';	\
+		echo "$$diff"; exit 1;; esac;				\
+	else								\
+	  : ;								\
+	fi
+
+# Ensure that each sub-module commit we're using is public.
+# Without this, it is too easy to tag and release code that
+# cannot be built from a fresh clone.
+.PHONY: public-submodule-commit
+public-submodule-commit:
+	$(AM_V_GEN)if test -d $(srcdir)/.git				\
+		&& git --version >/dev/null 2>&1; then			\
+	  cd $(srcdir) &&						\
+	  git submodule --quiet foreach					\
+	      test '"$$(git rev-parse "$$sha1")"'			\
+	      = '"$$(git merge-base origin "$$sha1")"'			\
+	    || { echo '$(ME): found non-public submodule commit' >&2;	\
+		 exit 1; };						\
+	else								\
+	  : ;								\
+	fi
+# This rule has a high enough utility/cost ratio that it should be a
+# dependent of "check" by default.  However, some of us do occasionally
+# commit a temporary change that deliberately points to a non-public
+# submodule commit, and want to be able to use rules like "make check".
+# In that case, run e.g., "make check gl_public_submodule_commit="
+# to disable this test.
+gl_public_submodule_commit ?= public-submodule-commit
+check: $(gl_public_submodule_commit)
+
 # These targets do all the file shuffling necessary for a release, but
 # purely locally, so you can rewind and redo before pushing anything
 # to origin or sending release announcements. Use it like this, eg:
 #
 #				make beta
 .PHONY: alpha beta stable
-alpha beta stable:
+alpha beta stable: $(submodule-checks)
 	$(AM_V_GEN)test $@ = stable &&					\
 	  { echo $(VERSION) |$(EGREP) '^[0-9]+(\.[0-9]+)*$$' >/dev/null	\
 	    || { echo "invalid version string: $(VERSION)" 1>&2; exit 1;};}\
