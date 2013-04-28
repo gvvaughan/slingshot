@@ -1,0 +1,64 @@
+2013-04-28  Gary V. Vaughan  <gary@gnu.org>
+
+	Release v1.
+
+	maint: post-release administrivia.
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* ./Makefile.am (old_NEWS_hash): Auto-update.
+
+	Release version 1
+	* NEWS: Record release date.
+
+	configury: add autom4te.cache disabling configuration file.
+	* .autom4te.cfg: New file. Disable the cache.
+	* README.md: Document it.
+
+	bootstrap: use the correct bootstrap script.
+	* bootstrap: The full version!
+	* bootstrap.conf: Ensure ChangeLog for Automake.
+
+	release: import mutt mail wrapper.
+	* build-aux/mail: Import mutt mail wrapper.
+	* README.md: Note the addition of mail script.
+
+	release: remove woger dependency.
+	* build-aux/release.mk (WOGER, WOGER_ENV, WOGER_OUT): Remove.
+	(release): Split into...
+	(push): ...this one to push git changes back to origin...
+	(mail): ...and this one to make mailing list announcements.
+	(announcement): Produce a full release announcement message body.
+
+	release: elide 'remote end hung up' error on first release.
+	* build-aux/release.mk (check-in-release-branch): Elide the
+	misleading 'remote end hung up' error when failing to pull the
+	not-yet-created release branch updates into the local tree.
+
+	specs: rudimentary specl demo.
+	* specs/specs.mk (SPECL): Use installed specl binary.
+	(specl-check-local): Remove SPECL dependency, and call directly.
+	* specs/package_spec.yaml: A minimal spce file.
+	* src/src.mk (EXTRA_DIST): Fix a typo.
+	* build-aux/release.mk (EXTRA_DIST): Distribute travis.yml.in.
+	(all-am): Keep .travis.yml up to date by default.
+
+	travis: ensure availability of help2man.
+	* src/src.mk (docs/mkrockspecs.1): No need to call `missing` when
+	configure already sets HELP2MAN appropriately.
+	* travis.yml.in (install): Install help2man.
+	* .travis.yml: Regenerate.
+
+	maint: fix a typo in rockspec.conf
+	* rockspec.conf (homepage): Use the correct project url!
+
+	travis: make sure lyaml is installed.
+	* travis.yml.in: install lyaml to the local rocks tree.
+	* .travis.yml: Regenerate.
+
+	maint: add travis support.
+	* .travis.yml: New file. Generated from travis.yml.in.
+	* .gitignore: Remove .travis.yml.
+	* src/src.mk: Fix typos.
+	* README.md: Add slingshot URL.
+
+	Initial import.
