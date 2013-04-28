@@ -96,12 +96,22 @@ ChangeLog:
 	  rm -f '$@'; mv '$@T' '$@';			\
 	fi
 
-EXTRA_DIST +=						\
+# Override this in GNUmakefile if you don't want to automatically
+# redistribute all the maintainer support files (take care that
+# Travis CI is finicky about this, and will likely need tweaking
+# to cope with missing any of these if you decide to omit them).
+release_extra_dist ?=					\
 	.travis.yml					\
-	travis.yml.in					\
 	GNUmakefile					\
+	bootstrap					\
+	bootstrap.conf					\
+	travis.yml.in					\
+	$(NOTHING_ELSE)
+
+EXTRA_DIST +=						\
 	$(_build-aux)/release.mk			\
 	$(gitlog_to_changelog)				\
+	$(release_extra_dist)				\
 	$(NOTHING_ELSE)
 
 all-am: .travis.yml
