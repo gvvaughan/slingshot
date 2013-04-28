@@ -60,7 +60,6 @@ include Makefile
 GIT	?= git
 LUA	?= lua
 TAR	?= tar
-WOGER	?= woger
 
 # Override this in cfg.mk if you are using a different format in your
 # NEWS file.
@@ -121,27 +120,15 @@ all-am: .travis.yml
 RELEASE_TYPES = alpha beta stable
 release-type = $(call member-check,RELEASE_TYPE,$(RELEASE_TYPES))
 
-WOGER_ENV	 = LUA_INIT= LUA_PATH='$(abs_srcdir)/?-git-1.rockspec'
-WOGER_OUT	 = $(WOGER_ENV) $(LUA) -l$(PACKAGE) -e
-
 # This will actually make the release, including sending release
-# announcements with 'woger', and pushing changes back to the origin.
+# announcements, and pushing changes back to the origin.
 # Use it like this, eg:
 #				make RELEASE_TYPE=beta
 .PHONY: release
-release:
+release: 
 	$(AM_V_GEN)$(MAKE) $(release-type)
-	$(AM_V_at)$(GIT) push origin master
-	$(AM_V_at)$(GIT) push origin release
-	$(AM_V_at)$(GIT) push origin v$(VERSION)
-	$(AM_V_at)$(GIT) push origin release-v$(VERSION)
-	$(AM_V_at)$(WOGER) lua						\
-	  package=$(PACKAGE)						\
-	  package_name=$(PACKAGE_NAME)					\
-	  version=$(VERSION)						\
-	  notes=~/announce-$(my_distdir)				\
-	  home="`$(WOGER_OUT) 'print (description.homepage)'`"		\
-	  description="`$(WOGER_OUT) 'print (description.summary)'`"
+	$(AM_V_GEN)$(MAKE) push
+	$(AM_V_GEN)$(MAKE) mail
 
 # These targets do all the file shuffling necessary for a release, but
 # purely locally, so you can rewind and redo before pushing anything
@@ -162,6 +149,22 @@ alpha beta stable:
 	$(AM_V_at)$(MAKE) check
 	$(AM_V_at)$(MAKE) $(release-prep-hook) RELEASE_TYPE=$@
 	$(AM_V_at)$(MAKE) check-in-release-branch
+
+push:
+	$(AM_V_at)$(GIT) push origin master
+	$(AM_V_at)$(GIT) push origin release
+	$(AM_V_at)$(GIT) push origin v$(VERSION)
+	$(AM_V_at)$(GIT) push origin release-v$(VERSION)
+
+mail:
+	$(AM_V_at)cat ~/announce-$(my_distdir)				\
+	  | mail -s '[ANN] $(PACKAGE) $(VERSION) released' --		\
+	    lua-l@lists.lua.org
+	$(AM_V_at)printf '%s\n'						\
+	  'Rockspec for $(PACKAGE) version $(VERSION) attached.'	\
+	  | mail -a $(package_rockspec)					\
+	    -s '[ANN] $(PACKAGE) $(VERSION) released; rockspec attached' -- \
+	    luarocks-developers@lists.sourceforge.net
 
 prev-version-check:
 	$(AM_V_at)if test -z "`$(GIT) ls-files $(prev_version_file)`";	\
@@ -246,12 +249,28 @@ update-old-NEWS-hash: NEWS
 	    >> $(old_NEWS_hash-file); \
 	fi
 
+ANNOUNCE_ENV	 = LUA_INIT= LUA_PATH='$(abs_srcdir)/?-git-1.rockspec'
+ANNOUNCE_PRINT	 = $(ANNOUNCE_ENV) $(LUA) -l$(PACKAGE) -e
+
 announcement: NEWS
 # Not $(AM_V_GEN) since the output of this command serves as
 # announcement message: else, it would start with " GEN announcement".
+	$(AM_V_at)printf '%s\n'						\
+	  'I am happy to announce the release of $(PACKAGE) $(VERSION),'
+	$(AM_V_at)$(ANNOUNCE_PRINT) 'print (description.summary)'
+	$(AM_V_at)printf '\n'
 	$(AM_V_at)$(SED) -n						\
 	    -e '/^\* Noteworthy changes in release $(PREV_VERSION)/q'	\
 	    -e p NEWS |$(SED) -e 1,2d 
+	$(AM_V_at)printf '%s\n'	''					\
+	  'Install it as luarock xxxx (see http://luarocks.org/repositories/rocks)' \
+	  '' 'Most simply:' ''						\
+	  '  luarocks install $(PACKAGE)' ''				\
+	  '(You may need to wait a while after this announcement lands before the' \
+	  'rocks are available).' ''
+	$(AM_V_at)$(ANNOUNCE_PRINT) 					\
+	  'print ("$(PACKAGE)'\''s home page is at " .. description.homepage)'
+
 
 branch		 = $(shell $(GIT) branch |$(SED) -ne '/^\* /{s///;p;q;}')
 GCO		 = $(GIT) checkout
