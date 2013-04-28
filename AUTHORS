@@ -1,0 +1,31 @@
+Slingshot Contributors
+======================
+
+This file list contributors to Slingshot. If you think you should be in
+this list, please file an issue on github (run `mkrockspecs --help` for
+the URL).
+
+Many thanks to all users and those who have contributed bug fixes
+and suggestions.
+
+ * Gary V. Vaughan <gary@gnu.org>:
+   Assembled and customised the files included with slingshot.
+ * Jim Meyering <jim@meyering.net>:
+   Implemented the original versions of `do-releae-commit-and-tag` and
+   `gitlog-to-changelog`.
+ * Reuben Thomas <rrt@sc3d.org>:
+   Provided the prototype for `mkrockspecs`, and maintainer of upstream
+   `ax_lua.m4`.
+ * Tim Perkins <tprk77@gmail.com>:
+   Wrote the original version of `ax_lua.m4`.
+ * Tim Toolan <toolan@ele.uri.edu>:
+   For `ax_compare_version.m4`.
+ * Dustin J. Mitchell <dusting@cs.uchicago.edu>:
+   Wrote the original version of `ax_with_python.m4` upon which
+   `ax_with_prog.m4` is based.
+ * Francesco Salvestrini <salvestrini@users.sourceforge.net>:
+   Maintains upstream `ax_with_prog.m4`.
+ * Akim Demaille <akim@lrde.epita.fr>, Eric Blake <eblake@redhat.com>,
+   Simon Josefsson <simon@josefsson.org>:
+   Authors of upstream release rules in gnulib maint.mk, adapted as release.mk
+   in slingshot.
