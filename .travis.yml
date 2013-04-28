@@ -37,6 +37,7 @@ script:
   - make $LUAROCKS_CONFIG
     LUA="$LUA" LUA_INCDIR="$LUA_INCDIR" V=1
     || cat $LUAROCKS_CONFIG config.log
+  - $LUAROCKS install lyaml
   - eval `$LUAROCKS path`;
     make rockspecs LUAROCKS="$LUAROCKS" V=1
     || { $LUAROCKS path; cat $ROCKSPEC; }
