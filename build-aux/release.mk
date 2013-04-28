@@ -291,14 +291,13 @@ git-clean-files  = `printf -- '-e %s ' $(_save-files)`
 grep-clean-files = `printf -- '%s|' $(_save-files) |$(list-to-rexp)`
 
 # Switch to (or create) 'release' branch, remove all files, except the
-# newly generated dist tarball (and .travis.yml, because travis expects
-# that file on all active branches), then unpack the dist tarball and
-# check in all the files it creates, and tag that as the next release.
+# newly generated dist tarball, then unpack the dist tarball and check
+# in all the files it creates, and tag that as the next release.
 # Github creates automatic zipballs of tagged git revisions, so we can
 # safely use this tag in the rockspecs we distribute.
 .PHONY: check-in-release-branch
 check-in-release-branch:
-	$(AM_V_GEN)$(GCO) -b release 2>/dev/null || $(GCO) release
+	$(AM_V_GEN)$(GCO) -b release v1 2>/dev/null || $(GCO) release
 	$(AM_V_at)$(GIT) pull origin release 2>/dev/null || true
 	$(AM_V_at)$(GIT) clean -dfx $(git-clean-files)
 	$(AM_V_at)remove_re=$(grep-clean-files);			\
