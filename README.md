@@ -132,7 +132,7 @@ repository, and don't push the changes back to origin.
 
 Use `make release RELEASE_TYPE=stable` to perform a full release
 process, including pushing changes back to origin, and mailing an
-announcements taken from the NEWS file using woger.
+announcement taken from the NEWS file.
 
 
 [gnu gnulib]: http://gnu.org/s/gnulib
