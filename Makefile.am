@@ -30,6 +30,8 @@ LUA_PATH ?= ;
 
 ACLOCAL_AMFLAGS = -I m4
 
+old_NEWS_hash = 860dc3c7d516312253b35a19711791aa
+
 
 ## ------------- ##
 ## Declarations. ##
@@ -66,4 +68,11 @@ check-local: $(check_local)
 
 install-exec-hook: $(install_exec_hooks)
 
-old_NEWS_hash = 860dc3c7d516312253b35a19711791aa
+
+## ------------- ##
+## Distribution. ##
+## ------------- ##
+
+EXTRA_DIST +=						\
+	README.md					\
+	$(NOTHING_ELSE)
