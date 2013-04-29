@@ -673,9 +673,9 @@ sc_two_space_separator_in_usage:
 	halt='help2man requires at least two spaces between an option and its description'\
 	  $(_sc_search_regexp)
 
-# A regexp matching function names like "error" that may be used
+# A regexp matching function names like "error_" that may be used
 # to emit translatable messages.
-_gl_translatable_diag_func_re ?= error
+_gl_translatable_diag_func_re ?= error_
 
 # Look for diagnostics that aren't marked for translation.
 # This won't find any for which error's format string is on a separate line.
