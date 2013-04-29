@@ -2,6 +2,10 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bugs Fixed:
+
+  - Don't forget to distribute README.md and .autom4te.cfg files.
+
 
 * Noteworthy changes in release 2 (2013-04-28) [beta]
 
