@@ -21,21 +21,8 @@
 ## Specs. ##
 ## ------ ##
 
-SPECL = specl
-
 specl_SPECS =						\
 	$(srcdir)/specs/package_spec.yaml		\
 	$(NOTHING_ELSE)
 
-check_local += specs-check-local
-specs-check-local: $(specl_SPECS) $(specl_LUASPECS)
-	$(AM_V_at)$(SPECL) $(SPECL_OPTS) $(specl_SPECS)
-
-
-## ------------- ##
-## Distribution. ##
-## ------------- ##
-
-EXTRA_DIST +=						\
-	$(specl_SPECS)					\
-	$(NOTHING_ELSE)
+include build-aux/specl.mk
