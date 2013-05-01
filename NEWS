@@ -2,10 +2,18 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features:
+
+  - Support Specl automation with `include build-aux/specl.mk`
+
 ** Bugs Fixed:
 
   - Don't forget to distribute README.md and .autom4te.cfg files.
 
+** Incompatible Changes:
+
+  - `mail` wrapper removed.  Rockspec announcement sent with a link
+    to the rockspec rather than as an attachment.
 
 * Noteworthy changes in release 2 (2013-04-28) [beta]
 
