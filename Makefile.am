@@ -30,14 +30,12 @@ LUA_PATH ?= ;
 
 ACLOCAL_AMFLAGS = -I m4
 
-old_NEWS_hash = 860dc3c7d516312253b35a19711791aa
-
 
 ## ------------- ##
 ## Declarations. ##
 ## ------------- ##
 
-EXTRA_DIST		= README.md
+EXTRA_DIST		=
 CLEANFILES		=
 DISTCLEANFILES		=
 MAINTAINERCLEANFILES	=
@@ -48,6 +46,7 @@ check_local		=
 install_exec_hooks	=
 man_MANS		=
 
+-include local.mk
 include src/src.mk
 include specs/specs.mk
 include build-aux/rockspecs.mk

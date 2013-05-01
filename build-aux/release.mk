@@ -74,7 +74,7 @@ release-prep-hook  ?= release-prep
 _build-aux         ?= build-aux
 my_distdir	   ?= $(PACKAGE)-$(VERSION)
 prev_version_file  ?= $(srcdir)/.prev-version
-old_NEWS_hash-file ?= $(srcdir)/Makefile.am
+old_NEWS_hash-file ?= $(srcdir)/local.mk
 gl_noteworthy_news_ = * Noteworthy changes in release ?.? (????-??-??) [?]
 
 PREV_VERSION        = $(shell cat $(prev_version_file) 2>/dev/null)
@@ -106,6 +106,7 @@ release_extra_dist ?=					\
 	GNUmakefile					\
 	bootstrap					\
 	bootstrap.conf					\
+	local.mk					\
 	travis.yml.in					\
 	$(NOTHING_ELSE)
 
