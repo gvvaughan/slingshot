@@ -37,7 +37,11 @@ AC_PROG_EGREP
 AC_PROG_SED
 
 dnl Generate output files
-AC_CONFIG_FILES([Makefile])
+SPECL_FALSE=
+AS_IF([test -f src/specl.in], [SPECL_FALSE='#'])
+AC_SUBST([SPECL_FALSE])
+
 AC_CONFIG_FILES([build-aux/mkrockspecs], [chmod a+x build-aux/mkrockspecs])
 AC_CONFIG_FILES([.travis.yml:travis.yml.in])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
