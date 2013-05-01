@@ -47,4 +47,4 @@ script:
   - $LUAROCKS make $ROCKSPEC
   # The self tests must pass.
   - $LUAROCKS install specl
-  - make check V=1
+  - make SPECL=luarocks/bin/specl check V=1
