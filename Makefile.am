@@ -46,8 +46,8 @@ check_local		=
 install_exec_hooks	=
 man_MANS		=
 
--include local.mk
--include build-aux/rockspecs.mk
+include local.mk
+include build-aux/rockspecs.mk
 
 
 ## ------------ ##
