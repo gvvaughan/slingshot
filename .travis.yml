@@ -45,16 +45,14 @@ script:
   - make $LUAROCKS_CONFIG
     LUA="$LUA" LUA_INCDIR="$LUA_INCDIR" V=1
     || cat $LUAROCKS_CONFIG config.log
-  - $LUAROCKS install lyaml; $LUAROCKS install specl;
   # Set Lua and Shell paths up for local luarocks tree.
   - eval `$LUAROCKS path`
   - export PATH=`pwd`/luarocks/bin:$PATH
+  - $LUAROCKS install lyaml; $LUAROCKS install specl;
   - make rockspecs LUAROCKS="$LUAROCKS" V=1
     || { $LUAROCKS path; cat $ROCKSPEC; }
   # LuaRocks make will fail if dependencies are missing.
   - $LUAROCKS make $ROCKSPEC
-  # The self tests must pass.
-  - $LUAROCKS install specl
   # Use bin/specl if we built it, or else the specl rock we just installed.
   - test -f "$SPECL" || SPECL=luarocks/bin/specl;
     make check SPECL="$SPECL" V=1
