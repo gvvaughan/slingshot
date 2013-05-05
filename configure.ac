@@ -40,6 +40,7 @@ dnl Generate output files
 SPECL_FALSE=
 AS_IF([test -f src/specl.in], [SPECL_FALSE='#'])
 AC_SUBST([SPECL_FALSE])
+AC_SUBST([SPECL_MIN], [3])
 
 AC_CONFIG_FILES([build-aux/mkrockspecs], [chmod a+x build-aux/mkrockspecs])
 AC_CONFIG_FILES([.travis.yml:travis.yml.in])
