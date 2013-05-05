@@ -32,8 +32,8 @@ AC_DEFUN([SS_CONFIG_TRAVIS], [
   # is required by all slingshot clients for mkrockspecs.
   EXTRA_ROCKS=-
   for _ss_rock in lyaml $1; do
-    case "$EXTRA_ROCKS" in
-      " $_ss_rock;") ;; # ignore duplicates
+    case $EXTRA_ROCKS in
+      *" $_ss_rock;"*) ;; # ignore duplicates
       *)
         EXTRA_ROCKS="$EXTRA_ROCKS"' $LUAROCKS install '"$_ss_rock;"
         ;;
