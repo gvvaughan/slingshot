@@ -50,4 +50,4 @@ script:
   - $LUAROCKS install specl
   # Use bin/specl if we built it, or else the specl rock we just installed.
   - test -f "$SPECL" || SPECL=luarocks/bin/specl;
-    make check SPEC="$SPECL" V=1
+    make check SPECL="$SPECL" V=1
