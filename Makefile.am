@@ -47,9 +47,7 @@ install_exec_hooks	=
 man_MANS		=
 
 -include local.mk
-include src/src.mk
-include specs/specs.mk
-include build-aux/rockspecs.mk
+-include build-aux/rockspecs.mk
 
 
 ## ------------ ##
