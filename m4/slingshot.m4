@@ -21,9 +21,12 @@ dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # Generate .travis.yml, ensuring LUAROCKS are installed.
 AC_DEFUN([SS_CONFIG_TRAVIS], [
   # If we don't have a local Specl, travis will need to install it.
-  SPECL_FALSE=
-  AS_IF([test -f src/specl.in], [SPECL_FALSE='#'])
+  SPECL_FALSE=#
   AC_SUBST([SPECL_FALSE])
+
+  # Luadoc only works with Lua 5.1, so must be installed with care.
+  LUADOC_FALSE=#
+  AC_SUBST(LUADOC_FALSE)
 
   SPECL_MIN=${SPECL_MIN-"5"}
   AC_SUBST([SPECL_MIN])
@@ -32,6 +35,12 @@ AC_DEFUN([SS_CONFIG_TRAVIS], [
   # is required by all slingshot clients for mkrockspecs.
   EXTRA_ROCKS=-
   for _ss_rock in lyaml $1; do
+    # Enable associated .travis sections for some special rocks.
+    case $_ss_rock in
+      specl)  SPECL_FALSE=- ;;
+      luadoc) LUADOC_FALSE=- ;;
+    esac
+
     case $EXTRA_ROCKS in
       *" $_ss_rock;"*) ;; # ignore duplicates
       *)

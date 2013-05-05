@@ -32,6 +32,11 @@ install:
     --with-lua-include="/usr/include/lua5.1"
   - make all install
   - cd ..
+  # Luadoc has to be installed separately while it is Lua 5.1 only.
+  @LUADOC_FALSE@ sudo apt-get install luarocks
+  @LUADOC_FALSE@ sudo luarocks install luadoc
+  @LUADOC_FALSE@ mkdir -p luarocks/bin
+  @LUADOC_FALSE@ sed 's|^exec "[^"]*"|exec lua5.1|' `which luadoc` > luarocks/bin/luadoc
 
 # Configure and build.
 script:
@@ -49,7 +54,7 @@ script:
   # LuaRocks make will fail if dependencies are missing.
   - $LUAROCKS make $ROCKSPEC
   # The self tests must pass.
-  @SPECL_FALSE@- $LUAROCKS install specl
+  @SPECL_FALSE@ $LUAROCKS install specl
   # Use bin/specl if we built it, or else the specl rock we just installed.
   - test -f "$SPECL" || SPECL=luarocks/bin/specl;
     make check SPECL="$SPECL" V=1
