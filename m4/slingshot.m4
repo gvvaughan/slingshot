@@ -33,7 +33,10 @@ AC_DEFUN([SS_CONFIG_TRAVIS], [
   for _ss_rock in lyaml $1; do
     # Enable associated .travis sections for special rocks.
     case $_ss_rock in
-      luadoc) LUADOC_FALSE=- ;;
+      luadoc)
+        LUADOC_FALSE=-
+        continue
+        ;;
     esac
 
     case $EXTRA_ROCKS in
