@@ -21,7 +21,8 @@
 ## Environment. ##
 ## ------------ ##
 
-LUA_PATH ?= ;
+LUA_PATH  ?= ;
+LUA_CPATH ?= ;
 
 
 ## ---------- ##
@@ -36,6 +37,7 @@ ACLOCAL_AMFLAGS = -I m4
 ## ------------- ##
 
 EXTRA_DIST		=
+EXTRA_LTLIBRARIES	=
 CLEANFILES		=
 DISTCLEANFILES		=
 MAINTAINERCLEANFILES	=
@@ -45,6 +47,7 @@ bin_SCRIPTS		=
 check_local		=
 install_exec_hooks	=
 man_MANS		=
+lib_LTLIBRARIES		=
 
 include local.mk
 include build-aux/rockspecs.mk
