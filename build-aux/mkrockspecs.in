@@ -163,7 +163,7 @@ if spec.source ~= nil then
 elseif spec.description ~= nil then
   url = spec.description.homepage
 end
-url = url:gsub ("^[a-z]*://", "")
+url = url:gsub ("^[a-z]*://", ""):gsub ("%.git$", "")
 
 -- Interpolate default values.
 default.package = package
