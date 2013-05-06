@@ -313,7 +313,7 @@ announcement: NEWS
 	  '  luarocks install $(PACKAGE)-$(VERSION)' ''			\
 	  'Until the rocks are available from the official repository in a few days,' \
 	  'you can install directly from the $(PACKAGE) release branch, with:' \
-	  '' '  $$ luarocks install \'
+	  '' '  $$ luarocks install '\\
 	$(AM_V_at)$(ANNOUNCE_PRINT) 'print ($(GITHUB_ROCKSPEC))'
 
 
