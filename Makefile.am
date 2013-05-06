@@ -31,6 +31,8 @@ LUA_CPATH ?= ;
 
 ACLOCAL_AMFLAGS = -I m4
 
+AM_CPPFLAGS = $(LUA_INCLUDE)
+
 
 ## ------------- ##
 ## Declarations. ##
