@@ -37,6 +37,9 @@
 ## Configuration. ##
 ## -------------- ##
 
+# List of slingshot files to link into stdlib tree before autotooling.
+slingshot_files=
+
 # Relative path to the local slingshot submodule, and url to the upsream
 # git repository.  If you have a slingshot entry in your .gitmodules file,
 # these values are ignored.
@@ -119,6 +122,8 @@ slingshot_copy ()
 slingshot_copy_files ()
 {
     $debug_cmd
+
+    func_check_configuration slingshot_files
 
     $require_slingshot_submodule
 
