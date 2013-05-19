@@ -13,8 +13,13 @@ every-time I make an update.
 Installation
 ------------
 
-Using it involves copying whichever of the following files you want to
-make use of into your project, and checking them in:
+Using it fully involves copying `bootstrap` and `bootstrap.slingshot`
+into your project and checking them in, and adding the snippet of
+shell code in the comment at the top of `bootstrap.slingshot` to your
+`bootstrap.conf`.  Running `bootstrap` will now set up a [Slingshot][]
+submodule, a `.gitmodules` file, and link to the slingshot files
+described below for the matching slingshot version checked out into
+the submodule.
 
  * `bootstrap`:
 
@@ -25,9 +30,17 @@ make use of into your project, and checking them in:
    faster, and a little more portable than the GNU version.  It's also
    quite a lot larger than the GNU implementation.
 
+ * `bootstrap.slingshot`:
+
+   bootstrap customisations to keep your project in sync with a git
+   submodule of slingshot in your repository.
+
  * `bootstrap.texi`:
 
    texinfo documentation for `bootstrap`.
+
+Alternatively, pick and choose whichever of the following files you
+want to make use of into your project, and check them in:
 
  * `gitlog-to-changelog`, `do-release-commit-and-tag`:
 
@@ -38,11 +51,6 @@ make use of into your project, and checking them in:
 
    taken from the [GNU Autoconf Archive][], to help autoconf discover
    where Lua and its files are installed on your system.
-
- * `ax_with_prog.m4`:
-
-   also from the [GNU Autoconf Archive][], to simplify the process of
-   finding other programs for your project.
 
  * `configure.ac`:
 
@@ -75,13 +83,6 @@ make use of into your project, and checking them in:
 
    a port of the gnulib sanity check rules hooked into the pre-release
    process by default.
-
- * `mail`:
-
-   a POSIX mail interface wrapper for mutt, in case your machine
-   doesn't have one.  Used by `release.mk`, so you needn't check this
-   in to your project, just put it along your command seach path if
-   `make release` fails to email announcements properly without it.
 
  * `GNUmakefile`:
 
