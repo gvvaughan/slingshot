@@ -1,5 +1,5 @@
 package = "slingshot"
-version = "2-1"
+version = "3-1"
 description = {
   homepage = "http://github.com/gvvaughan/slingshot",
   license = "MIT/X11, GPLv3+",
@@ -7,8 +7,8 @@ description = {
   detailed = "A framework for automatic rockspecs creation and simplified release thereof.",
 }
 source = {
-  url = "http://github.com/gvvaughan/slingshot/archive/release-v2.zip",
-  dir = "slingshot-release-v2",
+  url = "http://github.com/gvvaughan/slingshot/archive/release-v3.zip",
+  dir = "slingshot-release-v3",
 }
 dependencies = {
   "lua >= 5.1",

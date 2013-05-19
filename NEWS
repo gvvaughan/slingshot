@@ -1,5 +1,32 @@
 Slingshot NEWS - User visible changes.
 
+* Noteworthy changes in release 3 (2013-05-19) [stable]
+
+** New Features:
+
+  - Support Specl automation with `include build-aux/specl.mk`
+
+  - No longer using hobbled "foreign" mode.  README is distributed
+    in release tarballs, but README.md maintained in the repo for
+    prettier output on github.
+
+  - Support `--module-dir ROOT` option to `mkrockspecs` to
+    specify the root of a tree of `.lua` files for a LuaRocks
+    "builtin" build.type installation.  Pass the new option to
+    Slingshot mkrockspec invocations setting `mkrockspecs_args`
+    appropriately in your `local.mk`:
+
+      mkrockspecs_args = --module-dir lib
+
+** Bugs Fixed:
+
+  - Don't forget to distribute .autom4te.cfg file.
+
+** Incompatible Changes:
+
+  - `mail` wrapper removed.  Rockspec announcement sent with a link
+    to the rockspec rather than as an attachment.
+
 * Noteworthy changes in release 2 (2013-04-28) [beta]
 
 ** New Features:

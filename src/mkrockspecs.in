@@ -104,7 +104,7 @@ Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
 end
 
 prog["--version"] = function ()
-  print [[mkrockspecs (slingshot) 3
+  print [[mkrockspecs (@PACKAGE@) @VERSION@
 Written by Gary V. Vaughan <gary@gnu.org>, 2013
 
 Copyright (C) 2013, Gary V. Vaughan
