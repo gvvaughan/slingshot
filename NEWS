@@ -10,6 +10,14 @@ Slingshot NEWS - User visible changes.
     in release tarballs, but README.md maintained in the repo for
     prettier output on github.
 
+  - Support `--module-dir ROOT` option to `mkrockspecs` to
+    specify the root of a tree of `.lua` files for a LuaRocks
+    "builtin" build.type installation.  Pass the new option to
+    Slingshot mkrockspec invocations setting `mkrockspecs_args`
+    appropriately in your `local.mk`:
+
+      mkrockspecs_args = --module-dir lib
+
 ** Bugs Fixed:
 
   - Don't forget to distribute .autom4te.cfg file.

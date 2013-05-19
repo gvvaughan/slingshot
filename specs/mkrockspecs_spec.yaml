@@ -1,0 +1,120 @@
+before:
+  hell = require "specl.shell"
+  MKROCKSPECS = "build-aux/mkrockspecs"
+
+describe mkrockspecs:
+- before: |
+    conf = "description:\n" ..
+           "  summary: spec check\n" ..
+           "  homepage: http://github.com/nobody/nothing\n"
+
+    function parse (arglist)
+      -- If <arglist> is a single string, it is the input text.
+      if type (arglist) == "string" then
+        return hell.spawn {
+          MKROCKSPECS, "check", "0", "0", "-";
+          stdin = arglist
+        }
+      end
+
+      -- If it is a table, fill in the gaps in parameters it names.
+      if type (arglist) == "table" then
+        -- The command is made from the array part of arglist table.
+        local cmd = table.concat (arglist, " ")
+
+        -- But is just options if it begins with a '-'.
+        if cmd:sub (1, 1) == "-" then
+          cmd = MKROCKSPECS .. " " .. cmd
+        end
+
+        return hell.spawn {cmd; env = arglist.env; stdin = arglist.stdin}
+      end
+
+      error ("parse was expecting a string or table, but got a " .. type (arglist))
+    end
+
+    -- when running from distcheck VPATH, rockspec.conf is in srcdir.
+    CONF = io.open "rockspec.conf"
+    if CONF == nil then
+      local w = io.open ("rockspec.conf", "w")
+      local conf = conf:gsub ("nothing", "slingshot")
+      w:write (conf)
+      w:close ()
+    end
+- after: |
+    if CONF == nil then
+      os.remove "rockspec.conf"
+    else
+      CONF:close ()
+    end
+
+- it diagnoses missing arguments: |
+    expect (hell.spawn {MKROCKSPECS}).
+      should_match_error ("^Usage: mkrockspecs .*\n" ..
+                          "mkrockspecs: error: .*\n" ..
+                          "mkrockspecs: .*'mkrockspecs %-%-help'")
+- it responds to --version:
+    expect (hell.spawn {MKROCKSPECS, "--version"}).
+      should_match_output "^mkrockspecs %(slingshot%) [1-9][0-9]*.*\nCopyright"
+- it responds to --help: |
+    expect (hell.spawn {MKROCKSPECS, "--help"}).
+      should_match_output "^Usage: mkrockspecs .*\nReport bugs"
+- it sets the revision to '1' by default:
+    expect (hell.spawn {MKROCKSPECS, "check", "0"}).
+      should_match_output ('.*version = "0%-1"\n')
+- it reads configuration from 'rockspec.conf' by default: |
+   expect (hell.spawn {MKROCKSPECS, "check", "0", "0"}).should_match_output (
+      '.*package = "check",?\n' ..
+      '.*homepage = ".*slingshot.*",?\n' ..
+      '')
+- it reads configuration from stdin with '-' argument: |
+    expect (parse (conf)).should_match_output (
+      '.*package = "check",?\n' ..
+      '.*version = "0%-0",?\n' ..
+      '.*summary = "spec check",?\n' ..
+      '')
+
+- context for an autotools install:
+  - it sets build.type to command:
+      expect (parse (conf)).
+        should_match_output '%stype = "command",?\n'
+  - it calls configure from build_command:
+      expect (parse (conf)).
+        should_match_output 'build_command = ".*%./configure .*",?\n'
+  - it calls bootstrap from a git rockspec build_command:
+      expect (hell.spawn {MKROCKSPECS, "check", "git", "1"}).
+        should_match_output 'build_command = ".*%./bootstrap .*",?\n'
+
+- context for a luarocks builtin install:
+  - it sets build.type to builtin:
+      expect (parse {"-m .", "check", "0"; stdin = conf}).
+        should_match_output '%stype = "builtin",?\n'
+  - it creates a build.modules sub-key:
+      expect (parse {"-m .", "check", "0"; stdin = conf}).
+        should_match_output '%smodules = {'
+  - it adds only files with .lua extension to modules sub-table: |
+      name = "spec_check.lua"
+      f = io.open (name, "w")
+      f:write "os.exit (1)"
+      f:close ()
+      expect (parse {"-m .", "check", "0"; stdin = conf}).
+        should_contain_output 'spec_check = "spec_check.lua",\n'
+      expect (parse {"-m .", "check", "0"; stdin = conf}).
+        should_not_contain_output "mkrockspecs"
+      os.remove (name)
+  - it adds quoted module keys with non-symbol characters in module path: |
+      name = "spec-check.lua"
+      f = io.open (name, "w")
+      f:write "os.exit (1)"
+      f:close ()
+      expect (parse {"-m .", "check", "0"; stdin = conf}).
+      should_contain_output '["spec-check"] = "spec-check.lua",\n'
+      os.remove (name)
+  - it adds quoted module keys with '.' separators for sub-directories: |
+      name = "docs/spec_check.lua"
+      f = io.open (name, "w")
+      f:write "os.exit (1)"
+      f:close ()
+      expect (parse {"-m .", "check", "0"; stdin = conf}).
+        should_contain_output '["docs.spec_check"] = "docs/spec_check.lua",\n'
+      os.remove (name)

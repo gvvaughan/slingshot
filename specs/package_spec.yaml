@@ -1,3 +1,0 @@
-describe package:
-- it does stuff:
-    expect ({}).should_equal {}

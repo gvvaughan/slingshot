@@ -22,7 +22,7 @@
 ## ------ ##
 
 specl_SPECS =						\
-	$(srcdir)/specs/package_spec.yaml		\
+	$(srcdir)/specs/mkrockspecs_spec.yaml		\
 	$(NOTHING_ELSE)
 
 include build-aux/specl.mk
