@@ -6,9 +6,13 @@ Slingshot NEWS - User visible changes.
 
   - Support Specl automation with `include build-aux/specl.mk`
 
+  - No longer using hobbled "foreign" mode.  README is distributed
+    in release tarballs, but README.md maintained in the repo for
+    prettier output on github.
+
 ** Bugs Fixed:
 
-  - Don't forget to distribute README.md and .autom4te.cfg files.
+  - Don't forget to distribute .autom4te.cfg file.
 
 ** Incompatible Changes:
 

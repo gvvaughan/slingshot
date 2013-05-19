@@ -26,13 +26,13 @@ AC_CONFIG_MACRO_DIR([m4])
 AS_BOX([Configuring AC_PACKAGE_TARNAME AC_PACKAGE_VERSION])
 echo
 
-AM_INIT_AUTOMAKE([-Wall foreign])
+AM_INIT_AUTOMAKE([-Wall])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 dnl Check for programs
 AC_PATH_PROG([HELP2MAN], [help2man], [false])
 AC_PATH_PROG([SPECL], [specl], [false])
-AX_PROG_LUA(5.1, 5.3)
+AX_PROG_LUA([5.1], [5.3])
 AC_PROG_EGREP
 AC_PROG_SED
 
