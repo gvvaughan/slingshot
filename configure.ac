@@ -38,6 +38,7 @@ AC_PROG_SED
 
 dnl Generate output files
 SS_CONFIG_TRAVIS([specl])
-AC_CONFIG_FILES([build-aux/mkrockspecs], [chmod a+x build-aux/mkrockspecs])
+AC_CONFIG_FILES([build-aux/mkrockspecs:src/mkrockspecs.in],
+                [chmod a+x build-aux/mkrockspecs])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
