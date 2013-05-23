@@ -33,7 +33,10 @@ the submodule.
  * `bootstrap.slingshot`:
 
    bootstrap customisations to keep your project in sync with a git
-   submodule of slingshot in your repository.
+   submodule of slingshot in your repository.  You'll need to tell it
+   which files from Slingshot that your project is using by listing
+   them in the `slingshot_files` variable setting in your
+   `bootstrap.conf`.
 
  * `bootstrap.texi`:
 
