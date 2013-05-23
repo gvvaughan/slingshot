@@ -127,7 +127,7 @@ build project specific rockspec files, suitable for uploading to
 luarocks.org.
 
 Use `make stable` (or `make alpha`, or `make beta` if appropriate) to
-locall run the pre-release sanity checks, the release itself, and some
+locally run the pre-release sanity checks, the release itself, and some
 post-release administration.  These rules only affect your local git
 repository, and don't push the changes back to origin.
 
