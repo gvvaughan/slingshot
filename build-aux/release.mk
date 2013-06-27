@@ -340,7 +340,7 @@ grep-clean-files = `printf -- '%s|' $(_save-files) |$(list-to-rexp)`
 # in all the files it creates, and tag that as the next release.
 # Github creates automatic zipballs of tagged git revisions, so we can
 # safely use this tag in the rockspecs we distribute.
-submodule-regex ?= '^\[submodule "'
+submodule-regexp ?= '^\[submodule "'
 submodule-extract-spec ?= 's|^.*"\([^"]*\)".*$$|\1|'
 
 .PHONY: check-in-release-branch
