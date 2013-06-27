@@ -22,6 +22,10 @@ Slingshot NEWS - User visible changes.
 
   - Don't forget to distribute .autom4te.cfg file.
 
+  - If either luadoc or ldoc are specified in SS_CONFIG_TRAVIS,
+    perform a segregated 5.1 install with the system luarocks to
+    avoid incompatibilities on Travis CI.
+
 ** Incompatible Changes:
 
   - `mail` wrapper removed.  Rockspec announcement sent with a link
