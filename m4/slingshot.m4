@@ -51,5 +51,7 @@ AC_DEFUN([SS_CONFIG_TRAVIS], [
     esac
   done
   AC_SUBST([EXTRA_ROCKS])
-  AC_CONFIG_FILES([.travis.yml:travis.yml.in])
+  AC_CONFIG_FILES([.travis.yml:travis.yml.in], [
+    # Remove trailing blanks so as not to trip sc_trailing_blank in syntax check
+    sed 's|  *$||' < .travis.yml > ss_tmp && mv ss_tmp .travis.yml; rm -f ss_tmp])
 ])
