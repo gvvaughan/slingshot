@@ -18,6 +18,9 @@ Slingshot NEWS - User visible changes.
 
       mkrockspecs_args = --module-dir lib
 
+  - Works with lyaml 4 and newer, which now returns all documents
+    in the YAML stream as a table.
+
 ** Bugs Fixed:
 
   - Don't forget to distribute .autom4te.cfg file.

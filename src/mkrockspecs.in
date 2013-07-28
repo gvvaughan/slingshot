@@ -81,6 +81,14 @@ local function opterr (msg)
   os.exit (2)
 end
 
+local function die (msg)
+  msg:gsub ("([^\n]+)\n?",
+            function ()
+              io.stderr:write (prog.name .. ": error: " .. msg.. "\n")
+	    end)
+  os.exit (1)
+end
+
 prog["--help"] = function ()
   print (usage .. [[
 
@@ -208,7 +216,16 @@ end
 --[[ Load configuration. ]]--
 --[[ =================== ]]--
 
-local yaml = require "lyaml"
+local ok, yaml = pcall (require, "yaml")
+
+-- lyaml < 4 compatibility:
+if not ok then
+  -- lyaml < 4 returns only the first document in the YAML stream, so wrap it
+  -- in a table to simulate lyaml >= 4 (if lyaml >= 4 discarded document 2+!)
+  yaml = require "lyaml"
+  local load = yaml.load
+  yaml.load = function (...) return { load (...) } end
+end
 
 -- Slurp io.input ().
 local function slurp ()
@@ -235,12 +252,17 @@ end
 local spec = yaml.load (slurp ())
 local default = { source = {} }
 
+-- Actual spec is in the first "document" of the YAML stream.
+spec = spec and spec[1]
+
 -- url needn't be given if it is identical to homepage.
 local url
 if spec.source ~= nil then
   url = spec.source.url
 elseif spec.description ~= nil then
   url = spec.description.homepage
+else
+  die (conf .. ": could not find source.url or description.homepage")
 end
 url = url:gsub ("^[a-z]*://", ""):gsub ("%.git$", "")
 
