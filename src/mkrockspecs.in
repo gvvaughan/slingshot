@@ -216,16 +216,7 @@ end
 --[[ Load configuration. ]]--
 --[[ =================== ]]--
 
-local ok, yaml = pcall (require, "yaml")
-
--- lyaml < 4 compatibility:
-if not ok then
-  -- lyaml < 4 returns only the first document in the YAML stream, so wrap it
-  -- in a table to simulate lyaml >= 4 (if lyaml >= 4 discarded document 2+!)
-  yaml = require "lyaml"
-  local load = yaml.load
-  yaml.load = function (...) return { load (...) } end
-end
+local yaml = require "lyaml"
 
 -- Slurp io.input ().
 local function slurp ()
