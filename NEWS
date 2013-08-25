@@ -2,6 +2,9 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+
+* Noteworthy changes in release 3 (2013-05-19) [stable]
+
 ** New Features:
 
   - Support Specl automation with `include build-aux/specl.mk`
