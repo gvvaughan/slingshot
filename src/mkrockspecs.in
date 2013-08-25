@@ -243,9 +243,6 @@ end
 local spec = yaml.load (slurp ())
 local default = { source = {} }
 
--- Actual spec is in the first "document" of the YAML stream.
-spec = spec and spec[1]
-
 -- url needn't be given if it is identical to homepage.
 local url
 if spec.source ~= nil then
