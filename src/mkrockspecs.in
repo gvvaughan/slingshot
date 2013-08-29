@@ -180,19 +180,39 @@ local conf     = arg[4] or "rockspec.conf"
 --[[ Helper functions. ]]--
 --[[ ================= ]]--
 
-files = {}
-local function tree (root)
-  local p = io.popen ("ls -1 " .. root .. " 2>/dev/null")
+local ok, posix = pcall (require, "posix")
 
-  if p ~= nil then
-    local f = p:read "*l"
-    while f ~= nil do
+files = {}
+
+if ok then
+  -- faster version if luaposix is available
+  function tree (root)
+    for f in posix.files (root) do
+      local path = root .. "/" .. f
       if f:match ("%.lua$") then
-        table.insert (files, root .. "/" .. f)
-      else
-        tree (root .. "/" .. f)
+        table.insert (files, path)
+      elseif f == "." or f == ".." then
+        -- don't go into a loop
+      elseif posix.stat (path, "type") == "directory" then
+        tree (path)
       end
-      f = p:read "*l"
+    end
+  end
+else
+  -- fallback version that executes ls in subshells
+  function tree (root)
+    local p = io.popen ("ls -1 " .. root .. " 2>/dev/null")
+
+    if p ~= nil then
+      local f = p:read "*l"
+      while f ~= nil do
+        if f:match ("%.lua$") then
+          table.insert (files, root .. "/" .. f)
+        else
+          tree (root .. "/" .. f)
+        end
+        f = p:read "*l"
+      end
     end
   end
 end
