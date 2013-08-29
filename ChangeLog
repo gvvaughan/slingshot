@@ -1,4 +1,136 @@
+2013-08-29  Gary V. Vaughan  <gary@gnu.org>
+
+	Release version 4
+	* NEWS: Record release date.
+
+	maint: patch corrupted old_NEWS_hash.
+	* local.mk (old_NEWS_hash): Regenerate.
+
+	maint: update NEWS.
+	* NEWS: Update with user visible changes since the last release.
+
+	configury: bump release version to 4.
+	* configure.ac (AC_INIT): Bump release version to 4.
+
+	configury: keep gnulib revision under version control.
+	* .gitignore: Add .gitmodules.
+	* gnulib: Add current master revision.
+
+	mkrockspecs: speed up mkrockspecs when luaposix is available.
+	* src/mkrockspecs.in (tree): Prefer a much faster implementation
+	when luaposix is available.
+
+	specs: speed up most slow tests by three orders of magnitude.
+	* specs/mkrockspecs_spec.yaml: The gnulib tree is huge and
+	deep, so using os.execute to traverse all of it with subshells
+	is incredibly slow.  Only the last spec needs it, the rest are
+	much improved by putting the test fils in a subdirectory and
+	traversing only that.
+
+	bootstrap: sync with upstream.
+	* bootstrap: Use the latest upstream version with better portability
+	to OpenBSD, and CLI compatibility with the GNU bootstrap script.
+
+2013-08-25  Gary V. Vaughan  <gary@gnu.org>
+
+	mkrockspecs: don't dereference the lyaml.load return table.
+	* src/mkrockspecs.in: Now that we expect the API to be consistent
+	for the next release of lyaml, no need to dereference the return
+	value of lyaml.load.
+
+	mkrockspecs: lyaml 4 will be API compatible after all.
+	* src/mkrockspecs.in: Remove table hacks for previously expected
+	API incompatible lyaml 4.
+
+	Merge accidentally diverged branch 'pending'
+
+2013-07-28  Gary V. Vaughan  <gary@gnu.org>
+
+	mkrockspecs: compatibility with lyaml > 3.
+	lyaml > 3 returns all documents in a YAML stream as a table, not
+	just the first document.
+	* src/mkrockspecs.in: Detect lyaml 4+ by whether `require "yaml"`
+	works, or else wrap the lyaml.load function return value in a
+	table.
+	* NEWS: Update.
+
+2013-07-15  Gary V. Vaughan  <gary@gnu.org>
+
+	m4: avoid installing luarocks version of current package.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): Skip adding the previous
+	release luarock version of this package to EXTRA_ROCKS.
+
+	configury: strip trailing whitespace from generated .travis.yml.
+	When a slingshot client does NOT use ldoc or luadoc, then
+	GENDOC is empty, and correctly commented out in the generated
+	.travis.yml, but leaves behind a trailing space after configure
+	substitutions that has to be removed manually.
+	* m4/slingshot.m4 (AC_CONFIG_FILES): Strip trailing whitespace.
+	* .travis.yml: Regenerate.
+
+2013-06-28  Gary V. Vaughan  <gary@gnu.org>
+
+	release: remove git submodules before .gitmodules file.
+	* build-aux/release.mk (check-in-release-branch): Don't run `git
+	clean` (which removes .gitmodules) until after submodule-extract-
+	spec has had a chance to remove any submodule directories from the
+	relase branch.
+
+	typo: use 'regexp' consistently in release.mk.
+	* release.mk: Fix missing 'p' in regexp typo.
+
+	sanity: don't complain about git submodule directories.
+	* build-aux/sanity.mk (_sc_excl): Add gnulib and slingshot to
+	exclusion list.
+
+	release: be sure to remove submodules on the release branch.
+	* build-aux/release.mk (check-in-release-branch): Add an expression
+	to delete git submodules before unpacking the release tarball.
+
+	travis: regenerate .travis.yml.
+	* .travis.yml: Regenerate.
+
+	configury: add lua header fallback when cross compiling.
+	* m4/ax_lua.m4 (AX_LUA_HEADERS): Assume header version has been
+	set up correctly when cross-compiling.
+	From Christian Ege.
+
+2013-06-27  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: handle luadoc and ldoc specially.
+	Both luadoc and ldoc behave badly with lua5.2 on Travis' Ubuntu
+	Precise distros, but work properly if installed separately into
+	the system luarocks tree when called from a wrapper script.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): Generalise special Luadoc
+	support ldoc too, substituting GENDOC and GENDOC_FALSE into...
+	* travis.yml.in: ...here, where LUADOC support is also factored to
+	work with ldoc.
+	* NEWS: Update.
+
+2013-05-24  Gary V. Vaughan  <gary@gnu.org>
+
+	release: copy scm_rockspec to release branch.
+	* Makefile.am (save_release_files): Default setting.
+	* build-aux/rockspecs.mk (save_release_files): Add scm_rockspecs.
+
+2013-05-23  Gary V. Vaughan  <gary@gnu.org>
+
+	README: note use of slingshot_files variable.
+	* README.md (Installation): Note use of slingshot_files variable.
+
+	typo: spell 'locally' correctly in README.md.
+	* README.md (Usage): Spell locally correctly.
+
 2013-05-19  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: fix location of mkrockspecs.in.
+	* bootstrap.slingshot (slingshot_require_slingshot_submodule):
+	mkrockspecs.in moved from build-aux to src.
+
+	maint: post-release administrivia.
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* ./local.mk (old_NEWS_hash): Auto-update.
 
 	Release version 3
 	* NEWS: Record release date.

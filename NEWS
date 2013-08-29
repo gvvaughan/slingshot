@@ -1,5 +1,26 @@
 Slingshot NEWS - User visible changes.
 
+* Noteworthy changes in release 4 (2013-08-29) [stable]
+
+** New Features:
+
+  - mkrockspecs uses luaposix to search the module root tree for lua
+    sources if it is available, which is a lot faster than spawning
+    a shell to list the contents of each subdirectory, and reading the
+    results back over a pipe.
+
+** Bugs Fixed:
+
+  - Submodules pulled to the release branch are removed before unpacking
+    the release tarball.
+  - `make syntax-check` ignores submodule directories.
+  - Scm rockspecs are now correctly copied to the release branch.
+  - No longer leaves trailing whitespace in .travis.yml where there are
+    no additional luarocks to install.
+  - No longer reinstalls the slingshot client package on Travis.
+  - Fixed many fine typos.
+
+
 * Noteworthy changes in release 3 (2013-05-19) [stable]
 
 ** New Features:
@@ -18,9 +39,16 @@ Slingshot NEWS - User visible changes.
 
       mkrockspecs_args = --module-dir lib
 
+  - Works with lyaml 4 and newer, which now returns all documents
+    in the YAML stream as a table.
+
 ** Bugs Fixed:
 
   - Don't forget to distribute .autom4te.cfg file.
+
+  - If either luadoc or ldoc are specified in SS_CONFIG_TRAVIS,
+    perform a segregated 5.1 install with the system luarocks to
+    avoid incompatibilities on Travis CI.
 
 ** Incompatible Changes:
 
