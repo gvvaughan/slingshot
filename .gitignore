@@ -10,6 +10,7 @@
 .deps
 .dirstamp
 .libs
+/.gitmodules
 /build-aux/mkrockspecs
 /ChangeLog
 /INSTALL
