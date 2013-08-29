@@ -1,4 +1,4 @@
-old_NEWS_hash = f29dd94d8e4bd7a91e782d83f66260f9
+old_NEWS_hash = db6a999d91aba16f8a2eaa812b25b1d6
 
 include src/src.mk
 include specs/specs.mk
