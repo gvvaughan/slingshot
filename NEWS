@@ -2,6 +2,10 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** Bugs fixed:
+
+  - Specifying additional SPECL_OPTS in local.mk now works properly.
+
 
 * Noteworthy changes in release 4 (2013-08-29) [stable]
 
