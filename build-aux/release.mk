@@ -300,7 +300,7 @@ announcement: NEWS
 # announcement message: else, it would start with " GEN announcement".
 	$(AM_V_at)$(ANNOUNCE_PRINT) 'print (description.summary)'
 	$(AM_V_at)printf '%s\n'	''					\
-	  'I am happy to announce the release of $(PACKAGE_NAME) release $(VERSION).' \
+	  'I am happy to announce release $(VERSION) of $(PACKAGE_NAME).' \
 	  ''
 	$(AM_V_at)$(ANNOUNCE_PRINT)					\
 	  'print ("$(PACKAGE_NAME)'\''s home page is at " .. description.homepage)'
@@ -310,10 +310,10 @@ announcement: NEWS
 	    -e p NEWS |$(SED) -e 1,2d
 	$(AM_V_at)printf '%s\n'						\
 	  'Install it with LuaRocks, using:' ''				\
-	  '  luarocks install $(PACKAGE)-$(VERSION)' ''			\
+	  '    luarocks install $(PACKAGE) $(VERSION)' ''		\
 	  'Until the rocks are available from the official repository in a few days,' \
 	  'you can install directly from the $(PACKAGE) release branch, with:' \
-	  '' '  $$ luarocks install '\\
+	  '' '    $$ luarocks install '\\
 	$(AM_V_at)$(ANNOUNCE_PRINT) 'print ($(GITHUB_ROCKSPEC))'
 
 

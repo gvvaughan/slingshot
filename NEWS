@@ -2,9 +2,16 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features:
+
+  - The announcement message is formatted for easier pasting into
+    github release notes.
+
 ** Bugs fixed:
 
   - Specifying additional SPECL_OPTS in local.mk now works properly.
+
+  - Announcement message shows luarocks install command correctly.
 
 
 * Noteworthy changes in release 4 (2013-08-29) [stable]
