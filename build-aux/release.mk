@@ -100,15 +100,17 @@ ChangeLog:
 # redistribute all the maintainer support files (take care that
 # Travis CI is finicky about this, and will likely need tweaking
 # to cope with missing any of these if you decide to omit them).
+
+_travis_yml ?= .travis.yml travis.yml.in
+
 release_extra_dist ?=					\
 	.autom4te.cfg					\
-	.travis.yml					\
 	GNUmakefile					\
 	bootstrap					\
 	bootstrap.conf					\
 	bootstrap.slingshot				\
 	local.mk					\
-	travis.yml.in					\
+	$(_travis_yml)					\
 	$(NOTHING_ELSE)
 
 EXTRA_DIST +=						\
@@ -117,7 +119,7 @@ EXTRA_DIST +=						\
 	$(release_extra_dist)				\
 	$(NOTHING_ELSE)
 
-all-am: .travis.yml
+all-am: $(_travis_yml)
 
 
 ## -------- ##
