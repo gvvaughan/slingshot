@@ -347,7 +347,7 @@ submodule-extract-spec ?= 's|^.*"\([^"]*\)".*$$|\1|'
 
 .PHONY: check-in-release-branch
 check-in-release-branch:
-	$(AM_V_GEN)$(GCO) -b release v1 2>/dev/null || $(GCO) release
+	$(AM_V_GEN)$(GCO) -b release v$(VERSION) 2>/dev/null || $(GCO) release
 	$(AM_V_at)$(GIT) pull origin release 2>/dev/null || true
 	$(AM_V_at)if $(EGREP) $(submodule-regexp) .gitmodules >/dev/null 2>&1; then \
 	    $(EGREP) $(submodule-regexp) .gitmodules			\
