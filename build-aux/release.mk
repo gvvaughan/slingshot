@@ -91,9 +91,9 @@ gitlog_to_changelog = $(srcdir)/build-aux/gitlog-to-changelog
 dist-hook: ChangeLog
 .PHONY: ChangeLog
 ChangeLog:
-	$(AM_V_GEN)if test -d '$(srcdir)/.git'; then	\
-	  $(gitlog_to_changelog) > '$@T';		\
-	  rm -f '$@'; mv '$@T' '$@';			\
+	$(AM_V_GEN)if test -d '$(srcdir)/.git'; then		\
+	  $(gitlog_to_changelog) $(gitlog_args) > '$@T';	\
+	  rm -f '$@'; mv '$@T' '$@';				\
 	fi
 
 # Override this in GNUmakefile if you don't want to automatically
