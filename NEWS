@@ -6,6 +6,8 @@ Slingshot NEWS - User visible changes.
 
   - The announcement message is formatted for easier pasting into
     github release notes.
+  - Mkrockspecs sorts table keys in generated rockspecs, so that
+    contents of build.modules is in order, for example.
 
 ** Bugs fixed:
 
