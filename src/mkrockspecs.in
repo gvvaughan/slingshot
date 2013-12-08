@@ -326,7 +326,7 @@ if version ~= "scm" and version ~= "git" then
 else
   spec.source.url = "git://" .. url .. ".git"
   default.build.build_command = "./bootstrap && " .. default.build.build_command
-  spec.build.module = nil
+  spec.build.modules = nil
 end
 
 
