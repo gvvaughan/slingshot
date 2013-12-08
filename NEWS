@@ -18,6 +18,7 @@ Slingshot NEWS - User visible changes.
   - Travis builds now use the correct version of Lua for local
     luarocks installation, so compiled dependency rocks actually
     work.
+  - Fixed a typo in maint.mk no-submodule-changes rule.
 
 
 * Noteworthy changes in release 4 (2013-08-29) [stable]

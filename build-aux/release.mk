@@ -152,8 +152,7 @@ no-submodule-changes:
 	$(AM_V_GEN)if test -d $(srcdir)/.git				\
 		&& git --version >/dev/null 2>&1; then			\
 	  diff=$$(cd $(srcdir) && git submodule -q foreach		\
-		  git diff-index --name-only HEAD)			\
-	    || exit 1;							\
+		  git diff-index --name-only HEAD);			\
 	  case $$diff in '') ;;						\
 	    *) echo '$(ME): submodule files are locally modified:';	\
 		echo "$$diff"; exit 1;; esac;				\
