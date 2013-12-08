@@ -8,12 +8,16 @@ Slingshot NEWS - User visible changes.
     github release notes.
   - Mkrockspecs sorts table keys in generated rockspecs, so that
     contents of build.modules is in order, for example.
+  - Travis builds will now use the latest upstream luarocks 2.1.1
+    release.
 
 ** Bugs fixed:
 
   - Specifying additional SPECL_OPTS in local.mk now works properly.
-
   - Announcement message shows luarocks install command correctly.
+  - Travis builds now use the correct version of Lua for local
+    luarocks installation, so compiled dependency rocks actually
+    work.
 
 
 * Noteworthy changes in release 4 (2013-08-29) [stable]
