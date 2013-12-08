@@ -11,9 +11,9 @@ env:
     - GENDOC=luarocks/bin/@GENDOC@
     - SPECL=bin/specl
   matrix:
-    - LUA=lua5.1             LUA_INCDIR=/usr/include/lua5.1
-    - LUA=lua5.2             LUA_INCDIR=/usr/include/lua5.2
-    - LUA=luajit-2.0.0-beta9 LUA_INCDIR=/usr/include/luajit-2.0
+    - LUA=lua5.1             LUA_INCDIR=/usr/include/lua5.1     LUA_SUFFIX=5.1
+    - LUA=lua5.2             LUA_INCDIR=/usr/include/lua5.2     LUA_SUFFIX=5.2
+    - LUA=luajit-2.0.0-beta9 LUA_INCDIR=/usr/include/luajit-2.0 LUA_SUFFIX=5.1
 
 # Tool setup.
 install:
@@ -38,8 +38,8 @@ install:
   - tar zxvpf $LUAROCKS_BASE.tar.gz
   - cd $LUAROCKS_BASE
   - ./configure
-    --prefix=$HOME --lua-version=5.1 --lua-suffix=5.1
-    --with-lua-include="/usr/include/lua5.1"
+    --prefix=$HOME --lua-version=$LUA_SUFFIX --lua-suffix=$LUA_SUFFIX
+    --with-lua-include=$LUA_INCDIR
   - make all install
   - cd ..
 
