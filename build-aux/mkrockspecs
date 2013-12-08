@@ -112,7 +112,7 @@ Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
 end
 
 prog["--version"] = function ()
-  print [[mkrockspecs (slingshot) 4
+  print [[mkrockspecs (slingshot) 5
 Written by Gary V. Vaughan <gary@gnu.org>, 2013
 
 Copyright (C) 2013, Gary V. Vaughan
@@ -353,18 +353,27 @@ local function format (x, indent)
       return "{}"
     else
       local s = "{\n"
-      for i, v in pairs (x) do
-        if type (i) ~= "number" then
-          s = s .. indent
-          if i:match ("[^_%w]") then
-            -- wrap keys with non-%w chars in square brackets
-            s = s .. '["' .. i .. '"]'
-          else
-            s = s .. i
-          end
-          s = s .. " = " .. format (v, indent .. "  ") .. ",\n"
-        end
+
+      -- Collect and sort non-numeric keys first.
+      keys = {}
+      for k in pairs (x) do
+        if type (k) ~= "number" then table.insert (keys, k) end
       end
+      table.sort (keys, function (a, b) return tostring (a) < tostring (b) end)
+
+      -- Display non-numeric key pairs in sort order.
+      for _, k in ipairs (keys) do
+        s = s .. indent
+        if k:match ("[^_%w]") then
+          -- wrap keys with non-%w chars in square brackets
+          s = s .. '["' .. k .. '"]'
+        else
+          s = s .. k
+        end
+        s = s .. " = " .. format (x[k], indent .. "  ") .. ",\n"
+      end
+
+      -- And numeric key pairs last.
       for i, v in ipairs (x) do
         s = s .. indent .. format (v, indent .. "  ") .. ",\n"
       end

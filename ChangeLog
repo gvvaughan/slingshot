@@ -1,4 +1,114 @@
-2013-08-29  Gary V. Vaughan  <gary@gnu.org>
+2013-12-08  Gary V. Vaughan  <gary@gnu.org>
+
+	Release version 5
+	* NEWS: Record release date.
+
+	syntax-check: exclude gnupload from some sanity checks.
+	* build-aux/sanity-cfg.mk (EXTRA_DIST): Add build-aux/sanity-cfg.mk.
+	Exclude gnupload from GPL_version and two_space_separator_in_usage
+	checks.
+
+	build-aux: sync gnupload with gnulib upstream.
+	* build-aux/gnupload: Update from gnulib.
+
+	release: remove disembodied "|| exit 1" from no-submodule-changes.
+	* build-aux/release.mk (no-submodule-changes): Even though the
+	unchanged syntax still matches what's in upstream gnulib... I
+	can't parse it, and neither can my shell.  Removing the errant
+	'|| exit 1' clause fixes the error message for me (/bin/bash:
+	 -c: line 1: syntax error: unexpected end of file).
+	* NEWS: Update.
+
+	maint: Update NEWS.
+	* NEWS: Update.
+
+	travis: update to luarocks-2.1.1.
+	* travis.yml.in (env): Bump LUAROCKS_BASE to luarocks-2.1.1.
+	* .travis.yml: Regenerate.
+
+	maint: regenerate .travis.yml.
+	* .travis.yml: Regenerate.
+
+	travis: install luarocks to work properly with compiled rocks.
+	* travis.yml.in (matrix): Add LUA_SUFFIX setting per Lua.
+	(install): configure luarocks with matching version, suffix and
+	include settings.
+
+	travis: restore library links for system libyaml.
+	Recent Travis CI VMs are missing libraries for libyaml in the
+	standard compiler search path.  Put them back in that case.
+	* travis.yml.in (install): If libyaml.so is not in /usr/lib,
+	search for suitable libraries and link them into place.
+
+2013-09-27  Gary V. Vaughan  <gary@gnu.org>
+
+	mkrockspecs: sort generated rockspec tables asciibetically.
+	* src/mkrockspecs.in (format): Collect and sort keys within
+	tables before returning stringification in order.
+	* NEWS: Update.
+
+2013-09-25  Gary V. Vaughan  <gary@gnu.org>
+
+	release: fix a typo in check-in-release-branch.
+	* build-aux/release.mk (check-in-release-branch): If we need to
+	create a new release branch, branch at the just tagged release,
+	rather than relying on there being no release history prior to
+	using this rule for the first time.
+
+	maint: remove build-aux/git-version-gen.
+	* build-aux/git-version-gen: Remove.  This script conflicts with
+	the way mkrockspecs expects versions to be formatted.
+
+	configury: support client set gitlog-to-changelog arguments.
+	* build-aux/release.mk (ChangeLog): If gitlog_args macro is set,
+	then pass it to gitlog-to-changelog script.
+
+	maint: add .version to gitignore.
+	* .gitignore: ignore .version.
+
+	travis: support non-travis using projects.
+	* build-aux/release.mk (_travis_yml): New macro, can be set to
+	empty in local.mk to prevent travis rules being triggered.
+	(release_extra_dist): Use it instead of hard-coding.
+
+	maint: add some gnulib scripts used by GNU Zile.
+	Add a few additional files to enable Zile to use slingshot instead
+	of tracking a fully blown gnulib subproject for the same.
+	* README-release, build-aux/git-version-gen, build-aux/gnupload,
+	build-aux/update-copyright: Copied from gnulib.
+	* Makefile.am (doc_DATA): New declaration to support Zile.
+
+2013-09-16  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* bootstrap: Pick up recent fixes from upstream.
+
+2013-09-12  Gary V. Vaughan  <gary@gnu.org>
+
+	announcement: show luarocks install command correctly.
+	* build-aux/release.mk (announcement): Format improvements.
+	* NEWS: Update.
+
+	specl: SPECL_OPTS now works correctly.
+	* GNUmakefile (SPECL_OPTS): Append the verbose option, even when
+	there are additional user-defined SPECL_OPTS.
+	* NEWS: Update.
+
+2013-08-30  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* bootstrap: Sync with upstream, to fix a bug that still clones
+	gnulib into the build tree even when gnulib_tool=true is set by
+	bootstrap.conf.
+	* gnulib: Not used.  Remove.
+
+	configury: bump release version to 5.
+	* configure.ac (AC_INIT): Bump release version to 5.
+
+	maint: post-release administrivia.
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* ./local.mk (old_NEWS_hash): Auto-update.
 
 	Release version 4
 	* NEWS: Record release date.
@@ -27,11 +137,13 @@
 	much improved by putting the test fils in a subdirectory and
 	traversing only that.
 
+2013-08-29  Gary V. Vaughan  <gary@gnu.org>
+
 	bootstrap: sync with upstream.
 	* bootstrap: Use the latest upstream version with better portability
 	to OpenBSD, and CLI compatibility with the GNU bootstrap script.
 
-2013-08-25  Gary V. Vaughan  <gary@gnu.org>
+2013-08-26  Gary V. Vaughan  <gary@gnu.org>
 
 	mkrockspecs: don't dereference the lyaml.load return table.
 	* src/mkrockspecs.in: Now that we expect the API to be consistent
@@ -95,8 +207,6 @@
 	set up correctly when cross-compiling.
 	From Christian Ege.
 
-2013-06-27  Gary V. Vaughan  <gary@gnu.org>
-
 	travis: handle luadoc and ldoc specially.
 	Both luadoc and ldoc behave badly with lua5.2 on Travis' Ubuntu
 	Precise distros, but work properly if installed separately into
@@ -107,7 +217,7 @@
 	work with ldoc.
 	* NEWS: Update.
 
-2013-05-24  Gary V. Vaughan  <gary@gnu.org>
+2013-05-25  Gary V. Vaughan  <gary@gnu.org>
 
 	release: copy scm_rockspec to release branch.
 	* Makefile.am (save_release_files): Default setting.
@@ -286,8 +396,6 @@
 	* bootstrap.slingshot: New file. Source this from bootstrap.conf to
 	integrate slingshot.
 
-2013-05-05  Gary V. Vaughan  <gary@gnu.org>
-
 	travis: make additional bootstrap rocks configurable.
 	* configure.ac (EXTRA_ROCKS): Set to lyaml, which is always
 	needed to run slingshot mkrockspecs.
@@ -302,6 +410,8 @@
 	* Makefile.am: Use `-include` so that this file is useful in a
 	parent project that doesn't have all the listed fragments.
 	* local.mk: Put project specific fragment includes here.
+
+2013-05-05  Gary V. Vaughan  <gary@gnu.org>
 
 	travis: regenerate .travis.yml.
 	* .travis.yml: Regenerate.
@@ -322,8 +432,6 @@
 	(mail): Use system `mail` by sending rockspec url rather than
 	an attachment.
 	NEWS: Update.
-
-2013-05-01  Gary V. Vaughan  <gary@gnu.org>
 
 	maint: move old_NEWS_hash into local.mk.
 	* Makefile.am (old_NEWS_hash): Move from here...
@@ -384,8 +492,6 @@
 	* README.md: Add some blank lines around list items to get a
 	definition-list-like display.
 
-2013-04-28  Gary V. Vaughan  <gary@gnu.org>
-
 	release: distribute .autom4te.cfg.
 	* build-aux/release.mk (release_extra_dist): Add .autom4te.cfg.
 
@@ -429,6 +535,8 @@
 
 	release: ensure git rockspec is available for announcement.
 	* build-aux/release.mk (announcement): Add depedency on scm_rockspec.
+
+2013-04-28  Gary V. Vaughan  <gary@gnu.org>
 
 	release: create new release branch at v1 tag.
 	* build-aux/release.mk (check-in-release-branch): If there is no

@@ -247,7 +247,7 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" \
-	"$(DESTDIR)$(luadir)"
+	"$(DESTDIR)$(luadir)" "$(DESTDIR)$(docdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 SCRIPTS = $(bin_SCRIPTS) $(dist_bin_SCRIPTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -272,7 +272,7 @@ am__can_run_installinfo = \
 man1dir = $(mandir)/man1
 NROFF = nroff
 MANS = $(man_MANS)
-DATA = $(dist_lua_DATA)
+DATA = $(dist_lua_DATA) $(doc_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
@@ -397,11 +397,12 @@ bin_SCRIPTS = build-aux/mkrockspecs
 check_local = specl-check-local
 dist_bin_SCRIPTS = 
 dist_lua_DATA = 
+doc_DATA = 
 install_exec_hooks = 
 lib_LTLIBRARIES = 
 man_MANS = docs/mkrockspecs.1
 save_release_files = $(scm_rockspec)
-old_NEWS_hash = db6a999d91aba16f8a2eaa812b25b1d6
+old_NEWS_hash = e0348da6b6192ed4c00e3acdf306fb22
 specl_SPECS = \
 	$(srcdir)/specs/mkrockspecs_spec.yaml		\
 	$(NOTHING_ELSE)
@@ -639,6 +640,27 @@ uninstall-dist_luaDATA:
 	@list='$(dist_lua_DATA)'; test -n "$(luadir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(luadir)'; $(am__uninstall_files_from_dir)
+install-docDATA: $(doc_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(doc_DATA)'; test -n "$(docdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(docdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(docdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(docdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(docdir)" || exit $$?; \
+	done
+
+uninstall-docDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(doc_DATA)'; test -n "$(docdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(docdir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -813,7 +835,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(SCRIPTS) $(MANS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(luadir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(luadir)" "$(DESTDIR)$(docdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -870,7 +892,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_luaDATA install-man
+install-data-am: install-dist_luaDATA install-docDATA install-man
 
 install-dvi: install-dvi-am
 
@@ -919,7 +941,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-binSCRIPTS uninstall-dist_binSCRIPTS \
-	uninstall-dist_luaDATA uninstall-libLTLIBRARIES uninstall-man
+	uninstall-dist_luaDATA uninstall-docDATA \
+	uninstall-libLTLIBRARIES uninstall-man
 
 uninstall-man: uninstall-man1
 
@@ -932,15 +955,16 @@ uninstall-man: uninstall-man1
 	distcleancheck distdir distuninstallcheck dvi dvi-am html \
 	html-am info info-am install install-am install-binSCRIPTS \
 	install-data install-data-am install-dist_binSCRIPTS \
-	install-dist_luaDATA install-dvi install-dvi-am install-exec \
-	install-exec-am install-exec-hook install-html install-html-am \
-	install-info install-info-am install-libLTLIBRARIES \
-	install-man install-man1 install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags-am \
-	uninstall uninstall-am uninstall-binSCRIPTS \
-	uninstall-dist_binSCRIPTS uninstall-dist_luaDATA \
+	install-dist_luaDATA install-docDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-exec-hook \
+	install-html install-html-am install-info install-info-am \
+	install-libLTLIBRARIES install-man install-man1 install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am tags-am uninstall uninstall-am \
+	uninstall-binSCRIPTS uninstall-dist_binSCRIPTS \
+	uninstall-dist_luaDATA uninstall-docDATA \
 	uninstall-libLTLIBRARIES uninstall-man uninstall-man1
 
 
