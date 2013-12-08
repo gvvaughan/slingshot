@@ -24,6 +24,9 @@ install:
   - sudo apt-get install liblua5.1-dev
   - sudo apt-get install lua5.2
   - sudo apt-get install liblua5.2-dev
+  # Put back the links for libyaml, which missing on recent Travis VMs
+  - test -f /usr/lib/libyaml.so ||
+    sudo find /usr/lib -name 'libyaml*' -exec ln -s {} /usr/lib \;
   # Luadoc and Ldoc work best on Travis with Lua 5.1.
   @GENDOC_FALSE@ sudo apt-get install luarocks
   @GENDOC_FALSE@ sudo luarocks install @GENDOC@
