@@ -2,6 +2,12 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features:
+
+  - A manually entered list of modules in rockspec.conf now
+    creates "builtin" autoconfless builds in the main rockspec
+    just as if --module-dir had been passed.
+
 
 * Noteworthy changes in release 5 (2013-12-08) [stable]
 

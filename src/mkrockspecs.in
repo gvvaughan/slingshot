@@ -297,24 +297,28 @@ if type (spec.external_dependencies) == "table" then
 end
 
 -- If we have a module root, use the luarocks "builtin" type.
-if prog.opts.module_root ~= nil and version ~= "scm" and version ~= "git" then
-  default.build = {
-    type = "builtin",
-    modules = loadmap (prog.opts.module_root),
-  }
-else
-  default.build = {
-    type = "command",
-    build_command = "./configure " ..
-      "LUA='$(LUA)' LUA_INCLUDE='-I$(LUA_INCDIR)' " .. configure_flags ..
-      "--prefix='$(PREFIX)' --libdir='$(LIBDIR)' --datadir='$(LUADIR)' " ..
-      "&& make clean all",
-    install_command = "make install luadir='$(LUADIR)'",
-    copy_directories = {},
-  }
+if version ~= "scm" and version ~= "git" then
+  if prog.opts.module_root ~= nil then
+    default.build = {
+      type = "builtin",
+      modules = loadmap (prog.opts.module_root),
+    }
+  elseif spec.build ~= nil and spec.build.modules ~= nil then
+    default.build = { type = "builtin" }
+  end
 end
 
--- Additional spec-type dependenent values.
+default.build = default.build or {
+  type = "command",
+  build_command = "./configure " ..
+    "LUA='$(LUA)' LUA_INCLUDE='-I$(LUA_INCDIR)' " .. configure_flags ..
+    "--prefix='$(PREFIX)' --libdir='$(LIBDIR)' --datadir='$(LUADIR)' " ..
+    "&& make clean all",
+  install_command = "make install luadir='$(LUADIR)'",
+  copy_directories = {},
+}
+
+-- Additional spec-type dependent values.
 spec.source = spec.source or {}
 if version ~= "scm" and version ~= "git" then
   spec.source.url = "http://" .. url .. "/archive/release-v" .. version .. ".zip"
@@ -322,6 +326,7 @@ if version ~= "scm" and version ~= "git" then
 else
   spec.source.url = "git://" .. url .. ".git"
   default.build.build_command = "./bootstrap && " .. default.build.build_command
+  spec.build.module = nil
 end
 
 
