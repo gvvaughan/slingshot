@@ -374,7 +374,7 @@ announce_emails ?= lua-l@lists.lua.org
 rockspec_emails ?= luarocks-developers@lists.sourceforge.net
 
 .PHONY: mail
-mail:
+mail: rockspecs
 	$(AM_V_at)cat ~/announce-$(my_distdir)				\
 	  | mail -s '[ANN] $(PACKAGE) $(VERSION) released' --		\
 	    $(announce_emails)
