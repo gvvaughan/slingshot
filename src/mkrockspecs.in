@@ -320,6 +320,7 @@ default.build = default.build or {
 
 -- Additional spec-type dependent values.
 spec.source = spec.source or {}
+spec.build  = spec.build  or {}
 if version ~= "scm" and version ~= "git" then
   spec.source.url = "http://" .. url .. "/archive/release-v" .. version .. ".zip"
   spec.source.dir = package .. "-release-v" .. version
