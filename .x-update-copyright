@@ -1,0 +1,6 @@
+^bootstrap$
+^build-aux/do-release-commit-and-tag
+^build-aux/gitlog-to-changelog
+^build-aux/gnupload
+^build-aux/update-copyright
+^m4/ax_.*\.m4
