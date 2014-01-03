@@ -139,6 +139,23 @@ slingshot_copy_files ()
 }
 func_add_hook func_prep slingshot_copy_files
 
+# slingshot_ensure_changelog
+# --------------------------
+# Slingshot project probably won't have a gnulib_modules list.
+# So we redo the ChangeLog check against slingshot_files.
+slingshot_ensure_changelog ()
+{
+    $debug_cmd
+
+    if test -n "$slingshot_files"; then
+      func_ifcontains "$slingshot_files" build-aux/gitlog-to-changelog \
+        func_ensure_changelog
+    fi
+
+    return 0
+}
+func_add_hook func_prep slingshot_ensure_changelog
+
 
 ## -------------------- ##
 ## Resource management. ##
