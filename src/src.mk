@@ -1,6 +1,6 @@
 # Project make rules.
 #
-# Copyright (c) 2013 Gary V. Vaughan
+# Copyright (c) 2013-2014 Gary V. Vaughan
 # Written by Gary V. Vaughan, 2013
 #
 # This program is free software; you can redistribute it and/or modify it
@@ -44,6 +44,7 @@ docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 ## ------------- ##
 
 EXTRA_DIST +=						\
+	build-aux/merge-sections			\
 	build-aux/mkrockspecs				\
 	docs/mkrockspecs.1				\
 	$(NOTHING_ELSE)

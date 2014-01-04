@@ -1,6 +1,6 @@
 # bootstrap.slingshot (Slingshot) version 2013-05-06
 #
-# Copyright (C) 2013 Gary V. Vaughan
+# Copyright (C) 2013-2014 Gary V. Vaughan
 # Written by Gary V. Vaughan, 2013
 
 # This is free software; see the source for copying conditions.  There is NO
@@ -23,16 +23,6 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
-# For your project to work with subproject slingshot out of the box, you'll
-# need to commit this file to your project's repository and source it from
-# bootstrap.conf.
-#
-#    case $0 in
-#      */*) . "$0.slingshot" ;;
-#      *)   . ./"$0.slingshot" ;;
-#    esac
-
-
 ## -------------- ##
 ## Configuration. ##
 ## -------------- ##
@@ -47,9 +37,9 @@ slingshot_path=$slingshot_path
 slingshot_url=$slingshot_url
 
 
-## ------------------ ##
-## Utility functions. ##
-## ------------------ ##
+## ----------------- ##
+## Helper functions. ##
+## ----------------- ##
 
 # slingshot_copy FILENAME SRCDIR DESTDIR
 # --------------------------------------
@@ -112,9 +102,9 @@ slingshot_copy ()
 }
 
 
-## --------------- ##
-## Hook functions. ##
-## --------------- ##
+## ------------------- ##
+## Hookable functions. ##
+## ------------------- ##
 
 # slingshot_copy_files
 # --------------------
@@ -123,21 +113,43 @@ slingshot_copy_files ()
 {
     $debug_cmd
 
-    func_check_configuration slingshot_files
+    $require_package
 
-    $require_slingshot_submodule
+    test slingshot = "$package" || {
+      func_check_configuration slingshot_files
 
-    # Make sure we have the latest mkrockspecs
-    make -C slingshot build-aux/mkrockspecs
+      $require_slingshot_submodule
 
-    # Update in-tree links.
-    for file in $slingshot_files; do
-      func_dirname_and_basename "./$file"
-      slingshot_copy "$func_basename_result" \
-        "slingshot/$func_dirname_result" "$func_dirname_result"
-    done
+      # Make sure we have the latest mkrockspecs
+      make -C slingshot build-aux/mkrockspecs
+
+      # Update in-tree links.
+      for file in $slingshot_files; do
+        func_dirname_and_basename "./$file"
+        slingshot_copy "$func_basename_result" \
+          "slingshot/$func_dirname_result" "$func_dirname_result"
+      done
+    }
 }
 func_add_hook func_prep slingshot_copy_files
+
+
+# slingshot_ensure_changelog
+# --------------------------
+# Slingshot project probably won't have a gnulib_modules list.
+# So we redo the ChangeLog check against slingshot_files.
+slingshot_ensure_changelog ()
+{
+    $debug_cmd
+
+    if test -n "$slingshot_files"; then
+      func_ifcontains "$slingshot_files" build-aux/gitlog-to-changelog \
+        func_ensure_changelog
+    fi
+
+    return 0
+}
+func_add_hook func_prep slingshot_ensure_changelog
 
 
 ## -------------------- ##
@@ -271,6 +283,11 @@ slingshot_cleanup ()
     $RM -fr $slingshot_path
     exit $_G_status
 }
+
+
+## --------------------------- ##
+## Emacs timestamp management. ##
+## --------------------------- ##
 
 # Local variables:
 # mode: shell-script

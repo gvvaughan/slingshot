@@ -1,4 +1,91 @@
+2014-01-04  Gary V. Vaughan  <gary@gnu.org>
+
+	Release version 6
+	* NEWS: Record release date.
+
+	bootstrap: auto-merge bootstrap.slingshot into bootstrap.
+	* src/merge-sections.in: New file. Merge sections of named files
+	into input from stdin.
+	* src/src.mk (EXTRA_DIST): Add build-aux/merge-sections.
+	* configure.ac (AC_CONFIG_FILES): Generate build-aux/merge-sections
+	from src/merge-sections.in.
+	* bootstrap, bootstrap.slingshot: Move from here...
+	* bulid-aux/bootstrap.in, bulid-aux/bootstrap.slingshot: ...to here.
+	* .gitignore: Adjust.
+	* build-aux/release.mk (release_extra_dist): Remove
+	bootstrap.slingshot.
+	* local.mk (EXTRA_DIST): Add build-aux/bootstrap.slingshot and
+	build-aux/bootstrap.
+	* bootstrap.conf (require_bootstrap_uptodate): Override bootstrap
+	default with a custom version that knows how to merge in slingshot
+	specific functions to upstream bootstrap.
+	* README.md: Remove bootstrap.slingshot instructions.
+	* bootstrap: Regenerate.
+	* NEWS: Update.
+
+2014-01-03  Gary V. Vaughan  <gary@gnu.org>
+
+	configury: ensure ChangeLog even without gnulib_modules setting.
+	* bootstrap.slingshot (slingshot_ensure_changelog): New
+	function.  Hook bootstrap's func_ensure_changelog into
+	func_prep so that it works even when we don't have gnulib_modules
+	containing gitlog-to-changelog in our bootstrap.conf.
+
+	configury: ChangeLog and README are now managed by bootstrap.
+	* bootstrap.conf (slingshot_force_changelog)
+	(slingshot_force_readme): Remove.
+
+	bootstrap: sync with upstream.
+	* bootstrap: Pick up some bugfixes and enhancements from earlier
+	today.
+
+2014-01-02  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* bootstrap: Pick up recent fixes from upstream.
+
+	maint: update copyright notices.
+	Add rules, and update all copyright notices.
+	* GNUmakefile (update-copyright): New rule to run
+	build-aux/update-copyright with appropriate options.
+	* local.mk (copyright_env): New macro with appropriate
+	update-copyright options.
+
+2013-12-11  Gary V. Vaughan  <gary@gnu.org>
+
+	mkrockspecs: define spec.build before dereferencing it.
+	* src/mkrockspecs.in: If spec.build is not set before accessing
+	default to the empty table.
+
+2013-12-09  Gary V. Vaughan  <gary@gnu.org>
+
+	release: make sure rockspecs are generated before emails.
+	* build-aux/release.mk (mail): Add dependency on rockspecs.
+
+	travis: support make check on partial installs.
+	* travis.yml.in (script): Set the LUA_PATH to point at the build
+	tree before running make check.
+	* .travis.yml: Regenerate.
+	* NEWS: Update.
+
+	mkrockspecs: fix a typo.
+	* src/mkrockspecs.in: Add missing 's' to spec.build.modules reset.
+
+	mkrockspecs: allow "builtin" builds even without --module-dir.
+	* src/mkrockspecs.in: Don't switch to autoconf builds for the
+	main rockspec if the default.build.modules is set in
+	rockspec.conf.
+	* NEWS: Update.
+
+	configury: bump release version to 6.
+	* configure.ac (AC_INIT): Bump release version to 6.
+
 2013-12-08  Gary V. Vaughan  <gary@gnu.org>
+
+	maint: post-release administrivia.
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* ./local.mk (old_NEWS_hash): Auto-update.
 
 	Release version 5
 	* NEWS: Record release date.

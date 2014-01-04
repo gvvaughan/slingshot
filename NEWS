@@ -1,5 +1,24 @@
 Slingshot NEWS - User visible changes.
 
+* Noteworthy changes in release 6 (2014-01-04) [stable]
+
+** New Features:
+
+  - A manually entered list of modules in rockspec.conf now
+    creates "builtin" autoconfless builds in the main rockspec
+    just as if --module-dir had been passed.
+  - Support running `make check` on installed packages, where the
+    checks require access to resources not visible in the install
+    tree (e.g. installed specl has all lua sources inlined, rather
+    than in an installed subtree, but unit tests need access to the
+    module subtree which is only visible in the build directory).
+
+** Incompatible Changes:
+
+  - `bootstrap.slingshot` is now automatically merged into the
+    `bootstrap` script, so you shouldn't copy it into your project
+    tree anymore, or add the glue to run it to your `bootstrap.conf`.
+
 * Noteworthy changes in release 5 (2013-12-08) [stable]
 
 ** New Features:

@@ -1,6 +1,6 @@
 dnl configure.ac
 dnl
-dnl Copyright (c) 2013 Free Software Foundation, Inc.
+dnl Copyright (c) 2013-2014 Free Software Foundation, Inc.
 dnl Written by Gary V. Vaughan, 2013
 dnl
 dnl This program is free software; you can redistribute it and/or modify
@@ -19,7 +19,7 @@ dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
 AC_PREREQ([2.68])
 
 dnl Initialise autoconf and automake
-AC_INIT([Slingshot], [5], [http://github.com/gvvaughan/slingshot/issues])
+AC_INIT([Slingshot], [6], [http://github.com/gvvaughan/slingshot/issues])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -38,7 +38,9 @@ AC_PROG_SED
 
 dnl Generate output files
 SS_CONFIG_TRAVIS([specl])
+AC_CONFIG_FILES([build-aux/merge-sections:src/merge-sections.in],
+                [chmod 555 build-aux/merge-sections])
 AC_CONFIG_FILES([build-aux/mkrockspecs:src/mkrockspecs.in],
-                [chmod a+x build-aux/mkrockspecs])
+                [chmod 555 build-aux/mkrockspecs])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

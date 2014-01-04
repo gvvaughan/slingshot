@@ -13,10 +13,8 @@ every-time I make an update.
 Installation
 ------------
 
-Using it fully involves copying `bootstrap` and `bootstrap.slingshot`
-into your project and checking them in, and adding the snippet of
-shell code in the comment at the top of `bootstrap.slingshot` to your
-`bootstrap.conf`.  Running `bootstrap` will now set up a [Slingshot][]
+Using it fully involves copying `bootstrap` into your project and
+checking it in .  Running `bootstrap` will now set up a [Slingshot][]
 submodule, a `.gitmodules` file, and link to the slingshot files
 described below for the matching slingshot version checked out into
 the submodule.
@@ -30,20 +28,19 @@ the submodule.
    faster, and a little more portable than the GNU version.  It's also
    quite a lot larger than the GNU implementation.
 
- * `bootstrap.slingshot`:
-
-   bootstrap customisations to keep your project in sync with a git
-   submodule of slingshot in your repository.  You'll need to tell it
-   which files from Slingshot that your project is using by listing
-   them in the `slingshot_files` variable setting in your
-   `bootstrap.conf`.
+   Note that the [Slingshot][] `bootstrap` script has extra functions
+   compared to the Libtool `bootstrap` on which it is based, and the
+   two are not interchangable!
 
  * `bootstrap.texi`:
 
    texinfo documentation for `bootstrap`.
 
 Alternatively, pick and choose whichever of the following files you
-want to make use of into your project, and check them in:
+want to make use of into your project, and either list them in a
+`slingshot_files` variable in your `bootstrap.conf`, or just copy
+them to your project and check them in (if you don't care about
+automatically keeping them in sync with future releases):
 
  * `gitlog-to-changelog`, `do-release-commit-and-tag`:
 
@@ -61,6 +58,18 @@ want to make use of into your project, and check them in:
    turns `mkrockspecs.in` into `mkrockspecs`, and generates a manual
    page for the same - though you can use it as the basis for your own
    `configure.ac` with a little editing.
+
+ * `merge-sections`:
+
+   given a list of files with section headers in boxes like this:
+
+       ## ------------- ##
+       ## Section Name. ##
+       ## ------------- ##
+
+   this script merges those sections into identically named sections
+   from standard input.  This script is used by [Slingshot][] itself
+   to merge additional functions into the upstream `bootstrap` script.
 
  * `mkrockspecs`:
 

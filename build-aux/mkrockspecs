@@ -6,7 +6,7 @@ SH=--[[                                             # -*- mode: lua; -*-
 ## terms of the MIT license reproduced below.
 
 ## ====================================================================
-## Copyright (C) 2013 Gary V. Vaughan
+## Copyright (C) 2013-2014 Gary V. Vaughan
 ##
 ## Permission is hereby granted, free of charge, to any person
 ## obtaining a copy of this software and associated documentation
@@ -112,7 +112,7 @@ Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
 end
 
 prog["--version"] = function ()
-  print [[mkrockspecs (slingshot) 5
+  print [[mkrockspecs (slingshot) 6
 Written by Gary V. Vaughan <gary@gnu.org>, 2013
 
 Copyright (C) 2013, Gary V. Vaughan
@@ -297,31 +297,37 @@ if type (spec.external_dependencies) == "table" then
 end
 
 -- If we have a module root, use the luarocks "builtin" type.
-if prog.opts.module_root ~= nil and version ~= "scm" and version ~= "git" then
-  default.build = {
-    type = "builtin",
-    modules = loadmap (prog.opts.module_root),
-  }
-else
-  default.build = {
-    type = "command",
-    build_command = "./configure " ..
-      "LUA='$(LUA)' LUA_INCLUDE='-I$(LUA_INCDIR)' " .. configure_flags ..
-      "--prefix='$(PREFIX)' --libdir='$(LIBDIR)' --datadir='$(LUADIR)' " ..
-      "&& make clean all",
-    install_command = "make install luadir='$(LUADIR)'",
-    copy_directories = {},
-  }
+if version ~= "scm" and version ~= "git" then
+  if prog.opts.module_root ~= nil then
+    default.build = {
+      type = "builtin",
+      modules = loadmap (prog.opts.module_root),
+    }
+  elseif spec.build ~= nil and spec.build.modules ~= nil then
+    default.build = { type = "builtin" }
+  end
 end
 
--- Additional spec-type dependenent values.
+default.build = default.build or {
+  type = "command",
+  build_command = "./configure " ..
+    "LUA='$(LUA)' LUA_INCLUDE='-I$(LUA_INCDIR)' " .. configure_flags ..
+    "--prefix='$(PREFIX)' --libdir='$(LIBDIR)' --datadir='$(LUADIR)' " ..
+    "&& make clean all",
+  install_command = "make install luadir='$(LUADIR)'",
+  copy_directories = {},
+}
+
+-- Additional spec-type dependent values.
 spec.source = spec.source or {}
+spec.build  = spec.build  or {}
 if version ~= "scm" and version ~= "git" then
   spec.source.url = "http://" .. url .. "/archive/release-v" .. version .. ".zip"
   spec.source.dir = package .. "-release-v" .. version
 else
   spec.source.url = "git://" .. url .. ".git"
   default.build.build_command = "./bootstrap && " .. default.build.build_command
+  spec.build.modules = nil
 end
 
 
