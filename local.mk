@@ -25,3 +25,5 @@ update_copyright_env = \
 
 include src/src.mk
 include specs/specs.mk
+
+EXTRA_DIST += build-aux/bootstrap.in build-aux/bootstrap.slingshot

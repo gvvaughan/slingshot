@@ -108,7 +108,6 @@ release_extra_dist ?=					\
 	GNUmakefile					\
 	bootstrap					\
 	bootstrap.conf					\
-	bootstrap.slingshot				\
 	local.mk					\
 	$(_travis_yml)					\
 	$(NOTHING_ELSE)

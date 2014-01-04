@@ -224,16 +224,6 @@ copy=false
 vc_ignore=
 
 
-# List of slingshot files to link into stdlib tree before autotooling.
-slingshot_files=$slingshot_files
-
-# Relative path to the local slingshot submodule, and url to the upsream
-# git repository.  If you have a slingshot entry in your .gitmodules file,
-# these values are ignored.
-slingshot_path=$slingshot_path
-slingshot_url=$slingshot_url
-
-
 ## ------------------- ##
 ## External Libraries. ##
 ## ------------------- ##
@@ -687,135 +677,6 @@ func_require_term_colors ()
     }
 
     require_term_colors=:
-}
-
-
-# require_slingshot_dotgitmodules
-# -------------------------------
-# Ensure we have a '.gitmodules' file, with appropriate 'slingshot' settings.
-require_slingshot_dotgitmodules=slingshot_require_slingshot_dotgitmodules
-slingshot_require_slingshot_dotgitmodules ()
-{
-    $debug_cmd
-
-    $require_git
-
-    test true = "$GIT" || {
-      # A slingshot entry in .gitmodules always takes precedence.
-      _G_path=`$GIT config --file .gitmodules submodule.slingshot.path 2>/dev/null`
-
-      test -n "$_G_path" || {
-        $require_vc_ignore_files
-
-        func_verbose "adding slingshot entries to '.gitmodules'"
-
-        test -n "$slingshot_path" || slingshot_path=slingshot
-        test -n "$slingshot_url"  || slingshot_url=git://github.com/gvvaughan/slingshot.git
-
-        {
-          echo '[submodule "slingshot"]'
-          echo "	path=$slingshot_path"
-          echo "	url=$slingshot_url"
-        } >> .gitmodules
-
-        test -n "$vc_ignore_files" \
-          || func_insert_if_absent ".gitmodules" $vc_ignore_files
-      }
-    }
-
-    require_slingshot_dotgitmodules=:
-}
-
-
-# require_slingshot_path
-# require_slingshot_url
-# ----------------------
-# Ensure 'slingshot_path' and 'slingshot_url' are set.
-require_slingshot_path=slingshot_require_slingshot_dotgitmodules_parameters
-require_slingshot_url=slingshot_require_slingshot_dotgitmodules_parameters
-slingshot_require_slingshot_dotgitmodules_parameters ()
-{
-    $debug_cmd
-
-    $require_git
-    $require_slingshot_dotgitmodules
-
-    test -f .gitmodules \
-      || func_fatal_error "Unable to update '.gitmodules' with slingshot submodule"
-
-    test true = "$GIT" || {
-      slingshot_path=`$GIT config --file=.gitmodules --get submodule.slingshot.path`
-      slingshot_url=`$GIT config --file=.gitmodules --get submodule.slingshot.url`
-
-      func_verbose "slingshot_path='$slingshot_path'"
-      func_verbose "slingshot_url='$slingshot_url'"
-    }
-
-    require_slingshot_path=:
-    require_slingshot_url=:
-}
-
-
-# require_slingshot_submodule
-# ---------------------------
-# Ensure that there is a current slingshot submodule.
-require_slingshot_submodule=slingshot_require_slingshot_submodule
-slingshot_require_slingshot_submodule ()
-{
-    $debug_cmd
-
-    $require_git
-
-    if test true = "$GIT"; then
-      func_warning recommend \
-          "No 'git' found; imported slingshot modules may be missing."
-    else
-      $require_slingshot_dotgitmodules
-
-      if test -f .gitmodules && test -f "slingshot/src/mkrockspecs.in"
-      then
-        : All present and correct.
-
-      else
-        $require_slingshot_path
-        $require_slingshot_url
-
-        trap slingshot_cleanup 1 2 13 15
-
-        shallow=
-        $GIT clone -h 2>&1 |func_grep_q -- --depth \
-            && shallow='--depth 365'
-
-        func_show_eval "$GIT clone $shallow '$slingshot_url' '$slingshot_path'" \
-          slingshot_cleanup
-
-        # FIXME: Solaris /bin/sh will try to execute '-' if any of
-        #        these signals are caught after this.
-        trap - 1 2 13 15
-
-        # Make sure we've checked out the correct revision of slingshot.
-        func_show_eval "$GIT submodule init" \
-          && func_show_eval "$GIT submodule update" \
-          || func_fatal_error "Unable to update slingshot submodule."
-      fi
-    fi
-
-    require_slingshot_submodule=:
-}
-
-
-# slingshot_cleanup
-# -----------------
-# Recursively delete everything at $slingshot_path.
-slingshot_cleanup ()
-{
-    $debug_cmd
-
-    $require_slingshot_path
-
-    _G_status=$?
-    $RM -fr $slingshot_path
-    exit $_G_status
 }
 
 
@@ -3014,52 +2875,6 @@ func_gettext_configuration ()
     func_run_hooks func_gettext_configuration
 }
 
-
-
-# slingshot_copy_files
-# --------------------
-# Update files from slingshot subproject.
-slingshot_copy_files ()
-{
-    $debug_cmd
-
-    $require_package
-
-    test slingshot = "$package" || {
-      func_check_configuration slingshot_files
-
-      $require_slingshot_submodule
-
-      # Make sure we have the latest mkrockspecs
-      make -C slingshot build-aux/mkrockspecs
-
-      # Update in-tree links.
-      for file in $slingshot_files; do
-        func_dirname_and_basename "./$file"
-        slingshot_copy "$func_basename_result" \
-          "slingshot/$func_dirname_result" "$func_dirname_result"
-      done
-    }
-}
-func_add_hook func_prep slingshot_copy_files
-
-
-# slingshot_ensure_changelog
-# --------------------------
-# Slingshot project probably won't have a gnulib_modules list.
-# So we redo the ChangeLog check against slingshot_files.
-slingshot_ensure_changelog ()
-{
-    $debug_cmd
-
-    if test -n "$slingshot_files"; then
-      func_ifcontains "$slingshot_files" build-aux/gitlog-to-changelog \
-        func_ensure_changelog
-    fi
-
-    return 0
-}
-func_add_hook func_prep slingshot_ensure_changelog
 
 
 ## --------------- ##

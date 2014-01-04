@@ -13,6 +13,11 @@ Slingshot NEWS - User visible changes.
     than in an installed subtree, but unit tests need access to the
     module subtree which is only visible in the build directory).
 
+** Incompatible Changes:
+
+  - `bootstrap.slingshot` is now automatically merged into the
+    `bootstrap` script, so you shouldn't copy it into your project
+    tree anymore, or add the glue to run it to your `bootstrap.conf`.
 
 * Noteworthy changes in release 5 (2013-12-08) [stable]
 

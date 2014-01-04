@@ -12,6 +12,7 @@
 .libs
 /.gitmodules
 /.version
+/build-aux/merge-sections
 /build-aux/mkrockspecs
 /ChangeLog
 /INSTALL
