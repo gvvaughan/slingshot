@@ -2,6 +2,15 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features:
+
+  - `build-aux/merge-sections` has a new `--verbose` flag that reports
+    progress to stderr in real time.
+
+** Bugs fixed:
+
+  - `bootstrap` now has `slingshot_copy` merged in correctly.
+
 
 * Noteworthy changes in release 6 (2014-01-04) [stable]
 
