@@ -28,8 +28,26 @@ SH=--[[                                             # -*- mode: lua; -*-
 ## WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ## ====================================================================
 
-lua_version_re='"Lua 5."[12]*'
-lua_binaries='lua lua5.2 lua52 lua5.1 lua51'
+
+_lua_version_re='"Lua 5."[12]*'
+_lua_binaries='lua lua5.2 lua52 lua5.1 lua51'
+
+export LUA_INIT
+export LUA_INIT_5_2
+export LUA_PATH
+export LUA_CPATH
+
+# Be Bourne compatible
+if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+  emulate sh
+  NULLCMD=:
+  # Zsh 3.x and 4.x performs word splitting on ${1+"$@"}, which
+  # is contrary to our usage.  Disable this feature.
+  alias -g '${1+"$@"}'='"$@"'
+  setopt NO_GLOB_SUBST
+else
+  case `(set -o) 2>/dev/null` in *posix*) set -o posix;; esac
+fi
 
 # If LUA is not set, search PATH for something suitable.
 test -n "$LUA" || {
@@ -39,7 +57,7 @@ test -n "$LUA" || {
   {
     test -x "$1" && {
       eval 'case `'$1' -e "print (_VERSION)" 2>/dev/null` in
-        '"$lua_version_re"') LUA='$1' ;;
+        '"$_lua_version_re"') LUA='$1' ;;
       esac'
     }
   }
@@ -48,7 +66,7 @@ test -n "$LUA" || {
 
   save_IFS="$IFS"
   LUA=
-  for x in $lua_binaries; do
+  for x in $_lua_binaries; do
     IFS=:
     for dir in $PATH; do
       IFS="$save_IFS"
@@ -65,6 +83,9 @@ test -n "$LUA" || {
   printf "${e+$e\n}$progname: retry after 'export LUA=/path/to/lua'\n" >&2
   exit 1
 }
+
+LUA_INIT=
+LUA_INIT_5_2=
 
 # Reexecute using the interpreter suppiled in LUA, or found above.
 exec "$LUA" "$0" "$@"
