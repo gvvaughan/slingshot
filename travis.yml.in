@@ -45,12 +45,15 @@ install:
 
 # Configure and build.
 script:
-  - ./bootstrap
+  # Use system Lua 5.1 LuaRocks for bootstrap checks, in case we have
+  # LDoc or Luadoc installed there.
+  - LUAROCKS=luarocks ./bootstrap
   - ./configure LUA="$LUA"
   - make $LUAROCKS_CONFIG
     LUA="$LUA" LUA_INCDIR="$LUA_INCDIR" V=1
     || cat $LUAROCKS_CONFIG config.log
-  # Set Lua and Shell paths up for local luarocks tree.
+  # Set Lua and Shell paths up for local luarocks tree, where any rocks
+  # this package depends on will be installed.
   - eval `$LUAROCKS path`
   - export PATH=`pwd`/luarocks/bin:$PATH
   @EXTRA_ROCKS@
