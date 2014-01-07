@@ -4,6 +4,13 @@ Slingshot NEWS - User visible changes.
 
 ** New Features:
 
+  - Slingshot bootstrap will check rockspecs listed in $buildreq,
+    according to the URL part of a specification triple ending in
+    `.rockspec`.
+
+  - Slingshot bootstrap accepts a new `--luarocks-tree` option to
+    check a particular tree for prerequisite rocks.
+
   - `build-aux/merge-sections` has a new `--verbose` flag that reports
     progress to stderr in real time.
 
