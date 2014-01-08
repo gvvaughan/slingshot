@@ -3258,23 +3258,37 @@ slingshot_check_rockspecs ()
 
       func_append _G_req " $_G_rock $_G_url"
 
-      _G_instver=`$LUAROCKS ${opt_luarocks_tree+--tree=$opt_luarocks_tree} \
-                    show $_G_rock 2>/dev/null \
-        |sed -n '/^'"$_G_rock"' .* - /{s/^'"$_G_rock"' \(.*\) - .*$/\1/p;}'`
+      # Honor $APP variables ($LDOC, $SPECL, etc.)
+      _G_appvar=`echo $_G_rock |tr '[a-z]' '[A-Z]'`
+      eval "_G_rock=\${$_G_appvar-$_G_rock}"
 
-      if test -z "$_G_instver"; then
-        slingshot_rockspec_error
+      # Trust the user will ensure the binaries will arive at the
+      # specified location before they are needed if they set these.
+      if eval 'test -n "${'$_G_appvar'+set}"'; then
+	eval test -f '"${'$_G_appvar'}"' \
+          || eval 'func_warning settings "\
+not checking whether $'$_G_appvar' has version $_G_reqver;
+configure or make may fail because you set $_G_appvar, but
+$'$_G_appvar' does not yet exist!"'
       else
-        func_verbose "found '$_G_rock' version $_G_instver."
+        _G_instver=`$LUAROCKS ${opt_luarocks_tree+--tree=$opt_luarocks_tree} \
+                    show $_G_rock 2>/dev/null \
+          |sed -n '/^'"$_G_rock"' .* - /{s/^'"$_G_rock"' \(.*\) - .*$/\1/p;}'`
 
-        case $_G_reqver in
-          =*)
-            test "x$_G_reqver" = "x=$_G_instver" || slingshot_rockspec_error
-            ;;
-          *)
-            func_lt_ver "$_G_reqver" "$_G_instver" || slingshot_rockspec_error
-            ;;
-        esac
+        if test -z "$_G_instver"; then
+          slingshot_rockspec_error
+        else
+          func_verbose "found '$_G_rock' version $_G_instver."
+
+          case $_G_reqver in
+            =*)
+              test "x$_G_reqver" = "x=$_G_instver" || slingshot_rockspec_error
+              ;;
+            *)
+              func_lt_ver "$_G_reqver" "$_G_instver" || slingshot_rockspec_error
+              ;;
+          esac
+        fi
       fi
     done
 
@@ -3285,7 +3299,10 @@ slingshot_check_rockspecs ()
 $func_strtable_result
 Install missing rockspecs with:
     $LUAROCKS ${opt_luarocks_tree+--tree=$opt_luarocks_tree }install \$Rockspec_URL
-or rerun bootstrap with the --luarocks-tree option set appropriately.
+and then rerun bootstrap with the --luarocks-tree option set
+appropriately, or if you're sure that the missing rocks will
+be installed before running make by exporting:
+     APPNAME=/path/to/app.
 "
     }
 }
