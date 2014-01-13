@@ -29,12 +29,11 @@ install:
   # Install a recent luarocks release locally for everything else.
   - wget http://luarocks.org/releases/$LUAROCKS_BASE.tar.gz
   - tar zxvpf $LUAROCKS_BASE.tar.gz
-  - cd $LUAROCKS_BASE
-  - ./configure
-    --prefix=$HOME --lua-version=$LUA_SUFFIX --lua-suffix=$LUA_SUFFIX
-    --with-lua-include=$LUA_INCDIR
-  - make all install
-  - cd ..
+  - ( cd $LUAROCKS_BASE;
+      ./configure
+      --prefix=$HOME --lua-version=$LUA_SUFFIX --lua-suffix=$LUA_SUFFIX
+      --with-lua-include=$LUA_INCDIR;
+      make all install; )
 
 # Configure and build.
 script:
@@ -54,7 +53,7 @@ script:
   # Install extra rocks into $LUAROCKS_CONFIG rocks tree.
   - $LUAROCKS install lyaml; $LUAROCKS install specl;
 
-  # Make git rockspec for this package.
+  # Make git rockspec for this slingshot
   - make rockspecs LUAROCKS="$LUAROCKS" V=1
     || { $LUAROCKS path; cat $ROCKSPEC; }
 
