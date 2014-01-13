@@ -8,7 +8,6 @@ env:
     - LUAROCKS_CONFIG=build-aux/luarocks-config.lua
     - LUAROCKS_BASE=luarocks-2.1.1
     - LUAROCKS="$LUA $HOME/bin/luarocks"
-    - SPECL=bin/specl
   matrix:
     - LUA=lua5.1             LUA_INCDIR=/usr/include/lua5.1     LUA_SUFFIX=5.1
     - LUA=lua5.2             LUA_INCDIR=/usr/include/lua5.2     LUA_SUFFIX=5.2
@@ -66,7 +65,8 @@ script:
   # Run self-tests in the `luarocks make` build tree.
   # Use bin/specl if present, or else the specl rock from EXTRA_ROCKS
   # above.
-  - test -f "$SPECL" || export SPECL=luarocks/bin/specl
+  - test -f "bin/specl" || export SPECL=bin/specl
+  - test -f "luarocks/bin/specl" || export SPECL=luarocks/bin/specl
   - export LUA_PATH=`pwd`'/lib/?.lua;'"${LUA_PATH-;}"
   - export LUA_CPATH=`pwd`'/ext/?.so;'"${LUA_CPATH-;}"
   - export LUA_INIT=; export LUA_INIT_5_2=
