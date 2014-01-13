@@ -23,9 +23,12 @@ dont-forget-to-bootstrap = $(wildcard Makefile.in)
 
 ifeq ($(dont-forget-to-bootstrap),)
 
+## Don't redo any pedantic rock version checks, incase they derail
+## a subdirectory bootstrap of slingshot.
+
 %::
 	@echo '$(ME): rebootstrap'
-	@test -f Makefile.in || ./bootstrap
+	@test -f Makefile.in || ./bootstrap --skip-rock-checks
 	@test -f Makefile || ./configure
 	$(MAKE) $@
 
