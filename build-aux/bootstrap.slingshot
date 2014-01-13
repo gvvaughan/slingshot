@@ -142,12 +142,18 @@ slingshot_options_prep ()
 {
     $debug_cmd
 
+    # Option defaults:
+    opt_skip_rock_checks=false
+    # opt_luarocks_tree default in *unset*!
+
     # Extend the existing usage message.
     usage_message=$usage_message'
 Slingshot Options:
 
         --luarocks-tree=DIR
-                      check a non-default tree for prerequisite rocks'
+                      check a non-default tree for prerequisite rocks
+        --skip-rock-checks
+                      ignore Lua rocks in bootstrap.conf:buidreq'
 
     func_quote_for_eval ${1+"$@"}
     slingshot_options_prep_result=$func_quote_for_eval_result
@@ -173,6 +179,10 @@ slingshot_parse_options ()
                       test $# = 0 && func_missing_arg $_G_opt && break
                       opt_luarocks_tree=$1
                       shift
+                      ;;
+
+        --skip-rock-checks)
+                      opt_skip_rock_checks=:
                       ;;
 
 	# Separate optargs to long options (plugins may need this):
@@ -242,6 +252,8 @@ func_add_hook func_init slingshot_split_buildreq
 slingshot_check_rockspecs ()
 {
     $debug_cmd
+
+    $opt_skip_rock_checks && return
 
     $require_rockspecs_req
 
