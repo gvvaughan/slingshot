@@ -372,19 +372,21 @@ if version ~= "scm" and version ~= "git" then
 else
   spec.source.url = "git://" .. url .. ".git"
   spec.source.branch = prog.opts.branch
+  default.build.build_command = "./bootstrap && " .. default.build.build_command
 
   -- luarocks git checkouts omit the .git directory, which is where the
   -- slingshot submodule revision is stored, so we have to transform into
   -- a sparse-checkout, and manually pull the slingshot revision :(
-  default.build.build_command =
-    "test -d slingshot || { " ..
-    "  git init; " ..
-    "  git config core.sparseCheckout true; " ..
-    "  git remote add -f origin " .. spec.source.url .. "; " ..
-    "  echo slingshot > .git/info/sparse-checkout; " ..
-    "  git checkout " .. (prog.opts.branch or "master") ..
-    "}; " ..
-    "./bootstrap && " .. default.build.build_command
+  if package ~= "slingshot" then
+    default.build.build_command =
+      "test -d slingshot || { " ..
+      "  git init; " ..
+      "  git config core.sparseCheckout true; " ..
+      "  git remote add -f origin " .. spec.source.url .. "; " ..
+      "  echo slingshot > .git/info/sparse-checkout; " ..
+      "  git checkout " .. (prog.opts.branch or "master") ..
+      "}; " .. default.build.build_command
+  end
   spec.build.modules = nil
 end
 
