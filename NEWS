@@ -4,6 +4,9 @@ Slingshot NEWS - User visible changes.
 
 ** New Features:
 
+  - `mkrockspecs` accepts a new `--branch` option for generating a
+    git/scm rockspec that pulls that branch instead of master.
+
   - Slingshot bootstrap will check rockspecs listed in $buildreq,
     according to the URL part of a specification-triple ending in
     `.rockspec`.  So that we don't have to install, say, LDoc twice
@@ -24,6 +27,10 @@ Slingshot NEWS - User visible changes.
 ** Bugs fixed:
 
   - `bootstrap` now has `slingshot_copy` merged in correctly.
+
+  - `mkrockspecs` now generates a fully functional git/scm rockspec
+    again by manually fetching the slingshot submodule revision that
+    matches the tip of the selected branch.
 
 
 * Noteworthy changes in release 6 (2014-01-04) [stable]

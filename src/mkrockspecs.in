@@ -137,6 +137,7 @@ rockspec if the default "-1" revision was released with errors.
 
       --help             print this help, then exit
       --version          print version number, then exit
+  -b, --branch=BRANCH    make git rockspec use BRANCH
   -m, --module-dir=ROOT  directory of lua-files for builtin build type
 
 Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
@@ -164,6 +165,18 @@ prog["--module-dir"] = function (arglist, i)
 end
 
 prog["-m"] = prog["--module-dir"]
+
+prog["--branch"] = function (arglist, i)
+  local opt = arglist[i]
+  if i + 1 > #arglist then
+    opterr ("option '" .. opt .. "' requires an argument")
+  end
+
+  prog.opts.branch = arglist[i + 1]
+  return i + 1
+end
+
+prog["-b"] = prog["--branch"]
 
 local nonopts
 local i = 0
@@ -358,7 +371,18 @@ if version ~= "scm" and version ~= "git" then
   spec.source.dir = package .. "-release-v" .. version
 else
   spec.source.url = "git://" .. url .. ".git"
-  default.build.build_command = "./bootstrap && " .. default.build.build_command
+  spec.source.branch = prog.opts.branch
+
+  -- luarocks git checkouts omit the .git directory, which is where the
+  -- slingshot submodule revision is stored, so we have to transform into
+  -- a sparse-checkout, and manually pull the slingshot revision :(
+  default.build.build_command =
+    "git init; " ..
+    "git config core.sparseCheckout true; " ..
+    "git remote add -f origin " .. spec.source.url .. "; " ..
+    "echo slingshot > .git/info/sparse-checkout; " ..
+    "git checkout " .. (prog.opts.branch or "master") .. " && " ..
+    "./bootstrap && " .. default.build.build_command
   spec.build.modules = nil
 end
 
