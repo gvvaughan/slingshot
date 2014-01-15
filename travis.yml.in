@@ -62,11 +62,7 @@ script:
   - $LUAROCKS make $ROCKSPEC LUA="$LUA"
 
   # Run self-tests in the `luarocks make` build tree.
-  # Use bin/specl if present, or else the specl rock from EXTRA_ROCKS
-  # above.
-  - if test -f luarocks/bin/specl; then export SPECL=luarocks/bin/specl;
-    elif test -f bin/specl; then export SPECL=bin/specl; fi
-  - export LUA_PATH=`pwd`'/lib/?.lua;'"${LUA_PATH-;}"
-  - export LUA_CPATH=`pwd`'/ext/?.so;'"${LUA_CPATH-;}"
-  - export LUA_INIT=; export LUA_INIT_5_2=
-  - make check SPECL="$SPECL" V=1
+  - LUA_PATH=`pwd`'/lib/?.lua;'"${LUA_PATH-;}"
+    LUA_CPATH=`pwd`'/ext/?.so;'"${LUA_CPATH-;}"
+    LUA_INIT= LUA_INIT_5_2=
+    make check V=1
