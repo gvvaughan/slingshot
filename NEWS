@@ -28,10 +28,6 @@ Slingshot NEWS - User visible changes.
 
   - `bootstrap` now has `slingshot_copy` merged in correctly.
 
-  - `mkrockspecs` now generates a fully functional git/scm rockspec
-    again by manually fetching the slingshot submodule revision that
-    matches the tip of the selected branch.
-
 
 * Noteworthy changes in release 6 (2014-01-04) [stable]
 
