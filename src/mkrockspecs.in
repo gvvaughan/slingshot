@@ -377,11 +377,13 @@ else
   -- slingshot submodule revision is stored, so we have to transform into
   -- a sparse-checkout, and manually pull the slingshot revision :(
   default.build.build_command =
-    "git init; " ..
-    "git config core.sparseCheckout true; " ..
-    "git remote add -f origin " .. spec.source.url .. "; " ..
-    "echo slingshot > .git/info/sparse-checkout; " ..
-    "git checkout " .. (prog.opts.branch or "master") .. " && " ..
+    "test -d slingshot || { " ..
+    "  git init; " ..
+    "  git config core.sparseCheckout true; " ..
+    "  git remote add -f origin " .. spec.source.url .. "; " ..
+    "  echo slingshot > .git/info/sparse-checkout; " ..
+    "  git checkout " .. (prog.opts.branch or "master") ..
+    "}; " ..
     "./bootstrap && " .. default.build.build_command
   spec.build.modules = nil
 end
