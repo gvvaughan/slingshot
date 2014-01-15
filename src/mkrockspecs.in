@@ -380,11 +380,11 @@ else
   if package ~= "slingshot" then
     default.build.build_command =
       "test -d slingshot || { " ..
-      "  git init; " ..
-      "  git config core.sparseCheckout true; " ..
-      "  git remote add -f origin " .. spec.source.url .. "; " ..
-      "  echo slingshot > .git/info/sparse-checkout; " ..
-      "  git checkout " .. (prog.opts.branch or "master") ..
+        "git init; " ..
+        "git config core.sparseCheckout true; " ..
+        "git remote add -f origin " .. spec.source.url .. "; " ..
+        "echo slingshot > .git/info/sparse-checkout; " ..
+        "git checkout " .. (prog.opts.branch or "master") .. "; " ..
       "}; " .. default.build.build_command
   end
   spec.build.modules = nil
