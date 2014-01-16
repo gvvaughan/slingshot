@@ -1,5 +1,34 @@
 Slingshot NEWS - User visible changes.
 
+* Noteworthy changes in release ?.?.? (????-??-??)
+
+** New Features:
+
+  - `mkrockspecs` accepts a new `--branch` option for generating a
+    git/scm rockspec that pulls that branch instead of master.
+
+  - Slingshot bootstrap will check rockspecs listed in $buildreq,
+    according to the URL part of a specification-triple ending in
+    `.rockspec`.  So that we don't have to install, say, LDoc twice
+    for Travis (once in the system rocks tree so that bootstrap
+    won't bomb out with a missing rockspec error, and then again
+    in the project rocks tree after luarocks-config.ld has been
+    built by make), the rockspec version checks can be short-
+    circuited by setting an APPVAR in bootstrap's environment, e.g:
+
+        LDOC=`pwd`/luarocks/bin/ldoc ./bootstrap
+
+  - Slingshot bootstrap accepts a new `--luarocks-tree` option to
+    check a particular tree for prerequisite rocks.
+
+  - `build-aux/merge-sections` has a new `--verbose` flag that reports
+    progress to stderr in real time.
+
+** Bugs fixed:
+
+  - `bootstrap` now has `slingshot_copy` merged in correctly.
+
+
 * Noteworthy changes in release 6 (2014-01-04) [stable]
 
 ** New Features:

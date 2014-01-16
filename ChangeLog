@@ -1,4 +1,183 @@
+2014-01-16  Gary V. Vaughan  <gary@gnu.org>
+
+	configury: bump version to 7.
+	* configure.ac (AC_INIT): Bump version to 7.
+	* build-aux/merge-sections: Regenerate.
+
+2014-01-16  Gary V. Vaughan  <gary@gnu.org>
+
+	Revert "mkrockspecs: slingshot doesn't need slingshot submodule git magic!" and others...
+	This reverts commits 039367682f360cec97324e3fdb58bc3443938468,
+	d963b9832cd68fb938bc50ff423b9c6231e00abc and most of
+	0613d6e152f698bc4f570f00aed14103e8ed6683.
+
+	The whole issue was a red-herring, better solved by a tiny one-line
+	fix to bootstrap $GIT detection.
+
+2014-01-15  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in: Sync with upstream.
+	* bootstrap: Regenerate.
+
+	mkrockspecs: add missing semi-colon.
+	* src/mkrockspecs.in (build): Add missing semicolon.
+
+	mkrockspecs: slingshot doesn't need slingshot submodule git magic!
+	* src/mkrockspecs.in (build): Only add the git magic if the
+	name of the current package is not "slingshot".
+
+	mkrockspecs: dont turn an existing git repo into a sparse checkout!
+	* src/mkrockspecs.in (build): Only run the git magic if slingshot
+	is missing.
+
+	configury: bump git revision to 1.7.0 for sparse checkout support.
+	* bootstrap.conf (buildreq): Bump minimum git revision to 1.7.0,
+	the first to support the sparse checkout features used in git/scm
+	rockspecs.
+
+	mkrockspecs: git magic to reenable slingshot submodule in PKG-git-1.rockspec.
+	Without this changeset, it was not possible to run bootstrap
+	inside a non-release revision checked out by luarocks install.
+	* mkrockspecs.in (prog): New --branch/-b option.
+	(build): Ugly git magic to fetch the missing slingshot submodule
+	from `luarocks install http://raw.github.com/owner/package.git`.
+	* NEWS: Update.
+
+	travis: let specl take care of itself.
+	* travis.yml.in (SPECL): Remove all references.
+	* .travis.yml: Regenerate.
+
+2014-01-13  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: cosmetic improvements to travis.yml.in.
+	* travis.yml.in: Cosmetic improvements.
+	* .travis.yml: Regenerate.
+
+	configury: make sure make launched rebootstraps don't fall over.
+	* GNUmakefile (%::): Pass --skip-rock-checks to bootstrap.
+
+	travis: use if statements instead of && short circuiting.
+	* travis.yml.in (script): Travis treats a short circuit fail as
+	a script failure, so use full blown if statement.
+	* .travis.yml: Regenerate.
+
+	travis: fix SPECL environment setting.
+	* travis.yml.in (SPECL): Set it properly.
+	* .travis.yml: Regenerate.
+
+	travis: don't export SPECL until required.
+	* travis.yml.in (global): Remove SPECL.
+	(script): Set SPECL just prior to running it.
+	* .travis.yml: Regenerate.
+
+	slingshot: use buildreq to check specl version, not custom configury.
+	* bootstrap.conf (buildreq): Add specl requirement.
+	* m4/slingshot.m4 (SPECL_MIN): Remove.
+	* build-aux/specl.mk (specl-check-local): Simplify.
+
+	travis: use a single luarocks tree.
+	Now that LDoc and LuaDoc work correctly on Lua 5.2, no need to
+	jump through hoops to keep a separate 5.1 rockstree for them.
+	* m4/slingshot.m4 (GENDOC, GENDOC_FALSE): Remove.
+	* travis.yml.in: Some extra comments and spacing for better
+	readability.
+	(global): Remove GENDOC export.
+	(install): Remove @GENDOC_FALSE@ section.
+	(script): Use new --skip-rock-checks when building a Makefile
+	for luarocks-config.lua generation.
+	* .travis.yml: Regenerate.
+
+	bootstrap: add --skip-rock-checks option.
+	* build-aux/bootstrap.slingshot (slingshot_options_prep): Add
+	default value and usage text for --skip-rock-checks option.
+	(slingshot_parse_options): Parse --skip-rock-checks option.
+	(slingshot_check_rockspecs): Early return if --skip-rock-checks
+	was passed.
+	* bootstrap: Regenerate.
+
+2014-01-08  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: allow pre-emptive APPVAR to skip rockspec version checks.
+	Avoid a catch-22 where you can't run bootstrap because
+	prerequisite rocks are missing, but you can't install the rocks
+	until you have the configured Makefiles necessary to generate
+	luarocks-config.lua.
+	* build-aux/bootstrap.slingshot (slingshot_check_rockspecs): If
+	APPVARs (e.g. LDOC, SPECL) are already set in the environment,
+	but the paths they point to don't yet exist, skip the version
+	check, but show a warning that configure and/or make will be
+	needing them to work properly.
+	* bootstrap: Regenerate.
+	* NEWS: Update.
+
+2014-01-07  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: be explicit about which LuaRocks tree is being used.
+	Older LDoc, and all Luadoc release only work with Lua 5.1, so on
+	Travis we have a system luarocks configured with Lua 5.1 to hold
+	those, but a separate LuaRocks tree managed by the latest LuaRocks
+	release for rock dependencies.
+	* travis.yml.in: Specify the system luarocks tree for bootstrap,
+	so that it will find LuaDoc correctly.
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in: Sync with upstream, for --version fix.
+	* bootstrap: Regenerate.
+
+	bootstrap: support rockspecs in $buildreq, and --luarocks-tree.
+	* build-aux/bootstrap.slingshot (require_rockspecs_req)
+	(slingshot_rockspec_error, slingshot_split_buildreq)
+	(slingshot_check_rockspecs): New functions.  Add support for
+	checking versions of rockspecs listed in $buildreq.
+	(slingshot_check_rockstree_path): New function. Warn if a
+	custom rockstree is passed, but not added to PATH.
+	(slingshot_options_prep, slingshot_parse_options)
+	(slingshot_option_validation): New functions.  Add support for
+	--luarocks-tree=DIR.
+	* bootstrap: Regenerate.
+	* NEWS: Update.
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in: sync with upstream.
+	* bootstrap: Regenerate.
+
+2014-01-05  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in: Sync with upstream bootstrap.
+	* bootstrap: Regenerate.
+
+	mkrockspecs: reset LUA_INIT and LUA_INIT_5_2 before re-exec.
+	* src/merge-sections.in, src/mkrockspecs.in: Add 'Bourne compat'
+	boilerplate, and ensure LUA_INIT and LUA_INIT_5_2 are reset in
+	the environment before re-execing with $LUA.
+	* build-aux/merge-sections: Regenerate.
+
 2014-01-04  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: check in the merge-sections script.
+	We need build-aux/merge-sections available at bootstrap time so
+	that bootstrap can rebuild itself to check for updates.
+	* bootstrap.conf (require_bootstrap_uptodate): Improve failure
+	message.
+	* .gitignore: Remove build-aux/merge-sections.
+	* build-aux/merge-sections: Check in.
+
+	bootstrap: call func_ensure_changelog manually.
+	* bootstrap.conf: Call func_ensure_changelog manually.
+
+	bootstrap: ensure slingshot_copy function is merged in.
+	* src/merg-sections.in: Add support for `--verbose` flag.
+	* build-aux/bootstrap.in: Sync with upstream, now that section
+	header comment typos are fixed.
+	* bootstrap: Regenerate.
+	* NEWS: Update.
+
+	maint: post-release administrivia.
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* ./local.mk (old_NEWS_hash): Auto-update.
 
 	Release version 6
 	* NEWS: Record release date.

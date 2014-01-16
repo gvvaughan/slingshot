@@ -92,7 +92,7 @@
 # terms of the MIT license reproduced below.
 
 # ==================================================================== #
-# Copyright (C) 2013-2014 Gary V. Vaughan                                   #
+# Copyright (C) 2013-2014 Gary V. Vaughan                              #
 #                                                                      #
 # Permission is hereby granted, free of charge, to any person          #
 # obtaining a copy of this software and associated documentation       #
@@ -324,8 +324,6 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXTRA_ROCKS = @EXTRA_ROCKS@
-GENDOC = @GENDOC@
-GENDOC_FALSE = @GENDOC_FALSE@
 GREP = @GREP@
 HELP2MAN = @HELP2MAN@
 INSTALL = @INSTALL@
@@ -356,7 +354,6 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SPECL = @SPECL@
-SPECL_MIN = @SPECL_MIN@
 STRIP = @STRIP@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
@@ -423,7 +420,7 @@ install_exec_hooks =
 lib_LTLIBRARIES = 
 man_MANS = docs/mkrockspecs.1
 save_release_files = $(scm_rockspec)
-old_NEWS_hash = b7f5ee3470e07fef2c1a882767f9b99b
+old_NEWS_hash = 4a4a721668a1516c046d865c7b425586
 update_copyright_env = \
 	UPDATE_COPYRIGHT_HOLDER='(Free Software Foundation, Inc.|Gary V. Vaughan|Reuben Thomas)' \
 	UPDATE_COPYRIGHT_USE_INTERVALS=1 \
@@ -1012,16 +1009,7 @@ docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 	    build-aux/mkrockspecs;			\
 	fi
 specl-check-local: $(specl_SPECS)
-	@v=`$(SPECL) --version | sed -e 's|^.* ||' -e 1q`;		\
-	if test "$$v" -lt "$(SPECL_MIN)"; then				\
-	  printf "%s%s\n%s\n"						\
-	    "ERROR: Specl version $$v is too old,"			\
-	    " please upgrade to at least version $(SPECL_MIN),"		\
-	    "ERROR: and rerun \`make check\`";				\
-	  exit 1;							\
-	else								\
-	  $(SPECL_ENV) $(SPECL) $(SPECL_OPTS) $(specl_SPECS);		\
-	fi
+	$(SPECL_ENV) $(SPECL) $(SPECL_OPTS) $(specl_SPECS)
 
 $(luarocks_config): Makefile.am
 	@test -d build-aux || mkdir build-aux

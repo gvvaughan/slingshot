@@ -28,8 +28,26 @@ SH=--[[                                             # -*- mode: lua; -*-
 ## WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ## ====================================================================
 
-lua_version_re='"Lua 5."[12]*'
-lua_binaries='lua lua5.2 lua52 lua5.1 lua51'
+
+_lua_version_re='"Lua 5."[12]*'
+_lua_binaries='lua lua5.2 lua52 lua5.1 lua51'
+
+export LUA_INIT
+export LUA_INIT_5_2
+export LUA_PATH
+export LUA_CPATH
+
+# Be Bourne compatible
+if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+  emulate sh
+  NULLCMD=:
+  # Zsh 3.x and 4.x performs word splitting on ${1+"$@"}, which
+  # is contrary to our usage.  Disable this feature.
+  alias -g '${1+"$@"}'='"$@"'
+  setopt NO_GLOB_SUBST
+else
+  case `(set -o) 2>/dev/null` in *posix*) set -o posix;; esac
+fi
 
 # If LUA is not set, search PATH for something suitable.
 test -n "$LUA" || {
@@ -39,7 +57,7 @@ test -n "$LUA" || {
   {
     test -x "$1" && {
       eval 'case `'$1' -e "print (_VERSION)" 2>/dev/null` in
-        '"$lua_version_re"') LUA='$1' ;;
+        '"$_lua_version_re"') LUA='$1' ;;
       esac'
     }
   }
@@ -48,7 +66,7 @@ test -n "$LUA" || {
 
   save_IFS="$IFS"
   LUA=
-  for x in $lua_binaries; do
+  for x in $_lua_binaries; do
     IFS=:
     for dir in $PATH; do
       IFS="$save_IFS"
@@ -65,6 +83,9 @@ test -n "$LUA" || {
   printf "${e+$e\n}$progname: retry after 'export LUA=/path/to/lua'\n" >&2
   exit 1
 }
+
+LUA_INIT=
+LUA_INIT_5_2=
 
 # Reexecute using the interpreter suppiled in LUA, or found above.
 exec "$LUA" "$0" "$@"
@@ -111,6 +132,7 @@ and copied to standard output with the sections from read files merged in
 at the end of identically named sections from standard input.
 
   -e PATT REPLACE        replace Lua pattern PATT with REPLACE
+  -v, --verbose          verbosely report processing
       --help             print this help, then exit
       --version          print version number, then exit
 
@@ -123,7 +145,7 @@ Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
 end
 
 prog["--version"] = function ()
-  print [[merge-sections (slingshot) 6
+  print [[merge-sections (slingshot) 7
 Written by Gary V. Vaughan <gary@gnu.org>, 2014
 
 Copyright (C) 2014, Gary V. Vaughan
@@ -131,6 +153,12 @@ Slingshot comes with ABSOLUTELY NO WARRANTY.
 See source files for individual license conditions.]]
   os.exit (0)
 end
+
+prog["--verbose"] = function (arglist, i)
+  prog.opts.verbose = true
+  return i
+end
+prog["-v"] = prog["--verbose"]
 
 prog["-e"] = function (arglist, i)
   local opt = arglist[i]
@@ -179,8 +207,31 @@ if select ("#", ...) < 1 then
   opterr "no file arguments provided"
 end
 
+
+--[[ ================= ]]--
+--[[ Helper functions. ]]--
+--[[ ================= ]]--
+
+-- Print a warning message to standard error.
+local function warn (msg)
+  io.stderr:write (prog.name .. ": warning: " .. msg .. ".\n")
+end
+
+
+-- Print a progress message, only if --verbose was given.
+local function verbose (msg)
+  if prog.opts.verbose then
+    io.stderr:write (prog.name .. ": " .. msg .. "\n")
+  end
+end
+
+
+--[[ ===== ]]--
+--[[ Main. ]]--
+--[[ ===== ]]--
+
 local header_pattern  = "## ([%w%s.]+%.) ##"
-local section_pattern = " %-+ ##\n" .. header_pattern .. "\n## %-+ ##\n\n(.-)\n##"
+local section_pattern = "%-%- ##\n" .. header_pattern .. "\n## %-+ ##\n\n(.-)\n## %-%-"
 local sections = {}
 
 -- Read sections to merge, from listed filenames.
@@ -192,6 +243,7 @@ for _, filename in ipairs (arg) do
   h:close ()
 
   s:gsub (section_pattern, function (title, code)
+    verbose (filename .. ": found " .. (sections[title] and "" or "initial ") .. title)
     sections[title] = sections[title] or ""
     sections[title] = sections[title] .. code
   end)
@@ -203,6 +255,7 @@ for line in io.stdin:lines () do
   if line:match ("^## %-+ ##$") then
     next_section = not next_section
     if next_section and in_section and sections[in_section] then
+      verbose ("stdout: emitting additional code from " .. in_section)
       print (sections[in_section])
       sections[in_section] = nil
     end
@@ -210,10 +263,15 @@ for line in io.stdin:lines () do
 
   if next_section and line:match ("^" .. header_pattern .. "$") then
     in_section = line:gsub (header_pattern, "%1")
+    verbose ("stdin: changing into section " .. in_section)
   end
 
   for _, e in ipairs (prog.opts.exprs) do
     line = line:gsub (e[1], e[2])
   end
   print (line)
+end
+
+for name in pairs (sections) do
+  warn ("section '" .. name .. "' was not merged")
 end
