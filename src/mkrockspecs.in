@@ -271,7 +271,7 @@ local function loadmap (root)
   tree (root)
   for _, f in ipairs (files) do
     local m = f:match ("^" .. escape_pattern (root) .. "/(.*)%.lua")
-    map [m:gsub ("/", ".")] = f:gsub ("^%./", "")
+    map [m:gsub ("/", "."):gsub ("%.init$", "")] = f:gsub ("^%./", "")
   end
   return map
 end

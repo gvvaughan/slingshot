@@ -32,6 +32,9 @@ Slingshot NEWS - User visible changes.
 
   - `bootstrap` now has `slingshot_copy` merged in correctly.
 
+  - `mkrockspecs` generates build.modules keys correctly for the
+    `foo/bar/init.lua` pattern.
+
 
 * Noteworthy changes in release 6 (2014-01-04) [stable]
 
