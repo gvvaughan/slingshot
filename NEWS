@@ -7,14 +7,18 @@ Slingshot NEWS - User visible changes.
   - `mkrockspecs` accepts a new `--branch` option for generating a
     git/scm rockspec that pulls that branch instead of master.
 
+  - `mkrockspecs` accepts a new `--repository` option to cope with
+    releasing a LuaRock from a repository with a different name, e.g:
+    `stdlib-36-1.rockspec` from `http://github.com/rrthomas/lua-stdlib`.
+
   - Slingshot bootstrap will check rockspecs listed in $buildreq,
     according to the URL part of a specification-triple ending in
-    `.rockspec`.  So that we don't have to install, say, LDoc twice
-    for Travis (once in the system rocks tree so that bootstrap
-    won't bomb out with a missing rockspec error, and then again
-    in the project rocks tree after luarocks-config.ld has been
-    built by make), the rockspec version checks can be short-
-    circuited by setting an APPVAR in bootstrap's environment, e.g:
+    `.rockspec`.  So that we don't have to install, say, LDoc twice for
+    Travis (once in the system rocks tree so that bootstrap won't bomb
+    out with a missing rockspec error, and then again in the project
+    rocks tree after luarocks-config.ld has been built by make), the
+    rockspec version checks can be short-circuited by setting an APPVAR
+    in bootstrap's environment, e.g:
 
         LDOC=`pwd`/luarocks/bin/ldoc ./bootstrap
 
