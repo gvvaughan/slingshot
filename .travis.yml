@@ -32,7 +32,7 @@ install:
   - ( cd $LUAROCKS_BASE;
       ./configure
       --prefix=$HOME --with-lua=$LUA --lua-version=$LUA_SUFFIX
-      --with-lua-include=$LUA_INCDIR;
+      --lua-suffix=$LUA_SUFFIX --with-lua-include=$LUA_INCDIR;
       make all install; )
 
 # Configure and build.
