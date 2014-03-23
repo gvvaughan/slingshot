@@ -47,19 +47,19 @@ script:
 
   # Set Lua and Shell paths up for local luarocks tree.
   # this package depends on will be installed.
-  - eval `$LUAROCKS path`
+  - eval `$LUA $LUAROCKS path`
   - export PATH=`pwd`/luarocks/bin:$PATH
 
   # Install extra rocks into $LUAROCKS_CONFIG rocks tree.
   - $LUAROCKS install lyaml; $LUAROCKS install specl;
 
   # Make git rockspec for this slingshot
-  - make rockspecs LUAROCKS="$LUAROCKS" V=1
-    || { $LUAROCKS path; cat $ROCKSPEC; }
+  - make rockspecs LUAROCKS="$LUA $LUAROCKS" V=1
+    || { $LUA $LUAROCKS path; cat $ROCKSPEC; }
 
   # The git rockspec will rerun bootstrap, and check any rock versions
   # in bootstrap.conf:buildreq this time.
-  - $LUAROCKS make $ROCKSPEC LUA="$LUA"
+  - $LUA $LUAROCKS make $ROCKSPEC LUA="$LUA"
 
   # Run self-tests in the `luarocks make` build tree.
   - LUA_PATH=`pwd`'/lib/?.lua;'"${LUA_PATH-;}"
