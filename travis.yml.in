@@ -31,7 +31,7 @@ install:
   - tar zxvpf $LUAROCKS_BASE.tar.gz
   - ( cd $LUAROCKS_BASE;
       ./configure
-      --prefix=$HOME --lua-version=$LUA_SUFFIX --lua-suffix=$LUA_SUFFIX
+      --prefix=$HOME --with-lua=$LUA --lua-version=$LUA_SUFFIX
       --with-lua-include=$LUA_INCDIR;
       make all install; )
 
