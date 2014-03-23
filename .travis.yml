@@ -34,7 +34,8 @@ install:
       ./configure
       --prefix=$HOME --with-lua=/usr --lua-version=$LUA_SUFFIX
       --lua-suffix=$LUA_SUFFIX --with-lua-include=$LUA_INCDIR;
-      make all install; )
+      make build;
+      make install; )
 
 # Configure and build.
 script:
