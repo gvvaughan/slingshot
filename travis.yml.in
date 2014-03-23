@@ -2,16 +2,16 @@
 language: erlang
 
 env:
+  matrix:
+    - LUA=lua5.1             LUA_INCDIR=/usr/include/lua5.1     LUA_SUFFIX=5.1
+    - LUA=lua5.2             LUA_INCDIR=/usr/include/lua5.2     LUA_SUFFIX=5.2
+    - LUA=luajit-2.0.0-beta9 LUA_INCDIR=/usr/include/luajit-2.0 LUA_SUFFIX=5.1
   global:
     - PACKAGE=@PACKAGE@
     - ROCKSPEC=$PACKAGE-git-1.rockspec
     - LUAROCKS_CONFIG=build-aux/luarocks-config.lua
     - LUAROCKS_BASE=luarocks-2.1.2
     - LUAROCKS="$LUA $HOME/bin/luarocks"
-  matrix:
-    - LUA=lua5.1             LUA_INCDIR=/usr/include/lua5.1     LUA_SUFFIX=5.1
-    - LUA=lua5.2             LUA_INCDIR=/usr/include/lua5.2     LUA_SUFFIX=5.2
-    - LUA=luajit-2.0.0-beta9 LUA_INCDIR=/usr/include/luajit-2.0 LUA_SUFFIX=5.1
 
 # Tool setup.
 install:
