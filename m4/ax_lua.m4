@@ -259,7 +259,7 @@ AC_DEFUN([AX_PROG_LUA],
     AC_CACHE_CHECK([for $ax_display_LUA version], [ax_cv_lua_version],
       [ ax_cv_lua_version=`$LUA -e "print(_VERSION)" | \
           sed "s|^Lua \(.*\)|\1|" | \
-          grep -o "^@<:@0-9@:>@\+\\.@<:@0-9@:>@\+"`
+          grep -E -o "^@<:@0-9@:>@+\\.@<:@0-9@:>@+"`
       ])
     AS_IF([test "x$ax_cv_lua_version" = 'x'],
       [AC_MSG_ERROR([invalid Lua version number])])
