@@ -28,6 +28,9 @@ Slingshot NEWS - User visible changes.
   - `build-aux/merge-sections` has a new `--verbose` flag that reports
     progress to stderr in real time.
 
+  - Remove m4/ax_compare_version.m4 and dependencies, resulting in a
+    slightly faster and smaller configure.
+
 ** Bugs fixed:
 
   - `bootstrap` now has `slingshot_copy` merged in correctly.

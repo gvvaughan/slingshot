@@ -52,7 +52,7 @@ about automatically keeping them in sync with future releases):
    adapted from the [GNU Gnulib][] project, with changes for portability
    and applicability to a Lua based project.
 
- * `ax_lua.m4`, `ax_compare_version.m4`:
+ * `ax_lua.m4`:
 
    taken from the [GNU Autoconf Archive][], to help autoconf discover
    where Lua and its files are installed on your system.

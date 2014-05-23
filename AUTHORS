@@ -18,8 +18,6 @@ and suggestions.
    `ax_lua.m4`.
  * Tim Perkins <tprk77@gmail.com>:
    Wrote the original version of `ax_lua.m4`.
- * Tim Toolan <toolan@ele.uri.edu>:
-   For `ax_compare_version.m4`.
  * Akim Demaille <akim@lrde.epita.fr>, Eric Blake <eblake@redhat.com>,
    Simon Josefsson <simon@josefsson.org>:
    Authors of upstream release rules in gnulib `maint.mk`, adapted as
