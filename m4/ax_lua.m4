@@ -254,7 +254,7 @@ AC_DEFUN([AX_PROG_LUA],
   ],
   [ dnl Query Lua for its version number.
     AC_CACHE_CHECK([for $ax_display_LUA version], [ax_cv_lua_version],
-      [ ax_cv_lua_version=`$LUA -e 'print(_VERSION:match "(%d+%.%d+)")' ])
+      [ ax_cv_lua_version=`$LUA -e 'print(_VERSION:match "(%d+%.%d+)")'` ])
     AS_IF([test "x$ax_cv_lua_version" = 'x'],
       [AC_MSG_ERROR([invalid Lua version number])])
     AC_SUBST([LUA_VERSION], [$ax_cv_lua_version])
@@ -357,7 +357,7 @@ dnl                 [ACTION-IF-TRUE], [ACTION-IF-FALSE])
 dnl =========================================================================
 AC_DEFUN([_AX_LUA_CHK_VER],
 [
-  AS_IF([$1 -e '
+  AS_IF([$1 2>/dev/null -e '
         function norm (v) i,j=v:match "(%d+)%.(%d+)" return 100 * i + j end
         v=norm (_VERSION)
         os.exit ((v >= norm ("$2") and v < norm ("$3")) and 0 or 1)'],
