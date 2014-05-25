@@ -357,7 +357,7 @@ default.build = default.build or {
   type = "command",
   build_command = "./configure " ..
     "LUA='$(LUA)' LUA_INCLUDE='-I$(LUA_INCDIR)' " .. configure_flags ..
-    "--prefix='$(PREFIX)' --libdir='$(LIBDIR)' --datadir='$(LUADIR)' " ..
+    "--prefix='$(PREFIX)' --libdir='$(LIBDIR)' --datarootdir='$(LUADIR)' " ..
     "&& make clean all",
   install_command = "make install luadir='$(LUADIR)'",
   copy_directories = {},
