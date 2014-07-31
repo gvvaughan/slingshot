@@ -2,22 +2,28 @@ SLINGSHOT
 =========
 
 [![travis-ci status](https://secure.travis-ci.org/gvvaughan/slingshot.png?branch=master)](http://travis-ci.org/gvvaughan/slingshot/builds)
+[![Stories in Ready](https://badge.waffle.io/gvvaughan/slingshot.png?label=ready&title=Ready)](https://waffle.io/gvvaughan/slingshot)
 
 [Slingshot][] releases rocks!
 
 The files shipped with this project form the common foundation I use
-to manage [LuaRocks][] releases from github for my other projects, to
-save having to propagate changes to the release process between them
-every-time I make an update.
+to manage [LuaRocks][] releases from github for all my other projects.
+This promotes the good programming trait of **laziness** by saving me
+from having to manually propagate improvements to my release process
+between them all every-time I update.
 
 Installation
 ------------
 
-Using it fully involves copying `bootstrap` into your project and
-checking it in .  Running `bootstrap` will now set up a [Slingshot][]
-submodule, a `.gitmodules` file, and link to the slingshot files
-described below for the matching slingshot version checked out into
-the submodule.
+Incorporating [Slingshot][] into your project involves copying the
+Slingshot `bootstrap` script into your project root directory and
+checking it in.  You should probably write and check in a project
+`bootstrap.conf` with a list of files you want slingshot to manage
+for you in the `slingshot_files` variable.
+
+Running `bootstrap` after that will set up a [Slingshot][] git
+submodule, along with requisite `.gitmodules` file, and link any
+slingshot managed files nominated into your project tree.
 
  * `bootstrap`:
 
@@ -30,24 +36,24 @@ the submodule.
 
    Note that the [Slingshot][] `bootstrap` script has extra functions
    compared to the Libtool `bootstrap` on which it is based, and the
-   two are not interchangable!
+   two are **not** interchangable!
 
- * `bootstrap.texi`:
+ * `docs/bootstrap.texi`:
 
    texinfo documentation for `bootstrap`.
 
 Alternatively, pick and choose whichever of the following files you
 want to make use of into your project, and either list them in a
-`slingshot_files` variable in your `bootstrap.conf`, or just copy
-them to your project and check them in (if you don't care about
-automatically keeping them in sync with future releases):
+`slingshot_files` variable in your `bootstrap.conf` (or just copy
+them to your project and check them in, as long as you don't care
+about automatically keeping them in sync with future releases):
 
  * `gitlog-to-changelog`, `do-release-commit-and-tag`:
 
    adapted from the [GNU Gnulib][] project, with changes for portability
-   and applicability to a Lua based projects.
+   and applicability to a Lua based project.
 
- * `ax_lua.m4`, `ax_compare_version.m4`:
+ * `ax_lua.m4`:
 
    taken from the [GNU Autoconf Archive][], to help autoconf discover
    where Lua and its files are installed on your system.
@@ -63,9 +69,9 @@ automatically keeping them in sync with future releases):
 
    given a list of files with section headers in boxes like this:
 
-       ## ------------- ##
-       ## Section Name. ##
-       ## ------------- ##
+   >    ## ------------- ##
+   >    ## Section Name. ##
+   >    ## ------------- ##
 
    this script merges those sections into identically named sections
    from standard input.  This script is used by [Slingshot][] itself
@@ -121,7 +127,9 @@ the previous release version number.  `release.mk` will maintain these
 files for you once you have them in place.
 
 You'll also need a `rockspec.conf` file to feed the `mkrockspecs`
-script.
+script, and probably a `local.mk` with your project specific build
+rules.
+
 
 Usage
 -----
@@ -145,7 +153,9 @@ repository, and don't push the changes back to origin.
 
 Use `make release RELEASE_TYPE=stable` to perform a full release
 process, including pushing changes back to origin, and mailing an
-announcement taken from the NEWS file.
+announcement taken from the NEWS file.  You can override the mail
+addresses by setting `announce_emails` and `rockspec_emails` in your
+`local.mk` fragment.
 
 
 [gnu gnulib]: http://gnu.org/s/gnulib

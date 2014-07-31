@@ -1,20 +1,33 @@
 Slingshot NEWS - User visible changes.
 
-* Noteworthy changes in release ?.?.? (????-??-??)
+* Noteworthy changes in release 7 (2014-07-31) [stable]
 
 ** New Features:
+
+  - Slingshot `make release` now requires a LuaRocks binary that supports
+    the upload command (such as the 2.2.0 beta release) and uses that to
+    upload rockspecs directly to the moonrocks repository, rather than
+    emailing the luarocks-developer list with an upload request.  If the
+    upload fails due to a missing api-key, then make sure you have one
+    at rocks.moonscript.org/settings and call make like this:
+
+        make upload API_KEY=0123456789abcdefghijklmnopqrstuvwxyzABCDE
 
   - `mkrockspecs` accepts a new `--branch` option for generating a
     git/scm rockspec that pulls that branch instead of master.
 
+  - `mkrockspecs` accepts a new `--repository` option to cope with
+    releasing a LuaRock from a repository with a different name, e.g:
+    `stdlib-36-1.rockspec` from `http://github.com/rrthomas/lua-stdlib`.
+
   - Slingshot bootstrap will check rockspecs listed in $buildreq,
     according to the URL part of a specification-triple ending in
-    `.rockspec`.  So that we don't have to install, say, LDoc twice
-    for Travis (once in the system rocks tree so that bootstrap
-    won't bomb out with a missing rockspec error, and then again
-    in the project rocks tree after luarocks-config.ld has been
-    built by make), the rockspec version checks can be short-
-    circuited by setting an APPVAR in bootstrap's environment, e.g:
+    `.rockspec`.  So that we don't have to install, say, LDoc twice for
+    Travis (once in the system rocks tree so that bootstrap won't bomb
+    out with a missing rockspec error, and then again in the project
+    rocks tree after luarocks-config.ld has been built by make), the
+    rockspec version checks can be short-circuited by setting an APPVAR
+    in bootstrap's environment, e.g:
 
         LDOC=`pwd`/luarocks/bin/ldoc ./bootstrap
 
@@ -24,9 +37,15 @@ Slingshot NEWS - User visible changes.
   - `build-aux/merge-sections` has a new `--verbose` flag that reports
     progress to stderr in real time.
 
+  - Remove m4/ax_compare_version.m4 and dependencies, resulting in a
+    slightly faster and smaller configure.
+
 ** Bugs fixed:
 
   - `bootstrap` now has `slingshot_copy` merged in correctly.
+
+  - `mkrockspecs` generates build.modules keys correctly for the
+    `foo/bar/init.lua` pattern.
 
 
 * Noteworthy changes in release 6 (2014-01-04) [stable]

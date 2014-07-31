@@ -1,10 +1,160 @@
+2014-07-31  Gary V. Vaughan  <gary@gnu.org>
+
+	Release version 7
+	* NEWS: Record release date.
+
+	release: use new luarocks 2.2.0 upload command.
+	* build-aux/release.mk (LUAROCKS): New macro. Default to luarocks.
+	(upload): New phony rule. Call luarocks upload with release
+	rockspec file.
+	(release): Add `$(MAKE) upload`.
+	* NEWS: Update.
+
+	maint: add a waffle.io badge to README.md.
+	* README.md: Add a waffle.io badge.
+
+	travis: use git luarocks for moonrocks and upload.
+	* travis.yml.in (LUAROCKS_BASE): Remove.
+	(install): Build a shallow git clone of luarocks repo HEAD.
+	* .travis.yml: Regenerate.
+
+	m4: sync ax_lua.m4 with upstream.
+	* m4/ax_lua.m4: Sync with upstream.
+
+2014-05-25  Gary V. Vaughan  <gary@gnu.org>
+
+	mkrockspecs: set datarootdir in addition to datadir subset.
+	* src/mkrockspecs.in (default.build): When using a GNU autotools
+	driven installation, we still set datarootdir so that (among
+	others) the documentation trees are installed to the correct rock
+	directory.  But, don't mangle datadir while doing so!
+
+	mkrockspecs: set datarootdir instead of just datadir subset.
+	* src/mkrockspecs.in (default.build): When using a GNU autotools
+	driven installation, set datarootdir so that (among others) the
+	documentation trees are installed to the correct rock directory.
+
+2014-05-24  Gary V. Vaughan  <gary@vaughan.pe>
+
+	Merge pull request #3 from rrthomas/master
+	Sync ax_lua.m4 with autoconf-archive
+
+2014-05-23  Reuben Thomas  <rrt@sc3d.org>
+
+	Sync ax_lua.m4 with autoconf-archive
+
+2014-05-23  Gary V. Vaughan  <gary@gnu.org>
+
+	m4: discard stderr, in case Lua fails for any reason.
+	* m4/ax_lua.m4 (_AX_LUA_CHK_VER): For compatibility with the contract
+	from the previous (shell|sed|awk) implementation, discard stderr output.
+	(AX_PROG_LUA): Missing backtick.
+
+	m4: use discovered Lua interpreter for its own version analysis.
+	* m4/ax_lua.m4 (AX_PROG_LUA): Use discovered Lua interpreter to
+	repor its own version number.
+	(_AX_LUA_CHK_VER): Use Lua code for version comparison rather
+	than depending on AX_COMPARE_VERSION macro, some awk and a slew
+	of sed.
+	* m4/ax_compare_version.m4: Remove.  Surplus to newly reduced
+	requirements.
+	* AUTHORS, README.md: Remove references to ax_compare_version.m4.
+	* NEWS: Update.
+
+2014-05-21  ncopa  <http://github.com/ncopa>
+
+	m4: don't use GNU grep extensions in portable scripts.
+	* m4/ax_lua.m4 (AX_PROG_LUA): \+ is not valid in standard BRE.
+	Use bare + in ERE with `grep -E`.
+
+2014-04-15  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: fix a typo in help.
+	* build-aux/bootstrap.slingshot (slingshot_options_prep): Add the
+	missing 'l' back into buildreq.
+	* bootstrap: Regenerate.
+
+2014-04-05  Gary V. Vaughan  <gary@gnu.org>
+
+	release: adjust for github url changes.
+	* build-aux/release.mk (_PRE): Raw file content is now served
+	from `https://raw.githubusercontent.com/...`.
+	(GITHUB_ROCKSPEC): Replace the `github` part of the prefix with
+	$(_PRE) too.
+
+	release: fix quote nesting.
+	* build-aux/release.mk (public-submodule-commit): Fix quote
+	nesting.
+
+2014-03-23  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: luarocks requires `make build`, not `make all`.
+	* travis.yml.in (install): Use `make build` for LuaRocks.
+	* .travis.yml: Regenerate.
+
+	travis: redo LuaRocks configuration.
+	* travis.yml.in (install): LuaRocks configure --with-lua switch
+	stands in for --with-lua-prefix.  Adjust and simplify.
+	* .travis.yml: Regenerate.
+
+	travis: set $LUAROCKS interpreter explicitly.
+	* travis.yml.in: Prefix every $LUAROCKS with $LUA.
+	* .travis.yml: Regenerate.
+
+	travis: revert previous change, and let luarocks pick its own Lua.
+	* travis.yml.in (LUAROCKS): Remove $LUA prefix.
+	* .travis.yml: Regenerate.
+
+	travis: ensure LUA is defined before LUAROCKS is expanded.
+	* travis.yml.in (env): Switch order of matrix and global sections.
+	* .travis.yml: Regenerate.
+
+	travis: luarocks-2.1.2 seems to need more configure arguments.
+	* travis.yml.in (install): Add --lua-suffix argument to configure.
+	* .travis.yml: Regenerate.
+
+	travis: luarocks-2.1.2 configuration tweaks.
+	* travis.yml.in (install): The configure arguments used for
+	luarocks-2.1.1 don't work with 2.1.2.  Adjust accordingly.
+	* .travis.yml: Regenerate.
+
+2014-03-22  Gary V. Vaughan  <gary@gnu.org>
+
+	docs: improve README.
+	* README.md: Fix some typos, and improve clarity a little.
+
+	travis: regenerate .travis.yml.
+	* .travis.yml: Regenerate.
+
+2014-01-21  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: bump luarocks install to release 2.1.2.
+	* travis.yml.in (LUAROCKS_BASE): Bump to 2.1.2.
+
+2014-01-17  Gary V. Vaughan  <gary@gnu.org>
+
+	specl: propagate $LUA to prevent mixing interpeters.
+	* build-aux/specl.mk (specl-check-local): Add LUA=$(LUA) to
+	Specl execution environment.
+
 2014-01-16  Gary V. Vaughan  <gary@gnu.org>
+
+	mkrockspecs: handle .../init.lua files properly.
+	* src/mkrockspecs.in (loadmap): Don't leave trailing `.init` in
+	the key field of the build.modules table.
+	* NEWS: Update.
+
+	mkrockspecs: add --repository option for rock/repo name mismatch.
+	* src/mkrockspecs.in (setopt): New function factored out of option
+	setting code duplication.
+	Use it to implement `--repository`.
+	* NEWS: Update.
 
 	configury: bump version to 7.
 	* configure.ac (AC_INIT): Bump version to 7.
 	* build-aux/merge-sections: Regenerate.
 
-2014-01-16  Gary V. Vaughan  <gary@gnu.org>
+2014-01-15  Gary V. Vaughan  <gary@gnu.org>
 
 	Revert "mkrockspecs: slingshot doesn't need slingshot submodule git magic!" and others...
 	This reverts commits 039367682f360cec97324e3fdb58bc3443938468,
@@ -223,6 +373,8 @@
 	bootstrap: sync with upstream.
 	* bootstrap: Pick up recent fixes from upstream.
 
+2014-01-01  Gary V. Vaughan  <gary@gnu.org>
+
 	maint: update copyright notices.
 	Add rules, and update all copyright notices.
 	* GNUmakefile (update-copyright): New rule to run
@@ -247,6 +399,8 @@
 	* .travis.yml: Regenerate.
 	* NEWS: Update.
 
+2013-12-08  Gary V. Vaughan  <gary@gnu.org>
+
 	mkrockspecs: fix a typo.
 	* src/mkrockspecs.in: Add missing 's' to spec.build.modules reset.
 
@@ -258,8 +412,6 @@
 
 	configury: bump release version to 6.
 	* configure.ac (AC_INIT): Bump release version to 6.
-
-2013-12-08  Gary V. Vaughan  <gary@gnu.org>
 
 	maint: post-release administrivia.
 	* NEWS: Add header line for next release.
@@ -306,7 +458,7 @@
 	* travis.yml.in (install): If libyaml.so is not in /usr/lib,
 	search for suitable libraries and link them into place.
 
-2013-09-27  Gary V. Vaughan  <gary@gnu.org>
+2013-09-26  Gary V. Vaughan  <gary@gnu.org>
 
 	mkrockspecs: sort generated rockspec tables asciibetically.
 	* src/mkrockspecs.in (format): Collect and sort keys within
@@ -328,6 +480,8 @@
 	configury: support client set gitlog-to-changelog arguments.
 	* build-aux/release.mk (ChangeLog): If gitlog_args macro is set,
 	then pass it to gitlog-to-changelog script.
+
+2013-09-24  Gary V. Vaughan  <gary@gnu.org>
 
 	maint: add .version to gitignore.
 	* .gitignore: ignore .version.
@@ -360,7 +514,7 @@
 	there are additional user-defined SPECL_OPTS.
 	* NEWS: Update.
 
-2013-08-30  Gary V. Vaughan  <gary@gnu.org>
+2013-08-29  Gary V. Vaughan  <gary@gnu.org>
 
 	bootstrap: sync with upstream.
 	* bootstrap: Sync with upstream, to fix a bug that still clones
@@ -403,13 +557,11 @@
 	much improved by putting the test fils in a subdirectory and
 	traversing only that.
 
-2013-08-29  Gary V. Vaughan  <gary@gnu.org>
-
 	bootstrap: sync with upstream.
 	* bootstrap: Use the latest upstream version with better portability
 	to OpenBSD, and CLI compatibility with the GNU bootstrap script.
 
-2013-08-26  Gary V. Vaughan  <gary@gnu.org>
+2013-08-25  Gary V. Vaughan  <gary@gnu.org>
 
 	mkrockspecs: don't dereference the lyaml.load return table.
 	* src/mkrockspecs.in: Now that we expect the API to be consistent
@@ -446,7 +598,7 @@
 	* m4/slingshot.m4 (AC_CONFIG_FILES): Strip trailing whitespace.
 	* .travis.yml: Regenerate.
 
-2013-06-28  Gary V. Vaughan  <gary@gnu.org>
+2013-06-27  Gary V. Vaughan  <gary@gnu.org>
 
 	release: remove git submodules before .gitmodules file.
 	* build-aux/release.mk (check-in-release-branch): Don't run `git
@@ -483,7 +635,7 @@
 	work with ldoc.
 	* NEWS: Update.
 
-2013-05-25  Gary V. Vaughan  <gary@gnu.org>
+2013-05-24  Gary V. Vaughan  <gary@gnu.org>
 
 	release: copy scm_rockspec to release branch.
 	* Makefile.am (save_release_files): Default setting.
@@ -631,6 +783,8 @@
 	appropriate special handling of luadoc and specl.
 	* .travis.yml: Regenerate.
 
+2013-05-05  Gary V. Vaughan  <gary@gnu.org>
+
 	travis: shell picks up locally installed luarocks/bin scripts.
 	* travis.yml.in (script): Prepend luarocks bin directory to PATH.
 
@@ -677,8 +831,6 @@
 	parent project that doesn't have all the listed fragments.
 	* local.mk: Put project specific fragment includes here.
 
-2013-05-05  Gary V. Vaughan  <gary@gnu.org>
-
 	travis: regenerate .travis.yml.
 	* .travis.yml: Regenerate.
 
@@ -688,7 +840,7 @@
 	configury: fix a typo.
 	* configure.ac (AC_PATH_PROG): Spell false correctly.
 
-2013-05-02  Gary V. Vaughan  <gary@gnu.org>
+2013-05-01  Gary V. Vaughan  <gary@gnu.org>
 
 	release: redo announcements without mutt mail wrapper.
 	* build-aux/mail: Remove.
@@ -758,6 +910,8 @@
 	* README.md: Add some blank lines around list items to get a
 	definition-list-like display.
 
+2013-04-28  Gary V. Vaughan  <gary@gnu.org>
+
 	release: distribute .autom4te.cfg.
 	* build-aux/release.mk (release_extra_dist): Add .autom4te.cfg.
 
@@ -801,8 +955,6 @@
 
 	release: ensure git rockspec is available for announcement.
 	* build-aux/release.mk (announcement): Add depedency on scm_rockspec.
-
-2013-04-28  Gary V. Vaughan  <gary@gnu.org>
 
 	release: create new release branch at v1 tag.
 	* build-aux/release.mk (check-in-release-branch): If there is no

@@ -226,9 +226,8 @@ DIST_COMMON = $(srcdir)/local.mk $(srcdir)/src/src.mk \
 	$(top_srcdir)/build-aux/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/ax_compare_version.m4 \
-	$(top_srcdir)/m4/ax_lua.m4 $(top_srcdir)/m4/slingshot.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/ax_lua.m4 \
+	$(top_srcdir)/m4/slingshot.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -1009,7 +1008,7 @@ docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 	    build-aux/mkrockspecs;			\
 	fi
 specl-check-local: $(specl_SPECS)
-	$(SPECL_ENV) $(SPECL) $(SPECL_OPTS) $(specl_SPECS)
+	$(SPECL_ENV) LUA=$(LUA) $(SPECL) $(SPECL_OPTS) $(specl_SPECS)
 
 $(luarocks_config): Makefile.am
 	@test -d build-aux || mkdir build-aux
