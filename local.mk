@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-old_NEWS_hash = 4a4a721668a1516c046d865c7b425586
+old_NEWS_hash = 30f59825c3c559d1e12971e1de549a09
 
 update_copyright_env = \
 	UPDATE_COPYRIGHT_HOLDER='(Free Software Foundation, Inc.|Gary V. Vaughan|Reuben Thomas)' \
