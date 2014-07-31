@@ -2,6 +2,7 @@ SLINGSHOT
 =========
 
 [![travis-ci status](https://secure.travis-ci.org/gvvaughan/slingshot.png?branch=master)](http://travis-ci.org/gvvaughan/slingshot/builds)
+[![Stories in Ready](https://badge.waffle.io/gvvaughan/slingshot.png?label=ready&title=Ready)](https://waffle.io/gvvaughan/slingshot)
 
 [Slingshot][] releases rocks!
 
