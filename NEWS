@@ -4,6 +4,15 @@ Slingshot NEWS - User visible changes.
 
 ** New Features:
 
+  - Slingshot `make release` now requires a LuaRocks binary that supports
+    the upload command (such as the 2.2.0 beta release) and uses that to
+    upload rockspecs directly to the moonrocks repository, rather than
+    emailing the luarocks-developer list with an upload request.  If the
+    upload fails due to a missing api-key, then make sure you have one
+    at rocks.moonscript.org/settings and call make like this:
+
+        make upload API_KEY=0123456789abcdefghijklmnopqrstuvwxyzABCDE
+
   - `mkrockspecs` accepts a new `--branch` option for generating a
     git/scm rockspec that pulls that branch instead of master.
 
