@@ -359,7 +359,9 @@ dnl =========================================================================
 AC_DEFUN([_AX_LUA_CHK_VER],
 [
   AS_IF([$1 2>/dev/null -e '
-        function norm (v) i,j=v:match "(%d+)%.(%d+)" return 100 * i + j end
+        function norm (v)
+          i,j=v:match "(%d+)%.(%d+)" if i then return 100 * i + j end
+        end
         v, toobig=norm (_VERSION), norm "$3" or math.huge
         os.exit ((v >= norm ("$2") and v < toobig) and 0 or 1)'],
     [$4], [$5])
