@@ -2,6 +2,13 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New Features:
+
+  - Slingshot now supports the slack.com Travis Integration.  Add
+    a .slackid file to the root of your project, containing your slack
+    token on a single line -- a notification section containing that
+    id will be appended to your `.travis.yml` at configure time.
+
 
 * Noteworthy changes in release 7 (2014-07-31) [stable]
 
