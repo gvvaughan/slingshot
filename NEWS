@@ -9,6 +9,36 @@ Slingshot NEWS - User visible changes.
     token on a single line -- a notification section containing that
     id will be appended to your `.travis.yml` at configure time.
 
+  - Various build related directories are added to SPECL_ENV by default,
+    so that package.path and package.cpath settings can be set in your
+    spec_helper.lua to enforce loading from the build tree instead of
+    accidentally falling back to the system module paths -- especially
+    during the VPATH `make check` performed during `make distcheck`. You
+    might want to write something like this in `spec_helper.lua`:
+
+      local std = require "specl.std"
+
+      local builddir = os.getenv "top_builddir" or "."
+      local srcdir = os.getenv "top_srcdir" or "."
+
+      package.path = std.package.normalize (
+                       top_builddir .. "/lib/mymodule/?.lua",
+                       top_srcdir .. "/lib/mymodule/?.lua",
+                       package.path)
+
+      mymodule = require "mymodule"
+
+    This ensures that, no matter what LuaRocks does to the package paths,
+    nor whether you run `specl` by hand with auto-discovery, or via the
+    `make check` or `make distcheck` rules... by the time you require
+    your module from the development tree, the package path has the right
+    directories at the front.
+
+** Incompatible Changes:
+
+  - SPECL_ENV is now set (to empty) by default, and should be augmented
+    with += in local.mk.
+
 
 * Noteworthy changes in release 7 (2014-07-31) [stable]
 
