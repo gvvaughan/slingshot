@@ -69,3 +69,7 @@ script:
     LUA_CPATH=`pwd`'/ext/?.so;'"${LUA_CPATH-;}"
     LUA_INIT= LUA_INIT_5_2=
     make check V=1
+
+  # Run sanity checks on CI server, ignoring buggy automakes.
+  - echo 'local-checks-to-skip = sc_vulnerable_makefile_CVE-2012-3386' >> build-aux/sanity-cfg.mk
+  - make syntax-check || :
