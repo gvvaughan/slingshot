@@ -39,6 +39,11 @@ Slingshot NEWS - User visible changes.
   - SPECL_ENV is now set (to empty) by default, and should be augmented
     with += in local.mk.
 
+## Bug Fixes:
+
+  - We no longer assume autotooled installations will put modules in
+    --libdir (although that will continue to work), but also set
+    luaexecdir at install-time for `ax_lua.m4` compatibility.
 
 * Noteworthy changes in release 7 (2014-07-31) [stable]
 
