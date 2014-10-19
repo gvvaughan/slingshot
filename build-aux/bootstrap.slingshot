@@ -531,7 +531,7 @@ slingshot_require_slingshot_submodule ()
 
         # Make sure we've checked out the correct revision of slingshot.
         func_show_eval "$GIT submodule init" \
-          && func_show_eval "$GIT submodule update" \
+          && func_show_eval "$GIT submodule update -- $slingshot_path" \
           || func_fatal_error "Unable to update slingshot submodule."
       fi
     fi

@@ -45,6 +45,10 @@ Slingshot NEWS - User visible changes.
     --libdir (although that will continue to work), but also set
     luaexecdir at install-time for `ax_lua.m4` compatibility.
 
+  - bootstrap now updates only gnulib and slingshot git submodules as
+    expected.
+
+
 * Noteworthy changes in release 7 (2014-07-31) [stable]
 
 ** New Features:
