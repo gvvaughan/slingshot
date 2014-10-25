@@ -842,7 +842,7 @@ slingshot_require_slingshot_submodule ()
         trap - 1 2 13 15
 
         # Make sure we've checked out the correct revision of slingshot.
-        func_show_eval "$GIT submodule init" \
+        func_show_eval "$GIT submodule init -- $slingshot_path" \
           && func_show_eval "$GIT submodule update -- $slingshot_path" \
           || func_fatal_error "Unable to update slingshot submodule."
       fi
@@ -2908,7 +2908,7 @@ test extract-trace = "$progname" && func_main "$@"
 # End:
 
 # Set a version string for *this* script.
-scriptversion=2014-01-04.01; # UTC
+scriptversion=2014-10-19.23; # UTC
 
 
 ## ------------------- ##
@@ -4206,7 +4206,7 @@ func_require_git ()
     $opt_skip_git && GIT=true
 
     test true = "$GIT" || {
-      if test -f .git; then
+      if test -d .git/.; then
         ($GIT --version) >/dev/null 2>&1 || GIT=true
       fi
     }
@@ -4424,7 +4424,7 @@ func_require_gnulib_submodule ()
       fi
 
       # Make sure we've checked out the correct revision of gnulib.
-      func_show_eval "$GIT submodule init" \
+      func_show_eval "$GIT submodule init -- $gnulib_path" \
           && func_show_eval "$GIT submodule update -- $gnulib_path" \
           ||  func_fatal_error "Unable to update gnulib submodule."
     fi
