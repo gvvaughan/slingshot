@@ -71,5 +71,8 @@ script:
     make check V=1
 
   # Run sanity checks on CI server, ignoring buggy automakes.
-  - echo 'local-checks-to-skip = sc_vulnerable_makefile_CVE-2012-3386' >> build-aux/sanity-cfg.mk
+  - '{ _assign="=";
+       grep local-checks-to-skip build-aux/sanity-cfg.mk >/dev/null && _assign="+=";
+       printf "local-checks-to-skip %s sc_vulnerable_makefile_CVE-2012-3386\n" "$_assign";
+     } >> build-aux/sanity-cfg.mk'
   - 'make syntax-check || :'
