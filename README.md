@@ -35,12 +35,8 @@ slingshot managed files nominated into your project tree.
    quite a lot larger than the GNU implementation.
 
    Note that the [Slingshot][] `bootstrap` script has extra functions
-   compared to the Libtool `bootstrap` on which it is based, and the
-   two are **not** interchangable!
-
- * `docs/bootstrap.texi`:
-
-   texinfo documentation for `bootstrap`.
+   compared to the [standard `bootstrap`](https://github.com/gvvaughan/bootstrap)
+   on which it is based, and the two are **not** interchangable!
 
 Alternatively, pick and choose whichever of the following files you
 want to make use of into your project, and either list them in a

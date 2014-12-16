@@ -87,35 +87,34 @@ describe mkrockspecs:
 
 - context for a luarocks builtin install:
   - it sets build.type to builtin:
-      expect (parse {"-m docs", "check", "0"; stdin = conf}).
+      expect (parse {"-m doc", "check", "0"; stdin = conf}).
         should_match_output '%stype = "builtin",?\n'
   - it creates a build.modules sub-key:
-      expect (parse {"-m docs", "check", "0"; stdin = conf}).
+      expect (parse {"-m doc", "check", "0"; stdin = conf}).
         should_match_output '%smodules = {'
   - it adds only files with .lua extension to modules sub-table: |
-      name = "docs/spec_check.lua"
+      name = "doc/spec_check.lua"
       f = io.open (name, "w")
       f:write "os.exit (1)"
       f:close ()
-      expect (parse {"-m docs", "check", "0"; stdin = conf}).
-        should_contain_output 'spec_check = "docs/spec_check.lua",\n'
-      expect (parse {"-m docs", "check", "0"; stdin = conf}).
+      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+        should_contain_output 'spec_check = "doc/spec_check.lua",\n'
+      expect (parse {"-m doc", "check", "0"; stdin = conf}).
         should_not_contain_output "mkrockspecs"
       os.remove (name)
   - it adds quoted module keys with non-symbol characters in module path: |
-      name = "docs/spec-check.lua"
+      name = "doc/spec-check.lua"
       f = io.open (name, "w")
       f:write "os.exit (1)"
       f:close ()
-      expect (parse {"-m docs", "check", "0"; stdin = conf}).
-      should_contain_output '["spec-check"] = "docs/spec-check.lua",\n'
-      os.remove (name)
+      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+      should_contain_output '["spec-check"] = "doc/spec-check.lua",\n'
       os.remove (name)
   - it adds quoted module keys with '.' separators for sub-directories: |
-      name = "docs/spec_check.lua"
+      name = "doc/spec_check.lua"
       f = io.open (name, "w")
       f:write "os.exit (1)"
       f:close ()
       expect (parse {"-m .", "check", "0"; stdin = conf}).
-        should_contain_output '["docs.spec_check"] = "docs/spec_check.lua",\n'
+        should_contain_output '["doc.spec_check"] = "doc/spec_check.lua",\n'
       os.remove (name)
