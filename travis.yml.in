@@ -2,7 +2,7 @@ language: c
 
 env:
   global:
-    - LUAROCKS_BASE=2.2.0
+    - LUAROCKS=2.2.0
     - ROCKSPEC=@PACKAGE@-git-1.rockspec
   matrix:
     - LUA=lua5.1
