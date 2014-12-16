@@ -63,6 +63,8 @@ else
   sudo make $PLATFORM install;
 fi
 
+sudo ln -s /usr/local/bin/lua /usr/local/bin/$LUA
+
 cd $TRAVIS_BUILD_DIR;
 
 LUAROCKS_BASE=luarocks-$LUAROCKS
