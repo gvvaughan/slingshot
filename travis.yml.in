@@ -30,7 +30,7 @@ install:
 
   # Install a recent luarocks release locally for everything else.
   - wget https://github.com/keplerproject/luarocks/archive/v$LUAROCKS_RELEASE.tar.gz
-  - tar zxvpf $LUAROCKS_BASE.tar.gz
+  - tar zxvpf v$LUAROCKS_RELEASE.tar.gz
   # LuaRocks configure --with-lua argument is just a prefix!
   - ( cd $LUAROCKS_BASE;
       ./configure
