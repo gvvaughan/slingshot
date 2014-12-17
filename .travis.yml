@@ -2,10 +2,10 @@ language: c
 
 env:
   global:
-    - CC="libtool --mode=compile --tag=CC gcc"
+    - COMPILE="libtool --mode=compile --tag=CC gcc"
     - CFLAGS="-O2 -Wall -DLUA_COMPAT_ALL -DLUA_USE_LINUX"
     - INSTALL="libtool --mode=install install -p"
-    - LD="libtool --mode=link --tag=CC gcc"
+    - LINK="libtool --mode=link --tag=CC gcc"
     - LIBS="-lm -Wl,-E -ldl -lreadline"
 
     - ROCKSPEC=slingshot-git-1.rockspec
@@ -43,23 +43,20 @@ before_install:
     fi'
 
   # Unpack, compile and install Lua.
-  - 'set -vx;
-    if test luajit = "$LUA"; then
+  - 'if test luajit = "$LUA"; then
       curl http://luajit.org/download/luajit-2.0.3.tar.gz | tar xz;
       cd luajit-2.0.3;
       make && sudo make install;
     else
-      pwd;
-      ls -ltr src;
       for src in src/*.c; do
-        test src/lua.c = "$src" || test src/luac.c = "$src" || eval $CC $CFLAGS -c $src;
+        test src/lua.c = "$src" || test src/luac.c = "$src" || eval $COMPILE $CFLAGS -c $src;
       done;
-      eval $LD -o lib$LUA.la -version-info 0:0:0 -rpath $libdir *.lo;
+      eval $LINK -o lib$LUA.la -version-info 0:0:0 -rpath $libdir *.lo;
       sudo mkdir -p $libdir;
       eval sudo $INSTALL lib$LUA.la $libdir/lib$LUA.la;
 
-      eval $CC $CFLAGS -c src/lua.c;
-      eval $LD -static -o $LUA lua.lo lib$LUA.la $LIBS;
+      eval $COMPILE $CFLAGS -c src/lua.c;
+      eval $LINK -static -o $LUA lua.lo lib$LUA.la $LIBS;
       sudo mkdir -p $bindir;
       eval sudo $INSTALL $LUA $bindir/$LUA;
 
