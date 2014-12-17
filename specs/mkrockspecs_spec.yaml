@@ -87,34 +87,38 @@ describe mkrockspecs:
 
 - context for a luarocks builtin install:
   - it sets build.type to builtin:
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+      expect (parse {"-m m4", "check", "0"; stdin = conf}).
         should_match_output '%stype = "builtin",?\n'
   - it creates a build.modules sub-key:
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+      expect (parse {"-m m4", "check", "0"; stdin = conf}).
         should_match_output '%smodules = {'
   - it adds only files with .lua extension to modules sub-table: |
-      name = "doc/spec_check.lua"
-      f = io.open (name, "w")
-      f:write "os.exit (1)"
-      f:close ()
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
-        should_contain_output 'spec_check = "doc/spec_check.lua",\n'
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+      name = "m4/spec_check.lua"
+      f, err = io.open (name, "w")
+      if f ~= nil then
+        f:write "os.exit (1)"
+        f:close ()
+      else
+        print (err)
+      end
+      expect (parse {"-m m4", "check", "0"; stdin = conf}).
+        should_contain_output 'spec_check = "m4/spec_check.lua",\n'
+      expect (parse {"-m m4", "check", "0"; stdin = conf}).
         should_not_contain_output "mkrockspecs"
       os.remove (name)
   - it adds quoted module keys with non-symbol characters in module path: |
-      name = "doc/spec-check.lua"
+      name = "m4/spec-check.lua"
       f = io.open (name, "w")
       f:write "os.exit (1)"
       f:close ()
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
-      should_contain_output '["spec-check"] = "doc/spec-check.lua",\n'
+      expect (parse {"-m m4", "check", "0"; stdin = conf}).
+      should_contain_output '["spec-check"] = "m4/spec-check.lua",\n'
       os.remove (name)
   - it adds quoted module keys with '.' separators for sub-directories: |
-      name = "doc/spec_check.lua"
+      name = "m4/spec_check.lua"
       f = io.open (name, "w")
       f:write "os.exit (1)"
       f:close ()
       expect (parse {"-m .", "check", "0"; stdin = conf}).
-        should_contain_output '["doc.spec_check"] = "doc/spec_check.lua",\n'
+        should_contain_output '["m4.spec_check"] = "m4/spec_check.lua",\n'
       os.remove (name)
