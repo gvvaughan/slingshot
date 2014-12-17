@@ -20,6 +20,7 @@ env:
     - LUA=lua5.1
     - LUA=luajit
 
+
 before_install:
   # Put back the links for libyaml, which are missing on recent Travis VMs
   - test -f /usr/lib/libyaml.so ||
@@ -28,18 +29,18 @@ before_install:
 
   # Fetch Lua sources.
   - cd $TRAVIS_BUILD_DIR
-  - 'test lua5.3 = "$LUA" && {
+  - 'if test lua5.3 = "$LUA"; then
       curl http://www.lua.org/work/lua-5.3.0-rc1.tar.gz | tar xz;
       cd lua-5.3.0;
-    }'
-  - 'test lua5.2 = "$LUA" && {
+    fi'
+  - 'if test lua5.2 = "$LUA"; then
       curl http://www.lua.org/ftp/lua-5.2.3.tar.gz | tar xz;
       cd lua-5.2.3;
-    }'
-  - 'test lua5.1 = "$LUA" && {
+    fi'
+  - 'if test lua5.1 = "$LUA"; then
       curl http://www.lua.org/ftp/lua-5.1.5.tar.gz | tar xz;
       cd lua-5.1.5;
-    }'
+    fi'
 
   # Unpack, compile and install Lua.
   - 'if test luajit = "$LUA"; then
@@ -83,6 +84,7 @@ before_install:
   - cd $TRAVIS_BUILD_DIR
   - rm -rf lua-5.3.0 lua-5.2.3 lua-5.1.5 luarocks-2.2.0
 
+
 install:
   - sudo luarocks install lyaml; sudo luarocks install specl;
 
@@ -92,12 +94,17 @@ install:
 
   - sudo luarocks make $ROCKSPEC LUA="$LUA"
 
+
 script:
   - make check V=1
 
-  # Run sanity checks on CI server, ignoring buggy automakes.
+
+# Run sanity checks on CI server, ignoring buggy automakes.
+after_success:
   - '{ _assign="=";
-       grep local-checks-to-skip build-aux/sanity-cfg.mk >/dev/null && _assign="+=";
+       if grep local-checks-to-skip build-aux/sanity-cfg.mk >/dev/null; then
+         _assign="+=";
+       fi;
        printf "local-checks-to-skip %s sc_vulnerable_makefile_CVE-2012-3386\n" "$_assign";
      } >> build-aux/sanity-cfg.mk'
   - 'make syntax-check || :'
