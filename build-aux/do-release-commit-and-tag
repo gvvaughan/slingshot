@@ -89,6 +89,18 @@ func_sort_ver ()
       | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n -k 5,5n -k 6,6n -k 7,7n -k 8,8n -k 9,9n
 }
 
+# func_lt_ver PREV CURR
+# ---------------------
+# Return true if PREV and CURR are in the correct order according to
+# func_sort_ver, otherwise false.  Use it like this:
+#
+#  func_lt_ver "$prev_ver" "$proposed_ver" || func_fatal_error "..."
+func_lt_ver ()
+{
+    test "x$1" = x`func_sort_ver "$1" "$2" | sed 1q`
+}
+
+
 
 ## ------ ##
 ## Main.  ##
@@ -142,10 +154,8 @@ prev_ver=$(cat .prev-version) \
   || die 'failed to determine previous version number from .prev-version'
 
 # Verify that $ver is sensible (> .prev-version).
-case $(func_sort_ver "$prev_ver" "$ver"|tr ' ' ':') in
-  "$prev_ver:$ver") ;;
-  *) die "invalid version: $ver (<= $prev_ver)";;
-esac
+func_lt_ver "$prev_ver" "$ver" \
+  || die "invalid version: $ver (<= $prev_ver)"
 
 case $type in
   alpha|beta|stable) ;;
