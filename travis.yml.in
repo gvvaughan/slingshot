@@ -2,10 +2,10 @@ language: c
 
 env:
   global:
-    - COMPILE="libtool --mode=compile --tag=CC gcc"
+    - COMPILE="libtool --quiet --mode=compile --tag=CC gcc"
     - CFLAGS="-O2 -Wall -DLUA_COMPAT_ALL -DLUA_USE_LINUX"
     - INSTALL="libtool --mode=install install -p"
-    - LINK="libtool --mode=link --tag=CC gcc"
+    - LINK="libtool --quiet --mode=link --tag=CC gcc"
     - LIBS="-lm -Wl,-E -ldl -lreadline"
 
     - ROCKSPEC=@PACKAGE@-git-1.rockspec
