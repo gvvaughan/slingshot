@@ -62,7 +62,9 @@ before_install:
 
       sudo mkdir -p $incdir;
       for header in lua.h luaconf.h lualib.h lauxlib.h lua.hpp; do
-        test -f src/$header && eval sudo $INSTALL src/$header $incdir/$header;
+        if test -f src/$header; then
+          eval sudo $INSTALL src/$header $incdir/$header;
+        fi;
       done;
     fi'
 
