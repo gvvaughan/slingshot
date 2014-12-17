@@ -29,40 +29,40 @@ before_install:
   # Fetch Lua sources.
   - cd $TRAVIS_BUILD_DIR
   - 'test lua5.3 = "$LUA" && {
-      curl http://www.lua.org/work/lua-5.3.0-rc1.tar.gz | tar xz
-      cd lua-5.3.0
+      curl http://www.lua.org/work/lua-5.3.0-rc1.tar.gz | tar xz;
+      cd lua-5.3.0;
     }'
   - 'test lua5.2 = "$LUA" && {
-      curl http://www.lua.org/ftp/lua-5.2.3.tar.gz | tar xz
-      cd lua-5.2.3
+      curl http://www.lua.org/ftp/lua-5.2.3.tar.gz | tar xz;
+      cd lua-5.2.3;
     }'
   - 'test lua5.1 = "$LUA" && {
-      curl http://www.lua.org/ftp/lua-5.1.5.tar.gz | tar xz
-      cd lua-5.1.5
+      curl http://www.lua.org/ftp/lua-5.1.5.tar.gz | tar xz;
+      cd lua-5.1.5;
     }'
 
   # Unpack, compile and install Lua.
   - 'if test luajit = "$LUA"; then
-      curl http://luajit.org/download/luajit-2.0.3.tar.gz | tar xz
-      cd luajit-2.0.3
-      make && sudo make install
+      curl http://luajit.org/download/luajit-2.0.3.tar.gz | tar xz;
+      cd luajit-2.0.3;
+      make && sudo make install;
     else
       for src in src/*.c; do
-        test src/lua.c = "$src" || test src/luac.c = "$src" || eval $CC $CFLAGS -c $src
-      done
-      eval $LD -o lib$LUA.la -version-info 0:0:0 -rpath $libdir *.lo
-      sudo mkdir -p $libdir
-      eval sudo $INSTALL lib$LUA.la $libdir/lib$LUA.la
+        test src/lua.c = "$src" || test src/luac.c = "$src" || eval $CC $CFLAGS -c $src;
+      done;
+      eval $LD -o lib$LUA.la -version-info 0:0:0 -rpath $libdir *.lo;
+      sudo mkdir -p $libdir;
+      eval sudo $INSTALL lib$LUA.la $libdir/lib$LUA.la;
 
-      eval $CC $CFLAGS -c src/lua.c
-      eval $LD -static -o $LUA lua.lo lib$LUA.la $LIBS
-      sudo mkdir -p $bindir
-      eval sudo $INSTALL $LUA $bindir/$LUA
+      eval $CC $CFLAGS -c src/lua.c;
+      eval $LD -static -o $LUA lua.lo lib$LUA.la $LIBS;
+      sudo mkdir -p $bindir;
+      eval sudo $INSTALL $LUA $bindir/$LUA;
 
-      sudo mkdir -p $incdir
+      sudo mkdir -p $incdir;
       for header in lua.h luaconf.h lualib.h lauxlib.h lua.hpp; do
         test -f src/$header && eval sudo $INSTALL src/$header $incdir/$header;
-      done
+      done;
     fi'
 
   # Fetch LuaRocks.
@@ -96,9 +96,9 @@ script:
   - make check V=1
 
   # Run sanity checks on CI server, ignoring buggy automakes.
-  - '{ _assign="="
-       grep local-checks-to-skip build-aux/sanity-cfg.mk >/dev/null && _assign="+="
-       printf "local-checks-to-skip %s sc_vulnerable_makefile_CVE-2012-3386\n" "$_assign"
+  - '{ _assign="=";
+       grep local-checks-to-skip build-aux/sanity-cfg.mk >/dev/null && _assign="+=";
+       printf "local-checks-to-skip %s sc_vulnerable_makefile_CVE-2012-3386\n" "$_assign";
      } >> build-aux/sanity-cfg.mk'
   - 'make syntax-check || :'
 
