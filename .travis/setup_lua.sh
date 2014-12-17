@@ -68,7 +68,7 @@ else
   CC="libtool --mode=compile --tag=CC gcc"
   LD="libtool --mode=link --tag=CC gcc"
 
-  case $platform in
+  case $PLATFORM in
   linux)
     INSTALL="libtool --mode=install install -p"
     CFLAGS="-O2 -Wall -DLUA_COMPAT_ALL -DLUA_USE_LINUX"
