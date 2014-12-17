@@ -81,7 +81,7 @@ before_install:
       ./configure;
     fi
   - 'make build && sudo make install'
-  
+
   # Tidy up file droppings.
   - cd $TRAVIS_BUILD_DIR
   - rm -rf lua-5.3.0 lua-5.2.3 lua-5.1.5 luarocks-2.2.0
