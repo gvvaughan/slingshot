@@ -43,11 +43,14 @@ before_install:
     fi'
 
   # Unpack, compile and install Lua.
-  - 'if test luajit = "$LUA"; then
+  - 'set -vx;
+    if test luajit = "$LUA"; then
       curl http://luajit.org/download/luajit-2.0.3.tar.gz | tar xz;
       cd luajit-2.0.3;
       make && sudo make install;
     else
+      pwd;
+      ls -ltr src;
       for src in src/*.c; do
         test src/lua.c = "$src" || test src/luac.c = "$src" || eval $CC $CFLAGS -c $src;
       done;
