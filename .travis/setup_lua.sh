@@ -7,8 +7,9 @@
 # luajit2.1 - master v2.1
 
 prefix=/usr/local
-libdir=$prefix/lib
 bindir=$prefix/bin
+incdir=$prefix/include
+libdir=$prefix/lib
 
 LUAJIT_BASE="LuaJIT-2.0.3"
 
@@ -85,16 +86,22 @@ else
     test src/lua.c = "$src" || test src/luac.c = "$src" || eval $CC $CFLAGS -c $src
   done
   eval $LD -o lib$LUA.la -version-info 0:0:0 -rpath $libdir *.lo
-  mkdir -p $libdir
+  sudo mkdir -p $libdir
   eval sudo $INSTALL lib$LUA.la $libdir/lib$LUA.la
 
   eval $CC $CFLAGS -c src/lua.c
   eval $LD -static -o $LUA lua.lo lib$LUA.la $LIBS
-  mkdir -p $bindir
+  sudo mkdir -p $bindir
   eval sudo $INSTALL $LUA $bindir/$LUA
+
+  sudo mkdir -p $incdir
+  for header in lua.h luaconf.h lualib.h lauxlib.h lua.hpp; do
+    test -f src/$header && eval sudo $INSTALL src/$header $incdir/$header
+  done
+
+  sudo ln -s /usr/local/bin/$LUA /usr/local/bin/lua
 fi
 
-sudo ln -s /usr/local/bin/$LUA /usr/local/bin/lua
 
 cd $TRAVIS_BUILD_DIR;
 
