@@ -94,13 +94,9 @@ describe mkrockspecs:
         should_match_output '%smodules = {'
   - it adds only files with .lua extension to modules sub-table: |
       name = "m4/spec_check.lua"
-      f, err = io.open (name, "w")
-      if f ~= nil then
-        f:write "os.exit (1)"
-        f:close ()
-      else
-        print (err)
-      end
+      f = io.open (name, "w")
+      f:write "os.exit (1)"
+      f:close ()
       expect (parse {"-m m4", "check", "0"; stdin = conf}).
         should_contain_output 'spec_check = "m4/spec_check.lua",\n'
       expect (parse {"-m m4", "check", "0"; stdin = conf}).
