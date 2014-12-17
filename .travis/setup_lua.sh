@@ -6,6 +6,10 @@
 # luajit2.0 - master v2.0
 # luajit2.1 - master v2.1
 
+prefix=/usr/local
+libdir=$prefix/lib
+bindir=$prefix/bin
+
 LUAJIT_BASE="LuaJIT-2.0.3"
 
 source .travis/platform.sh
@@ -43,10 +47,10 @@ if [ "$LUAJIT" == "yes" ]; then
   make && sudo make install
 
   if [ "$LUA" == "luajit2.1" ]; then
-    sudo ln -s /usr/local/bin/luajit-2.1.0-alpha /usr/local/bin/luajit
-    sudo ln -s /usr/local/bin/luajit /usr/local/bin/lua;
+    sudo ln -s $bindir/luajit-2.1.0-alpha $bindir/luajit
+    sudo ln -s $bindir/luajit $bindir/lua;
   else
-    sudo ln -s /usr/local/bin/luajit /usr/local/bin/lua;
+    sudo ln -s $bindir/luajit $bindir/lua;
   fi;
 
 else
@@ -60,10 +64,37 @@ else
     curl http://www.lua.org/work/lua-5.3.0-rc1.tar.gz | tar xz
     cd lua-5.3.0;
   fi
-  sudo make $PLATFORM install;
+
+  CC="libtool --mode=compile --tag=CC gcc"
+  LD="libtool --mode=link --tag=CC gcc"
+
+  case $platform in
+  linux)
+    INSTALL="libtool --mode=install install -p"
+    CFLAGS="-O2 -Wall -DLUA_COMPAT_ALL -DLUA_USE_LINUX"
+    LIBS="-lm -Wl,-E -ldl -lreadline"
+    ;;
+  macosx)
+    INSTALL="libtool --mode=install cp -p"
+    CFLAGS="-O2 -Wall -DLUA_COMPAT_ALL -DLUA_USE_MACOSX"
+    LIBS="-lm -lreadline"
+    ;;
+  esac
+
+  for src in src/*.c; do
+    test src/lua.c = "$src" || test src/luac.c = "$src" || eval $CC $CFLAGS -c $src
+  done
+  eval $LD -o lib$LUA.la -version-info 0:0:0 -rpath $libdir *.lo
+  mkdir -p $libdir
+  eval sudo $INSTALL lib$LUA.la $libdir/lib$LUA.la
+
+  eval $CC $CFLAGS -c src/lua.c
+  eval $LD -static -o $LUA lua.lo lib$LUA.la $LIBS
+  mkdir -p $bindir
+  eval sudo $INSTALL $LUA $bindir/$LUA
 fi
 
-sudo ln -s /usr/local/bin/lua /usr/local/bin/$LUA
+sudo ln -s /usr/local/bin/$LUA /usr/local/bin/lua
 
 cd $TRAVIS_BUILD_DIR;
 
