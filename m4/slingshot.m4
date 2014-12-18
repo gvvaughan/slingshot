@@ -29,7 +29,7 @@ AC_DEFUN([SS_CONFIG_TRAVIS], [
 
     # Swap files back to where we need them, after shuffling in INIT-CMDS.
     test -f .travis.yml && mv -f .travis.yml .travis.yml.new
-    test -f .travis.yml.tmp && mv -f .travis.yml.tmp .travis.yml
+    test -f .travis.yml.orig && cp -f .travis.yml.orig .travis.yml && rm -f .travis.yml.orig
 
     # Remove trailing blanks so as not to trip sc_trailing_blank in syntax check
     sed 's|  *$||' < .travis.yml.new > ss_tmp && {
@@ -84,6 +84,6 @@ AC_DEFUN([SS_CONFIG_TRAVIS], [
 
     # Save incumbent .travis.yml from overwriting, so the configure
     # output can show 'creating .travis.yml'.
-    test -f .travis.yml && mv -f .travis.yml .travis.yml.tmp
+    test -f .travis.yml && mv -f .travis.yml .travis.yml.orig
   ])
 ])
