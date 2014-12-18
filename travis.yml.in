@@ -97,7 +97,7 @@ install:
   - 'for rock in @EXTRA_ROCKS@""; do
        if test -z "$rock"; then break; fi;
        if luarocks list | grep "^$rock$" >/dev/null; then continue; fi;
-       luarocks install --server=http://rocks.moonscript.org/manifests/gvvaughan $rock;
+       sudo luarocks install --server=http://rocks.moonscript.org/manifests/gvvaughan $rock;
     done'
 
   # Initial bootstrap to generate Makefile for rockspecs.
