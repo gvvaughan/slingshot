@@ -147,7 +147,7 @@ Report bugs to http://github.com/gvvaughan/slingshot/issues.]])
 end
 
 prog["--version"] = function ()
-  print [[merge-sections (slingshot) 9.0.0
+  print [[merge-sections (slingshot) 8.0.0
 Written by Gary V. Vaughan <gary@gnu.org>, 2014
 
 Copyright (C) 2014, Gary V. Vaughan
