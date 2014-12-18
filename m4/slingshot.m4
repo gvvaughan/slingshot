@@ -21,20 +21,7 @@ dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------
 # Generate .travis.yml, ensuring LUAROCKS are installed.
 AC_DEFUN([SS_CONFIG_TRAVIS], [
-  # is required by all slingshot clients for mkrockspecs.
-  EXTRA_ROCKS=-
-  for _ss_rock in lyaml $1; do
-    case $EXTRA_ROCKS in
-      *" $_ss_rock;"*) ;; # ignore duplicates
-      *)
-        test "x$PACKAGE_NAME" != "x$_ss_rock" \
-            && EXTRA_ROCKS="$EXTRA_ROCKS"' sudo luarocks install '"$_ss_rock;"
-        ;;
-    esac
-  done
-
-  # Avoid empty travis commands.
-  test "x$EXTRA_ROCKS" != "x-" || EXTRA_ROCKS='# No extra rocks needed here;'
+  EXTRA_ROCKS="$1"
   AC_SUBST([EXTRA_ROCKS])
 
   AC_CONFIG_FILES([.travis.yml:travis.yml.in], [
