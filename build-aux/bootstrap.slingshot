@@ -507,32 +507,34 @@ slingshot_require_slingshot_submodule ()
           "No 'git' found; imported slingshot modules may be missing."
     else
       $require_slingshot_dotgitmodules
-      $require_slingshot_path
-      $require_slingshot_url
 
-      if test -f .gitmodules && test -f "slingshot/src/mkrockspecs.in"
-      then
-        : All present and correct.
+      if test -f .gitmodules; then
+        $require_slingshot_path
+        $require_slingshot_url
 
-      else
-        trap slingshot_cleanup 1 2 13 15
+        if test -f "slingshot/src/mkrockspecs.in"; then
+          : All present and correct.
 
-        shallow=
-        $GIT clone -h 2>&1 |func_grep_q -- --depth \
-            && shallow='--depth 365'
+        else
+          trap slingshot_cleanup 1 2 13 15
 
-        func_show_eval "$GIT clone $shallow '$slingshot_url' '$slingshot_path'" \
-          slingshot_cleanup
+          shallow=
+          $GIT clone -h 2>&1 |func_grep_q -- --depth \
+              && shallow='--depth 365'
 
-        # FIXME: Solaris /bin/sh will try to execute '-' if any of
-        #        these signals are caught after this.
-        trap - 1 2 13 15
+          func_show_eval "$GIT clone $shallow '$slingshot_url' '$slingshot_path'" \
+            slingshot_cleanup
+
+          # FIXME: Solaris /bin/sh will try to execute '-' if any of
+          #        these signals are caught after this.
+          trap - 1 2 13 15
+        fi
+
+        # Make sure we've checked out the correct revision of slingshot.
+        func_show_eval "$GIT submodule init -- $slingshot_path" \
+          && func_show_eval "$GIT submodule update -- $slingshot_path" \
+          || func_fatal_error "Unable to update slingshot submodule."
       fi
-
-      # Make sure we've checked out the correct revision of slingshot.
-      func_show_eval "$GIT submodule init -- $slingshot_path" \
-        && func_show_eval "$GIT submodule update -- $slingshot_path" \
-        || func_fatal_error "Unable to update slingshot submodule."
     fi
 
     require_slingshot_submodule=:
