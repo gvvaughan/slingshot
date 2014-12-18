@@ -54,6 +54,7 @@ dist_lua_DATA		=
 doc_DATA		=
 install_exec_hooks	=
 lib_LTLIBRARIES		=
+luaexec_LTLIBRARIES	=
 man_MANS		=
 save_release_files	=
 
