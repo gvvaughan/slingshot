@@ -20,6 +20,7 @@
    during the VPATH `make check` performed during `make distcheck`. You
    might want to write something like this in `spec_helper.lua`:
 
+   ```lua
        local std = require "specl.std"
 
        local builddir = os.getenv "top_builddir" or "."
@@ -31,7 +32,8 @@
                         package.path)
 
        mymodule = require "mymodule"
-
+   ```
+   
    This ensures that, no matter what LuaRocks does to the package paths,
    nor whether you run `specl` by hand with auto-discovery, or via the
    `make check` or `make distcheck` rules... by the time you require
@@ -83,8 +85,10 @@
    upload fails due to a missing api-key, then make sure you have one
    at rocks.moonscript.org/settings and call make like this:
 
+   ```
        make upload API_KEY=0123456789abcdefghijklmnopqrstuvwxyzABCDE
-
+   ```
+   
  - `mkrockspecs` accepts a new `--branch` option for generating a
    git/scm rockspec that pulls that branch instead of master.
 
@@ -101,8 +105,10 @@
    rockspec version checks can be short-circuited by setting an APPVAR
    in bootstrap's environment, e.g:
 
+   ```bash
        LDOC=`pwd`/luarocks/bin/ldoc ./bootstrap
-
+   ```
+   
  - Slingshot bootstrap accepts a new `--luarocks-tree` option to
    check a particular tree for prerequisite rocks.
 
@@ -198,8 +204,10 @@
    Slingshot mkrockspec invocations setting `mkrockspecs_args`
    appropriately in your `local.mk`:
 
+   ```
      mkrockspecs_args = --module-dir lib
-
+   ```
+   
  - Works with lyaml 4 and newer, which now returns all documents
    in the YAML stream as a table.
 
@@ -222,16 +230,22 @@
 ### New Features:
 
  - No longer depend on `woger`.
+
  - New `mail` wrapper script to provide a POSIX mail API wrapped
    around mutt.  Currently Mac OS X specific (which is the main
    system that doesn't ship a POSIX mail compatible command).
+
  - Split local and origin rules to support, eg:
+
+   ```
      $ make beta
-     ...manually check local trees...
+       # manually check local trees...
      $ make push
-     ...manually check github zipball and released rockspec files...
-     ...maunally edit ~/announce-<package>-<version>...
+       # manually check github zipball and released rockspec files...
+       # manually edit ~/announce-<package>-<version>...
      $ make mail
+  ```
+  
  - Port of gnulib project sanity checks hooked into release
    rules by `include build-aux/sanity.mk`.
 
@@ -245,4 +259,4 @@
 
 ## Noteworthy changes in release 1 (2013-04-28) [beta]
 
-### Initial proof-of concept for shared Lua RockSpec framework.
+ - Initial proof-of concept for shared Lua RockSpec framework.
