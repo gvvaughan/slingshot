@@ -38,6 +38,8 @@ Slingshot NEWS - User visible changes.
     your module from the development tree, the package path has the right
     directories at the front.
 
+  - Unused libtool .la files for Lua modules are no longer installed.
+
 ** Incompatible Changes:
 
   - SPECL_ENV is now set (to empty) by default, and should be augmented
