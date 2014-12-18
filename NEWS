@@ -49,6 +49,9 @@ Slingshot NEWS - User visible changes.
     version needed in each run.  We also run `make syntax-check` on the
     CI server after successful tests.
 
+  - Instead of overwriting .travis.yml unconditionally, show a warning
+    explaining how to update it when it changes, like bootstrap.
+
 ## Incompatible Changes:
 
   - SPECL_ENV is now set (to empty) by default, and should be augmented
