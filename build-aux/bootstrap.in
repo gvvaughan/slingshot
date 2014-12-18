@@ -2746,10 +2746,13 @@ func_reconfigure ()
 
     $require_automake_options
 
-    # Automake (without 'foreign' option) requires that README exists.
+    # Automake (without 'foreign' option) requires that NEWS & README exist.
     case " $automake_options " in
       " foreign ") ;;
-      *) func_ensure_README ;;
+      *)
+        func_ensure_NEWS
+        func_ensure_README
+        ;;
     esac
 
     # Ensure ChangeLog presence.
@@ -3073,6 +3076,29 @@ EOT
     test -f ChangeLog~ \
       && func_append _G_message ' (backup in ChangeLog~)'
     func_verbose "$_G_message"
+
+    return 0
+}
+
+
+# func_ensure_NEWS
+# ----------------
+# Without AM_INIT_AUTOMAKE([foreign]), automake will not run to
+# completion with no NEWS file, even though NEWS.md or NEWS.txt
+# is often preferable.
+func_ensure_NEWS ()
+{
+    $debug_cmd
+
+    test -f NEWS || {
+      _G_NEWS=
+      for _G_news in NEWS.txt NEWS.md NEWS.rst; do
+        test -f "$_G_news" && break
+      done
+
+      test -f "$_G_news" && $LN_S $_G_news NEWS
+      func_verbose "$LN_S $_G_news NEWS"
+    }
 
     return 0
 }
