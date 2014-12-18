@@ -2,7 +2,7 @@ Slingshot NEWS - User visible changes.
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
-** New Features:
+## New Features:
 
   - Libtool built Lua modules should be appended to luaexec_LTLIBRARIES,
     where non LuaRocks users will receive them in the correct directory
@@ -20,17 +20,17 @@ Slingshot NEWS - User visible changes.
     during the VPATH `make check` performed during `make distcheck`. You
     might want to write something like this in `spec_helper.lua`:
 
-      local std = require "specl.std"
+        local std = require "specl.std"
 
-      local builddir = os.getenv "top_builddir" or "."
-      local srcdir = os.getenv "top_srcdir" or "."
+        local builddir = os.getenv "top_builddir" or "."
+        local srcdir = os.getenv "top_srcdir" or "."
 
-      package.path = std.package.normalize (
-                       top_builddir .. "/lib/mymodule/?.lua",
-                       top_srcdir .. "/lib/mymodule/?.lua",
-                       package.path)
+        package.path = std.package.normalize (
+                         top_builddir .. "/lib/mymodule/?.lua",
+                         top_srcdir .. "/lib/mymodule/?.lua",
+                         package.path)
 
-      mymodule = require "mymodule"
+        mymodule = require "mymodule"
 
     This ensures that, no matter what LuaRocks does to the package paths,
     nor whether you run `specl` by hand with auto-discovery, or via the
@@ -40,7 +40,16 @@ Slingshot NEWS - User visible changes.
 
   - Unused libtool .la files for Lua modules are no longer installed.
 
-** Incompatible Changes:
+  - Update to latest upstream `ax_lua.m4`.
+
+  - Update to latest upstream `bootstrap`.
+
+  - Travis CI overhaul: Uses latest LuaRocks 2.2.0 with each of Lua
+    5.3.0(rc1), 5.2.3, 5.1.5 and luajit-2.0.3, only building the Lua
+    version needed in each run.  We also run `make syntax-check` on the
+    CI server after successful tests.
+
+## Incompatible Changes:
 
   - SPECL_ENV is now set (to empty) by default, and should be augmented
     with += in local.mk.
@@ -50,6 +59,9 @@ Slingshot NEWS - User visible changes.
   - We no longer assume autotooled installations will put modules in
     --libdir (although that will continue to work), but also set
     luaexecdir at install-time for `ax_lua.m4` compatibility.
+
+  - Version comparison in `build-aux/do-release-commit-and-tag` now
+    works correctly.
 
   - bootstrap now updates only gnulib and slingshot git submodules as
     expected.
