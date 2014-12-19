@@ -117,7 +117,7 @@ about automatically keeping them in sync with future releases):
    `~/.autom4te.cfg` to turn off the cache globally.
 
 In addition to the files above, slingshot expects you to maintain your
-release notes in a GNU format NEWS file, such as the one used by
+release notes in a Markdown format NEWS file, such as the one used by
 slingshot itself, and a revision controlled `.prev-version` file with
 the previous release version number.  `release.mk` will maintain these
 files for you once you have them in place.
