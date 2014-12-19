@@ -297,7 +297,7 @@ _PRE	= "    https://raw.githubusercontent"
 _POST	= "/release-v$(VERSION)/$(PACKAGE)-$(VERSION)-$(rockspec_revision).rockspec"
 GITHUB_ROCKSPEC	= (source.url:gsub ("^git://github", $(_PRE)):gsub ("%.git$$", $(_POST)))
 
-announcement: NEWS rockspecs
+announcement: NEWS
 # Not $(AM_V_GEN) since the output of this command serves as
 # announcement message: else, it would start with " GEN announcement".
 	$(AM_V_at)printf '%s\n'						\
