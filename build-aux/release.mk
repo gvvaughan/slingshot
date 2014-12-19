@@ -227,7 +227,7 @@ vc-diff-check:
 # of '$(_build-aux)/do-release-commit-and-tag'.
 # If you want to search only lines 1-10, use "1,10".
 news-check-lines-spec ?= 3
-news-check-regexp ?= '^##.* $(VERSION_REGEXP) \($(today)\)'
+news-check-regexp ?= '^\#\#.* $(VERSION_REGEXP) \($(today)\)'
 
 news-check: NEWS
 	$(AM_V_GEN)if $(SED) -n $(news-check-lines-spec)p $<		\
