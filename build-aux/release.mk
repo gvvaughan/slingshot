@@ -238,6 +238,12 @@ news-check: NEWS
 	  exit 1;							\
 	fi
 
+NEWS:
+	if test -f NEWS.md; then ln -s NEWS.md NEWS;			\
+	elif test -f NEWS.rst; then ln -s NEWS.rst NEWS;		\
+	elif test -f NEWS.txt; then ln -s NEWS.txt NEWS;		\
+	fi
+
 .PHONY: release-commit
 release-commit:
 	$(AM_V_GEN)cd $(srcdir)						\
@@ -263,7 +269,7 @@ release-prep: $(scm_rockspec)
 	$(AM_V_at)$(MAKE) update-old-NEWS-hash
 	$(AM_V_at)perl -pi						\
 	  -e '$$. == 3 and print "$(gl_noteworthy_news_)\n\n\n"'	\
-	  $(srcdir)/NEWS
+	  `readlink $(srcdir)/NEWS 2>/dev/null || echo $(srcdir)/NEWS`	\
 	$(AM_V_at)msg=$$($(emit-commit-log)) || exit 1;			\
 	cd $(srcdir) && $(GIT) commit -s -m "$$msg" -a
 	@echo '**** Release announcement in ~/announce-$(my_distdir)'
