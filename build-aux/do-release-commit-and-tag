@@ -28,12 +28,14 @@ ME=$(basename "$0")
 warn() { printf '%s: %s\n' "$ME" "$*" >&2; }
 die() { warn "$*"; exit 1; }
 
+NEWS=`readlink NEWS || echo NEWS`
+
 help()
 {
   cat <<EOF
 Usage: $ME [OPTION...] VERSION RELEASE_TYPE
 
-Run this script from top_srcdir to perform the final pre-release NEWS
+Run this script from top_srcdir to perform the final pre-release $NEWS
 update in which the date, release-type and version string are
 recorded.  Commit that result with a log entry marking the release,
 and apply a signed tag.  Run it from your project's top-level
@@ -42,7 +44,7 @@ directory.
 Requirements:
 - you use git for version-control
 - a version-controlled .prev-version file
-- a NEWS file, with line 3 identical to this:
+- a $NEWS file, with line 3 identical to this:
 $noteworthy_stub
 
 Options:
@@ -52,7 +54,7 @@ Options:
   --version           print version number, then exit
 
 EXAMPLE:
-To update NEWS and tag the beta 8.1 release of coreutils, I would run this:
+To update $NEWS and tag the beta 8.1 release of coreutils, I would run this:
 
   $ME 8.1 beta
 
@@ -178,8 +180,8 @@ pkg=$(sed -n 's/^PACKAGE = \(.*\)/\1/p' "$Makefile") \
   || die "failed to determine package name from $Makefile"
 
 # Check that line 3 of NEWS is the stub line about to be replaced.
-test "$(sed -n 3p NEWS)" = "$noteworthy_stub" \
-  || die "line 3 of NEWS must be exactly '$noteworthy_stub'"
+test "$(sed -n 3p $NEWS)" = "$noteworthy_stub" \
+  || die "line 3 of $NEWS must be exactly '$noteworthy_stub'"
 
 ## --------------- ##
 ## Then, changes.  ##
@@ -190,9 +192,9 @@ perl -MPOSIX -ni -e 'my $today = strftime "%F", localtime time;' \
  -e 'my ($type, $ver) = qw('"$type $ver"');' \
  -e 'my $pfx = "'"$noteworthy"'";' \
  -e 'print $.==3 ? "$pfx $ver ($today) [$type]\n" : $_' \
-     NEWS || die 'failed to update NEWS'
+     $NEWS || die "failed to update $NEWS"
 
-printf "Release version $ver\n\n* NEWS: Record release date.\n" \
+printf "Release version $ver\n\n* $NEWS: Record release date.\n" \
     | git commit -F -  -a || die 'git commit failed'
 git tag -s -m "$pkg $ver" v$ver HEAD || die 'git tag failed'
 
