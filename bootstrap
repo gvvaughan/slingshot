@@ -3490,7 +3490,7 @@ slingshot_update_travis_yml ()
       test -f "$_G_travis_yml_in" && {
         $slingshot_require_travis_extra_rocks
 
-        eval `grep 'PACKAGE=' configure | sed 1q`
+        eval `grep '^ *PACKAGE=' configure | sed 1q`
 
         cat "$_G_travis_yml_in" |
         sed 's|  *$||' |
