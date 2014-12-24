@@ -61,6 +61,10 @@
   - SPECL_ENV is now set (to empty) by default, and should be augmented
     with += in local.mk.
 
+  - SS_CONFIG_TRAVIS is no longer supported.  Any additional travis rocks
+    you were passing there should now be listed in a travis_extra_rocks
+    variable in `bootstrap.conf` instead.
+
 ### Bug Fixes:
 
   - We no longer assume autotooled installations will put modules in
