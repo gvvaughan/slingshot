@@ -73,6 +73,10 @@
  - bootstrap now updates only gnulib and slingshot git submodules as
    expected.
 
+ - Slingshot bootstrap really does perform an automatic out of date
+   check of client bootstrap against latest slingshot submodule
+   bootstrap script now - after updating to this version!
+
 
 ## Noteworthy changes in release 7 (2014-07-31) [stable]
 
