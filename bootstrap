@@ -853,46 +853,6 @@ slingshot_require_slingshot_submodule ()
 }
 
 
-# require_bootstrap_uptodate
-# --------------------------
-# Complain if the version of bootstrap in the build-aux directory differs
-# from the one we are running.
-require_bootstrap_uptodate=slingshot_require_bootstrap_uptodate
-slingshot_require_bootstrap_uptodate ()
-{
-    $debug_cmd
-
-    $require_slingshot_submodule
-
-    _G_slingshot_bootstrap=slingshot/bootstrap
-
-    if test -f "$_G_slingshot_bootstrap"; then
-      if func_cmp_s "$progpath" "$_G_slingshot_bootstrap"; then
-	func_verbose "bootstrap script up to date"
-      else
-        func_warning upgrade "\
-An updated slingshot bootstrap script is ready for you in
-'$_G_slingshot_bootstrap'.  After you've verified that you want
-the changes, you can update with:
-    cp -f $_G_slingshot_bootstrap $progname
-    ./$progname
-
-Or you can disable this check permanently by adding the
-following to 'bootstrap.conf':
-    require_bootstrap_uptodate=:"
-      fi
-    else
-      func_warning upgrade "\
-Your slingshot submodule appears to be damagedi, so I can't tell
-whether your bootstrap has gone out of sync.  Please check for
-and undo any local changes, or revert to the slingshot revision
-you were using previously, and rerun this script."
-    fi
-
-    require_bootstrap_uptodate=:
-}
-
-
 # slingshot_cleanup
 # -----------------
 # Recursively delete everything at $slingshot_path.
@@ -2556,6 +2516,50 @@ slingshot_rockspec_error ()
 Prerequisite LuaRock '$_G_rock $_G_strippedver' not found. Please install it."
 
     rockspecs_uptodate_result=false
+}
+
+# The following more properly belongs in 'Resource management', but we
+# put it in a later section to make sure it is defined after the
+# bootstrap.in equivalent that we need to override.
+
+
+# require_bootstrap_uptodate
+# --------------------------
+# Complain if the version of bootstrap in the build-aux directory differs
+# from the one we are running.
+require_bootstrap_uptodate=slingshot_require_bootstrap_uptodate
+slingshot_require_bootstrap_uptodate ()
+{
+    $debug_cmd
+
+    $require_slingshot_submodule
+
+    _G_slingshot_bootstrap=slingshot/bootstrap
+
+    if test -f "$_G_slingshot_bootstrap"; then
+      if func_cmp_s "$progpath" "$_G_slingshot_bootstrap"; then
+	func_verbose "bootstrap script up to date"
+      else
+        func_warning upgrade "\
+An updated slingshot bootstrap script is ready for you in
+'$_G_slingshot_bootstrap'.  After you've verified that you want
+the changes, you can update with:
+    cp -f $_G_slingshot_bootstrap $progname
+    ./$progname
+
+Or you can disable this check permanently by adding the
+following to 'bootstrap.conf':
+    require_bootstrap_uptodate=:"
+      fi
+    else
+      func_warning upgrade "\
+Your slingshot submodule appears to be damagedi, so I can't tell
+whether your bootstrap has gone out of sync.  Please check for
+and undo any local changes, or revert to the slingshot revision
+you were using previously, and rerun this script."
+    fi
+
+    require_bootstrap_uptodate=:
 }
 
 

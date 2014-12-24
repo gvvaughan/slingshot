@@ -593,6 +593,30 @@ slingshot_require_slingshot_submodule ()
 }
 
 
+# slingshot_cleanup
+# -----------------
+# Recursively delete everything at $slingshot_path.
+slingshot_cleanup ()
+{
+    $debug_cmd
+
+    $require_slingshot_path
+
+    _G_status=$?
+    $RM -fr $slingshot_path
+    exit $_G_status
+}
+
+
+## ----------------- ##
+## Helper functions. ##
+## ----------------- ##
+
+# The following more properly belongs in 'Resource management', but we
+# put it in a later section to make sure it is defined after the
+# bootstrap.in equivalent that we need to override.
+
+
 # require_bootstrap_uptodate
 # --------------------------
 # Complain if the version of bootstrap in the build-aux directory differs
@@ -630,21 +654,6 @@ you were using previously, and rerun this script."
     fi
 
     require_bootstrap_uptodate=:
-}
-
-
-# slingshot_cleanup
-# -----------------
-# Recursively delete everything at $slingshot_path.
-slingshot_cleanup ()
-{
-    $debug_cmd
-
-    $require_slingshot_path
-
-    _G_status=$?
-    $RM -fr $slingshot_path
-    exit $_G_status
 }
 
 
