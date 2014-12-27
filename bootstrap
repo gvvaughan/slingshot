@@ -4033,7 +4033,7 @@ func_require_autopoint ()
 # --------------------------
 # Complain if the version of bootstrap in the gnulib directory differs
 # from the one we are running.
-require_bootstrap_uptodate=func_require_bootstrap_uptodate
+
 func_require_bootstrap_uptodate ()
 {
     $debug_cmd
