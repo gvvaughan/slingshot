@@ -269,7 +269,7 @@ release-prep: $(scm_rockspec)
 	$(AM_V_at)$(MAKE) update-old-NEWS-hash
 	$(AM_V_at)perl -pi						\
 	  -e '$$. == 3 and print "$(gl_noteworthy_news_)\n\n\n"'	\
-	  `readlink $(srcdir)/NEWS 2>/dev/null || echo $(srcdir)/NEWS`	\
+	  `readlink $(srcdir)/NEWS 2>/dev/null || echo $(srcdir)/NEWS`
 	$(AM_V_at)msg=$$($(emit-commit-log)) || exit 1;			\
 	cd $(srcdir) && $(GIT) commit -s -m "$$msg" -a
 	@echo '**** Release announcement in ~/announce-$(my_distdir)'
