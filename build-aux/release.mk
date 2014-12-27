@@ -230,7 +230,7 @@ news-check-lines-spec ?= 3
 news-check-regexp ?= '^\#\#.* $(VERSION_REGEXP) \($(today)\)'
 
 NEWS:
-	if test -f NEWS.md; then ln -s NEWS.md NEWS;			\
+	$(AM_V_GEN)if test -f NEWS.md; then ln -s NEWS.md NEWS;		\
 	elif test -f NEWS.rst; then ln -s NEWS.rst NEWS;		\
 	elif test -f NEWS.txt; then ln -s NEWS.txt NEWS;		\
 	fi
