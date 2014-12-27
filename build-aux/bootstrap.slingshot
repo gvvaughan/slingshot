@@ -387,7 +387,7 @@ slingshot_update_travis_yml ()
 
         cat "$_G_travis_yml_in" |
         sed 's|  *$||' |
-        sed "s|@EXTRA_ROCKS@|"`echo $travis_extra_rocks`"|g" |
+        sed "s|@EXTRA_ROCKS@|`echo $travis_extra_rocks`|g" |
         sed "s|@PACKAGE@|$PACKAGE|g"
 
         if test -f .slackid; then
