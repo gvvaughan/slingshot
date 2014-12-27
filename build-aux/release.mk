@@ -229,6 +229,12 @@ vc-diff-check:
 news-check-lines-spec ?= 3
 news-check-regexp ?= '^\#\#.* $(VERSION_REGEXP) \($(today)\)'
 
+NEWS:
+	if test -f NEWS.md; then ln -s NEWS.md NEWS;			\
+	elif test -f NEWS.rst; then ln -s NEWS.rst NEWS;		\
+	elif test -f NEWS.txt; then ln -s NEWS.txt NEWS;		\
+	fi
+
 news-check: NEWS
 	$(AM_V_GEN)if $(SED) -n $(news-check-lines-spec)p $<		\
 	    | $(EGREP) $(news-check-regexp) >/dev/null; then		\
@@ -238,14 +244,8 @@ news-check: NEWS
 	  exit 1;							\
 	fi
 
-NEWS:
-	if test -f NEWS.md; then ln -s NEWS.md NEWS;			\
-	elif test -f NEWS.rst; then ln -s NEWS.rst NEWS;		\
-	elif test -f NEWS.txt; then ln -s NEWS.txt NEWS;		\
-	fi
-
 .PHONY: release-commit
-release-commit:
+release-commit: NEWS
 	$(AM_V_GEN)cd $(srcdir)						\
 	  && $(_build-aux)/do-release-commit-and-tag			\
 	       -C $(abs_builddir) $(VERSION) $(RELEASE_TYPE)
