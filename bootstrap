@@ -866,15 +866,18 @@ slingshot_require_bootstrap_uptodate ()
 
     _G_slingshot_bootstrap=slingshot/bootstrap
 
+    rm -f $progname.new
+
     if test -f "$_G_slingshot_bootstrap"; then
       if func_cmp_s "$progpath" "$_G_slingshot_bootstrap"; then
 	func_verbose "bootstrap script up to date"
       else
+        cp -f $_G_slingshot_bootstrap $progname.new
         func_warning upgrade "\
 An updated slingshot bootstrap script is ready for you in
-'$_G_slingshot_bootstrap'.  After you've verified that you want
-the changes, you can update with:
-    cp -f $_G_slingshot_bootstrap $progname
+'$progname.new'.  After you've verified that you want the
+changes, you can update with:
+    mv -f $progname.new $progname
     ./$progname
 
 Or you can disable this check permanently by adding the
