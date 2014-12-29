@@ -3478,45 +3478,49 @@ slingshot_update_travis_yml ()
 {
     $debug_cmd
 
-    case " "`echo $slingshot_files`" " in
-    *" travis.yml.in "*)
-      _G_travis_yml_in=travis.yml.in
-      _G_travis_yml_out=.travis.yml
+    $require_git
 
-      # Remove trailing blanks so as not to trip sc_trailing_blank in syntax check
-      test -f "$_G_travis_yml_in" && {
-        $slingshot_require_travis_extra_rocks
+    test true = "$GIT" || {
+      case " "`echo $slingshot_files`" " in
+      *" travis.yml.in "*)
+        _G_travis_yml_in=travis.yml.in
+        _G_travis_yml_out=.travis.yml
 
-        eval `grep '^ *PACKAGE=' configure | sed 1q`
+        # Remove trailing blanks so as not to trip sc_trailing_blank in syntax check
+        test -f "$_G_travis_yml_in" && {
+          $slingshot_require_travis_extra_rocks
 
-        cat "$_G_travis_yml_in" |
-        sed 's|  *$||' |
-        sed "s|@EXTRA_ROCKS@|`echo $travis_extra_rocks`|g" |
-        sed "s|@PACKAGE@|$PACKAGE|g"
+          eval `grep '^ *PACKAGE=' configure | sed 1q`
 
-        if test -f .slackid; then
-          read slackid < .slackid
-          printf '%s\n' '' 'notifications:' "  slack: $slackid"
-        fi
-      } > "$_G_travis_yml_out.new"
+          cat "$_G_travis_yml_in" |
+          sed 's|  *$||' |
+          sed "s|@EXTRA_ROCKS@|`echo $travis_extra_rocks`|g" |
+          sed "s|@PACKAGE@|$PACKAGE|g"
 
-      if test -f "$_G_travis_yml_out"; then
-        if func_cmp_s "$_G_travis_yml_out" "$_G_travis_yml_out.new"; then
-	  func_verbose "$_travis_yml_out is up to date"
-          rm -f "$_travis_yml_out.new"
-        else
-          func_warning upgrade "\
+          if test -f .slackid; then
+            read slackid < .slackid
+            printf '%s\n' '' 'notifications:' "  slack: $slackid"
+          fi
+        } > "$_G_travis_yml_out.new"
+
+        if test -f "$_G_travis_yml_out"; then
+          if func_cmp_s "$_G_travis_yml_out" "$_G_travis_yml_out.new"; then
+	    func_verbose "$_travis_yml_out is up to date"
+            rm -f "$_travis_yml_out.new"
+          else
+            func_warning upgrade "\
 An updated $_G_travis_yml_out script is ready for you in
 '$_G_travis_yml_out.new'.  After you've verified that you want
 the changes, you can update with:
     mv -f $_G_travis_yml_out.new $_G_travis_yml_out"
+          fi
+        else
+	  func_verbose "creating '$_travis_yml_out'"
+          mv -f "$_G_travis_yml_out.new" "$_G_travis_yml_out"
         fi
-      else
-	func_verbose "creating '$_travis_yml_out'"
-        mv -f "$_G_travis_yml_out.new" "$_G_travis_yml_out"
-      fi
-      ;;
-    esac
+        ;;
+      esac
+    }
 }
 func_add_hook func_fini slingshot_update_travis_yml
 
