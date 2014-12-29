@@ -229,6 +229,8 @@ vc-diff-check:
 news-check-lines-spec ?= 3
 news-check-regexp ?= '^\#\#.* $(VERSION_REGEXP) \($(today)\)'
 
+Makefile.in: NEWS
+
 NEWS:
 	$(AM_V_GEN)if test -f NEWS.md; then ln -s NEWS.md NEWS;		\
 	elif test -f NEWS.rst; then ln -s NEWS.rst NEWS;		\
