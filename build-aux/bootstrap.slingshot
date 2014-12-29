@@ -376,12 +376,14 @@ slingshot_update_travis_yml ()
 
     $require_git
 
+    _G_travis_yml_in=travis.yml.in
+    _G_travis_yml_out=.travis.yml
+
+    rm -f "$_G_travis_yml_out.new"
+
     test true = "$GIT" || {
       case " "`echo $slingshot_files`" " in
       *" travis.yml.in "*)
-        _G_travis_yml_in=travis.yml.in
-        _G_travis_yml_out=.travis.yml
-
         # Remove trailing blanks so as not to trip sc_trailing_blank in syntax check
         test -f "$_G_travis_yml_in" && {
           $slingshot_require_travis_extra_rocks
@@ -401,8 +403,8 @@ slingshot_update_travis_yml ()
 
         if test -f "$_G_travis_yml_out"; then
           if func_cmp_s "$_G_travis_yml_out" "$_G_travis_yml_out.new"; then
-	    func_verbose "$_travis_yml_out is up to date"
-            rm -f "$_travis_yml_out.new"
+	    func_verbose "$_G_travis_yml_out is up to date"
+            rm -f "$_G_travis_yml_out.new"
           else
             func_warning upgrade "\
 An updated $_G_travis_yml_out script is ready for you in
@@ -411,7 +413,7 @@ the changes, you can update with:
     mv -f $_G_travis_yml_out.new $_G_travis_yml_out"
           fi
         else
-	  func_verbose "creating '$_travis_yml_out'"
+	  func_verbose "creating '$_G_travis_yml_out'"
           mv -f "$_G_travis_yml_out.new" "$_G_travis_yml_out"
         fi
         ;;
