@@ -33,7 +33,7 @@
 
         mymodule = require "mymodule"
     ```
-    
+
     This ensures that, no matter what LuaRocks does to the package paths,
     nor whether you run `specl` by hand with auto-discovery, or via the
     `make check` or `make distcheck` rules... by the time you require
@@ -96,7 +96,7 @@
     ```
         make upload API_KEY=0123456789abcdefghijklmnopqrstuvwxyzABCDE
     ```
-    
+
   - `mkrockspecs` accepts a new `--branch` option for generating a
     git/scm rockspec that pulls that branch instead of master.
 
@@ -116,7 +116,7 @@
     ```bash
         LDOC=`pwd`/luarocks/bin/ldoc ./bootstrap
     ```
-    
+
   - Slingshot bootstrap accepts a new `--luarocks-tree` option to
     check a particular tree for prerequisite rocks.
 
@@ -215,7 +215,7 @@
     ```
       mkrockspecs_args = --module-dir lib
     ```
-    
+
   - Works with lyaml 4 and newer, which now returns all documents
     in the YAML stream as a table.
 
@@ -253,7 +253,7 @@
         # manually edit ~/announce-<package>-<version>...
       $ make mail
    ```
-   
+
   - Port of gnulib project sanity checks hooked into release
     rules by `include build-aux/sanity.mk`.
 
