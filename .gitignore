@@ -30,6 +30,7 @@
 /configure
 /libtool
 /*.rockspec
+!/slingshot-git-*.rockspec
 /*.tar.gz
 /stamp-h1
 ar-lib
