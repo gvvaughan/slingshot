@@ -389,11 +389,13 @@ slingshot_update_travis_yml ()
           $slingshot_require_travis_extra_rocks
 
           eval `grep '^ *PACKAGE=' configure | sed 1q`
+          eval `grep '^ *VERSION=' configure | sed 1q`
 
           cat "$_G_travis_yml_in" |
           sed 's|  *$||' |
           sed "s|@EXTRA_ROCKS@|`echo $travis_extra_rocks`|g" |
-          sed "s|@PACKAGE@|$PACKAGE|g"
+          sed "s|@PACKAGE@|$PACKAGE|g" |
+          sed "s|@VERSION@|$VERSION|g"
 
           if test -f .slackid; then
             read slackid < .slackid
