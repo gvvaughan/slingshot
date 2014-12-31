@@ -1,8 +1,90 @@
-Slingshot NEWS - User visible changes.
+# Slingshot NEWS - User visible changes.
 
-* Noteworthy changes in release 7 (2014-07-31) [stable]
+## Noteworthy changes in release 8.0.0 (2014-12-31) [stable]
 
-** New Features:
+### New Features:
+
+  - Libtool built Lua modules should be appended to luaexec_LTLIBRARIES,
+    where non LuaRocks users will receive them in the correct directory
+    (likely already in their LUA_CPATH) after `sudo make install`.
+
+  - Slingshot now supports the slack.com Travis Integration.  Add
+    a .slackid file to the root of your project, containing your slack
+    token on a single line -- a notification section containing that
+    id will be appended to your `.travis.yml` at configure time.
+
+  - Various build related directories are added to SPECL_ENV by default,
+    so that package.path and package.cpath settings can be set in your
+    spec_helper.lua to enforce loading from the build tree instead of
+    accidentally falling back to the system module paths -- especially
+    during the VPATH `make check` performed during `make distcheck`. You
+    might want to write something like this in `spec_helper.lua`:
+
+    ```lua
+        local std = require "specl.std"
+
+        local builddir = os.getenv "top_builddir" or "."
+        local srcdir = os.getenv "top_srcdir" or "."
+
+        package.path = std.package.normalize (
+                         top_builddir .. "/lib/mymodule/?.lua",
+                         top_srcdir .. "/lib/mymodule/?.lua",
+                         package.path)
+
+        mymodule = require "mymodule"
+    ```
+
+    This ensures that, no matter what LuaRocks does to the package paths,
+    nor whether you run `specl` by hand with auto-discovery, or via the
+    `make check` or `make distcheck` rules... by the time you require
+    your module from the development tree, the package path has the right
+    directories at the front.
+
+  - Unused libtool .la files for Lua modules are no longer installed.
+
+  - Update to latest upstream `ax_lua.m4`.
+
+  - Update to latest upstream `bootstrap`.
+
+  - Travis CI overhaul: Uses latest LuaRocks 2.2.0 with each of Lua
+    5.3.0(rc1), 5.2.3, 5.1.5 and luajit-2.0.3, only building the Lua
+    version needed in each run.  We also run `make syntax-check` on the
+    CI server after successful tests.
+
+  - Instead of overwriting .travis.yml unconditionally, show a warning
+    explaining how to update it when it changes, like bootstrap.
+
+  - Markdown format NEWS and announcements.
+
+### Incompatible Changes:
+
+  - SPECL_ENV is now set (to empty) by default, and should be augmented
+    with += in local.mk.
+
+  - SS_CONFIG_TRAVIS is no longer supported.  Any additional travis rocks
+    you were passing there should now be listed in a travis_extra_rocks
+    variable in `bootstrap.conf` instead.
+
+### Bug Fixes:
+
+  - We no longer assume autotooled installations will put modules in
+    --libdir (although that will continue to work), but also set
+    luaexecdir at install-time for `ax_lua.m4` compatibility.
+
+  - Version comparison in `build-aux/do-release-commit-and-tag` now
+    works correctly.
+
+  - bootstrap now updates only gnulib and slingshot git submodules as
+    expected.
+
+  - Slingshot bootstrap really does perform an automatic out of date
+    check of client bootstrap against latest slingshot submodule
+    bootstrap script now - after updating to this version!
+
+
+## Noteworthy changes in release 7 (2014-07-31) [stable]
+
+### New Features:
 
   - Slingshot `make release` now requires a LuaRocks binary that supports
     the upload command (such as the 2.2.0 beta release) and uses that to
@@ -11,7 +93,9 @@ Slingshot NEWS - User visible changes.
     upload fails due to a missing api-key, then make sure you have one
     at rocks.moonscript.org/settings and call make like this:
 
+    ```
         make upload API_KEY=0123456789abcdefghijklmnopqrstuvwxyzABCDE
+    ```
 
   - `mkrockspecs` accepts a new `--branch` option for generating a
     git/scm rockspec that pulls that branch instead of master.
@@ -29,7 +113,9 @@ Slingshot NEWS - User visible changes.
     rockspec version checks can be short-circuited by setting an APPVAR
     in bootstrap's environment, e.g:
 
+    ```bash
         LDOC=`pwd`/luarocks/bin/ldoc ./bootstrap
+    ```
 
   - Slingshot bootstrap accepts a new `--luarocks-tree` option to
     check a particular tree for prerequisite rocks.
@@ -40,7 +126,7 @@ Slingshot NEWS - User visible changes.
   - Remove m4/ax_compare_version.m4 and dependencies, resulting in a
     slightly faster and smaller configure.
 
-** Bugs fixed:
+### Bugs fixed:
 
   - `bootstrap` now has `slingshot_copy` merged in correctly.
 
@@ -48,9 +134,9 @@ Slingshot NEWS - User visible changes.
     `foo/bar/init.lua` pattern.
 
 
-* Noteworthy changes in release 6 (2014-01-04) [stable]
+## Noteworthy changes in release 6 (2014-01-04) [stable]
 
-** New Features:
+### New Features:
 
   - A manually entered list of modules in rockspec.conf now
     creates "builtin" autoconfless builds in the main rockspec
@@ -61,15 +147,16 @@ Slingshot NEWS - User visible changes.
     than in an installed subtree, but unit tests need access to the
     module subtree which is only visible in the build directory).
 
-** Incompatible Changes:
+### Incompatible Changes:
 
   - `bootstrap.slingshot` is now automatically merged into the
     `bootstrap` script, so you shouldn't copy it into your project
     tree anymore, or add the glue to run it to your `bootstrap.conf`.
 
-* Noteworthy changes in release 5 (2013-12-08) [stable]
 
-** New Features:
+## Noteworthy changes in release 5 (2013-12-08) [stable]
+
+### New Features:
 
   - The announcement message is formatted for easier pasting into
     github release notes.
@@ -78,7 +165,7 @@ Slingshot NEWS - User visible changes.
   - Travis builds will now use the latest upstream luarocks 2.1.1
     release.
 
-** Bugs fixed:
+### Bugs fixed:
 
   - Specifying additional SPECL_OPTS in local.mk now works properly.
   - Announcement message shows luarocks install command correctly.
@@ -88,16 +175,16 @@ Slingshot NEWS - User visible changes.
   - Fixed a typo in maint.mk no-submodule-changes rule.
 
 
-* Noteworthy changes in release 4 (2013-08-29) [stable]
+## Noteworthy changes in release 4 (2013-08-29) [stable]
 
-** New Features:
+### New Features:
 
   - mkrockspecs uses luaposix to search the module root tree for lua
     sources if it is available, which is a lot faster than spawning
     a shell to list the contents of each subdirectory, and reading the
     results back over a pipe.
 
-** Bugs Fixed:
+### Bugs Fixed:
 
   - Submodules pulled to the release branch are removed before unpacking
     the release tarball.
@@ -109,9 +196,9 @@ Slingshot NEWS - User visible changes.
   - Fixed many fine typos.
 
 
-* Noteworthy changes in release 3 (2013-05-19) [stable]
+## Noteworthy changes in release 3 (2013-05-19) [stable]
 
-** New Features:
+### New Features:
 
   - Support Specl automation with `include build-aux/specl.mk`
 
@@ -125,12 +212,14 @@ Slingshot NEWS - User visible changes.
     Slingshot mkrockspec invocations setting `mkrockspecs_args`
     appropriately in your `local.mk`:
 
+    ```
       mkrockspecs_args = --module-dir lib
+    ```
 
   - Works with lyaml 4 and newer, which now returns all documents
     in the YAML stream as a table.
 
-** Bugs Fixed:
+### Bugs Fixed:
 
   - Don't forget to distribute .autom4te.cfg file.
 
@@ -138,36 +227,44 @@ Slingshot NEWS - User visible changes.
     perform a segregated 5.1 install with the system luarocks to
     avoid incompatibilities on Travis CI.
 
-** Incompatible Changes:
+### Incompatible Changes:
 
   - `mail` wrapper removed.  Rockspec announcement sent with a link
     to the rockspec rather than as an attachment.
 
-* Noteworthy changes in release 2 (2013-04-28) [beta]
 
-** New Features:
+## Noteworthy changes in release 2 (2013-04-28) [beta]
+
+### New Features:
 
   - No longer depend on `woger`.
+
   - New `mail` wrapper script to provide a POSIX mail API wrapped
     around mutt.  Currently Mac OS X specific (which is the main
     system that doesn't ship a POSIX mail compatible command).
+
   - Split local and origin rules to support, eg:
+
+    ```
       $ make beta
-      ...manually check local trees...
+        # manually check local trees...
       $ make push
-      ...manually check github zipball and released rockspec files...
-      ...maunally edit ~/announce-<package>-<version>...
+        # manually check github zipball and released rockspec files...
+        # manually edit ~/announce-<package>-<version>...
       $ make mail
+   ```
+
   - Port of gnulib project sanity checks hooked into release
     rules by `include build-aux/sanity.mk`.
 
-** Bugs Fixed:
+### Bugs Fixed:
 
   - Newly created release branch is now branched from the v1 tag rather
     than the "Post-release administrivia" commit.
   - Include maintainer support files in release, so that Travis CI has
     everything it needs to work on the release branch too.
 
-* Noteworthy changes in release 1 (2013-04-28) [beta]
 
-** Initial proof-of concept for shared Lua RockSpec framework.
+## Noteworthy changes in release 1 (2013-04-28) [beta]
+
+  - Initial proof-of concept for shared Lua RockSpec framework.

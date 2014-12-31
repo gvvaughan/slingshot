@@ -1,4 +1,556 @@
+2014-12-31  Gary V. Vaughan  <gary@gnu.org>
+
+	Release version 8.0.0
+	* NEWS.md: Record release date.
+
+	bootstrap: bump minimum specl requirement to version 14.
+	* bootstrap.conf (buildreq): Bump Specl requirement to version 14.
+
+	specs: correctly support VPATH builds ala make distcheck.
+	* specs/mkrockspecs_spec.yaml: Use the doc directory for examples
+	that need a directory present in $builddir.
+
+	maint: commit git rockspec to master.
+	* .gitignore: Unignore git rockspec.
+	* slingshot-git-1.rockspec: New file.
+	* rockspec.conf (dependencies): Not yet Lua 5.4 ready!
+
+	maint: remove trailing whitespace.
+	* NEWS.md: Remove trailing whitespace.
+
+	configury: set slingshot_files to regenerate .travis.yml.
+	* bootstrap.conf (slingshot_files): Add travis.yml.in to make
+	sure slingshot_update_travis_yml() triggers.
+	* bootstrap: Regenerate.
+	* .travis.yml: Regenerate.
+
+	travis: avoid erroring out on release branch.
+	* travis.yml.in (env): Remove ROCKSPEC setting.
+	(before_install): Clean up LuaJIT-2.0.3 directory droppings.
+	(install): If there is a release rockspec use it, falling back
+	to git rockspec otherwise.
+	(script): Autofool timestamps when we can avoid bootstrapping
+	on ready-to-configure release branches.
+	* build-aux/bootstrap.slingshot (slingshot_update_travis_yml):
+	Substitute for @VERSION@ when generating .travis.yml.
+
+	travis: be careful about precious configure environment vars.
+	It's not safe to set things like CFLAGS and INSTALL in the global
+	environment, because those settings also leak into `./configure`
+	invocations.
+	* travis.yml.in (env.global): Prefix COMPILE, CFLAGS, INSTALL,
+	LINK and LIBS with an underscore. Adjust all references to match.
+
+2014-12-29  Gary V. Vaughan  <gary@gnu.org>
+
+	release: be sure to put NEWS back before calling automake.
+	* build-aux/release.mk (Makefile.in): Depend on NEWS.
+
+	bootstrap: simplify bootstrap update warning.
+	It was confusing to sometimes have to `cp -f slingshot/bootstrap`
+	versus sometimes `mv -f bootstrap.new`.  Perform the copy
+	automatically, and always advise using mv regardless of source.
+	* build-aux/bootstrap.slingshot (slingshot_require_bootstrap_uptodate):
+	Remove stale bootstrap.new, then copy from slingshot/bootstrap
+	when necessary, in order to simplify update instructions.
+	* bootstrap: Regenerate.
+
+	bootstrap: remove .travis.yml.new more aggressively.
+	* build-aux/bootstrap.slingshot (slingshot_update_travis_yml):
+	Remove .travis.yml.new unconditionally before creating a new one.
+	(_travis_yml_out): Correct references from this...
+	(_G_travis_yml_out): ...to this.
+	* bootstrap: Regenerate.
+
+	bootstrap: only present updated travis.yml in a git working tree.
+	* build-aux/bootstrap.slingshot (slingshot_update_travis_yml):
+	If $GIT has been disabled by $require_git, skip checks and updates
+	for .travis.yml.
+	* bootstrap: Regenerate.
+
+2014-12-27  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: regenerate.
+
+	bootstrap: fix command substitution quoting.
+	* build-aux/bootstrap.slingshot (slingshot_update_travis_yml):
+	Quote command substitution correctly for multiple extra rocks.
+	* bootstrap: Regenerate.
+
+	release: use AM_V_GEN for NEWS.
+	* build-aux/release.mk (NEWS): Add AM_V_GEN invocation to NEWS.
+
+	release: do-release-commit-and-tag depends on NEWS.
+	* build-aux/release.mk (release-commit): Add NEWS dependency, so
+	the link is in place before running do-release-commit-and-tag.
+
+	release: remove a stray trailing backslash.
+	* build-aux/release.mk (release-prep): Remove a stray trailing
+	backslash.
+
+	Revert "bootstrap: make sure slingshot bootstrap overrides correctly."
+	This reverts commit ee7a39d8cd918549c69c161232186b6bd254ca06.
+	* build-aux/bootstrap.slingshot: Due to multiple section recurrences
+	in upstream bootstrap.in, this didn't work anyway.
+	* bootstrap: Regenerate.
+
+	bootstrap: elide original require_bootstrap_uptodate setting.
+	The pre-merge expanded bootstrap.in from upstream has several
+	occurrences of many section headers, so we have to use the -e
+	option of our merge-sections script to elide the original
+	bootstrap.in definition of require_bootstrap_uptodate, so that
+	our improved version takes precedence.
+	* bootstrap.conf (require_bootstrap_uptodate): When generating
+	the merged bootstrap script elide require_bootstrap_uptodate
+	setting.
+	* bootstrap: Regenerate.
+
+2014-12-26  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream, for version output fix.
+	* build-aux/bootstrap.in: Sync with upstream.
+	* bootstrap: Regenerate.
+
+2014-12-24  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: extract PACKAGE from configure properly.
+	* build-aux/bootstrap.slingshot (slingshot_update_travis_yml):
+	Extract PACKAGE from configure properly.
+	* bootstrap: Regenerate.
+
+	NEWS: Update.
+
+	bootstrap: make sure slingshot bootstrap overrides correctly.
+	* build-aux/bootstrap.slingshot (require_bootstrap_uptodate):
+	Move to the later 'Helper functions' section to make sure the
+	original namesake is properly overridden.
+	* bootstrap: Regenerate.
+
+	travis: move .travis.yml regeneration from configure to bootstrap.
+	* m4/slingshot.m4: Remove unused file.
+	* configure.ac (SS_CONFIG_TRAVIS): Remove.
+	* bootstrap.conf (travis_extra_rocks): New variable to list rocks
+	formerly listed in SS_CONFIG_TRAVIS parameters.
+	* build-aux/bootstrap.slingshot (slingshot_update_travis_yml): New
+	function to ensure .travis.yml doesn't go out of date.
+	* bootstrap: Regenerate.
+
+	maint: use github markdown compatible multi-paragraph bullets.
+	* NEWS: Indent bullets an extra space so that they render
+	properly in the github web interface with multiple paragraph
+	bullet items.
+
+	bootstrap: detect out of date bootstrap with slingshot clients.
+	* build-aux/bootstrap.slingshot (require_bootstrap_uptodate): A
+	third version of this function!  The main one from upstream
+	bootstrap is overridden by ./bootstrap.conf to merge in the extra
+	functions in this file.  The new one here is to automate checking
+	for out of date bootstrap in slingshot client projects when they
+	update their slingshot submodule and rebootstrap.
+	* bootstrap: Regenerate.
+	* NEWS: Update.
+
+2014-12-19  Gary V. Vaughan  <gary@gnu.org>
+
+	release: fix remaining hard-coded references to NEWS.
+	* build-aux/release.mk (NEWS): New rule. Link to NEWS.md etc.
+	(release-commit): Use readlink to follow NEWS symbolic link.
+
+	maint: don't regenerate rockspecs for announcement.
+	We don't want the `GEN foo.rockspec` lines in the announcement
+	message.
+	* build-aux/release.mk (announcement): Remove rockspec dependency.
+
+	configury: add luaexec module uninstall hook.
+	* Makefile.am (uninstall-luaexec-modules): Uninstall luaexec
+	modules, even though we didn't install the .la file that
+	Automake's uninstall rules rely on.
+	(uninstall_hooks): Add uninstall-luaexec-modules.
+	(uninstall-hook): Depend on uninstall_hooks.
+
+	maint: escape comment chars in news-check-regexp.
+
+	maint: fix news-check-regexp.
+	* build-aux/release.mk (news-check-regexp): Adjust for Markdown
+	format NEWS.
+	* README.md: Update NEWS format reference.
+
+	do-release-commit-and-tag: follows NEWS symbolic link.
+	* build-aux/do-release-commit-and-tag (NEWS): Use readlink to
+	find link destination if any.
+	Update all clients.
+
+	bootstrap: let submodule GNUmakefile rebootstrap rule trigger.
+	* build-aux/bootstrap.slingshot (slingshot_copy_files): Don't
+	manually bootstrap.
+	* bootstrap: Regenerate.
+
+2014-12-18  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: bootstrap slingshot submodule before make.
+	* build-aux/bootstrap.slingshot (slingshot_copy_files): Run
+	bootstrap in a freshly checked out slingshot submodule.
+	* bootstrap: Regenerate.
+
+	maint: add NEWS to .gitignore.
+
+2014-12-18  Gary V. Vaughan  <gary@vaughan.pe>
+
+	maint: reformat NEWS.md as valid markdown.
+
+2014-12-18  Gary V. Vaughan  <gary@gnu.org>
+
+	maint: move NEWS to NEWS.md.
+	* NEWS: Move from here...
+	* NEWS.md: ...to here.
+	* build-aux/bootstrap.in: Sync with upstream, for NEWS.md
+	support.
+	* bootstrap: Regenerate.
+
+	maint: move to Markdown format NEWS and release announcements.
+	* build-aux/do-release-commit-and-tag (noteworthy): Use a ##
+	prefix for new noteworthy changes lines.
+	* build-aux/release.mk (gl_noteworthy_news_): Update regexp.
+	(announcement): Generate Markdown format.
+	* NEWS: Reformat.
+	* local.mk (old_NEWS_hash): Regenerate.
+
+	configury: avoid spurious .travis.yml regeneration.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): Use cp instead of mv to
+	ensure the .travis.yml timestamp is updated, avoiding spurious
+	remakes on multiple make reruns.
+
+	configury: simplify regeneration rules for .travis.yml.
+	When called by make as just `config.status .travis.yml`, the
+	travis-yml-up-to-date commands did not run, and so a spurious
+	.travis.yml.new file dropping would appear occasionally.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): Consolidate regeneration
+	log entirely in the AC_CONFIG_FILES call for .travis.yml to
+	prevent this, and simplify accordingly.
+
+	travis: run luarocks install as superuser.
+	* travis.yml.in (install): Run luarocks install as superuser.
+	* .travis.yml: Regenerate.
+
+	travis: don't skip every EXTRA_ROCK.
+	* travis.yml.in (install): Don't skip every EXTRA_ROCK!
+	* .travis.yml: Regenerate.
+
+	travis: try moonscript gvvaughan manifest first, for Lua 5.3 rocks.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): AC_SUBST arguments to this
+	macro as EXTRA_ROCKS without munging.
+	* travis.yml.in (install): Install EXTRA_ROCKS using moonscript
+	gvvaughan manifest first, for Lua 5.3 compatible rocks not yet
+	available in the moonscript root manifest.
+	* .travis.yml: Regenerate.
+
+	mkrockspecs: accept and export luajit as LUA.
+	* src/merge-sections.in, src/mkrockspecs.in
+	(shell re-execute preamble): If LUA is not already in the
+	environment, accept a binary called luajit from the path, and
+	in any case re-export the discovered binary.
+	* build-aux/merge-sections: Regenerate.
+
+	configury: show a warning rather than always updating .travis.yml.
+	Close #8.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): Save the incumbent
+	.travis.yml contents, and warn about impending regeneration
+	rather than always updating it.
+	* NEWS: Update.
+
+	maint: Add missing NEWS items.
+	* NEWS: Reformat slightly, for easier pasting into Markdown
+	format GitHub release announcement.
+	Add forgotten items since last release.
+
+	bootstrap: don't run `git submodule update` outside working dir.
+	5cd707a was not quite correct, and would sometimes try to update
+	submodules in a tarball source tree.
+	* build-aux/bootstrap.slingshot
+	(slingshot_require_slingshot_submodule): If there is a .gitmodules
+	file, make sure it contains the slingshot submodule, and update
+	it to the correct version for the parent revision; incidentally
+	only doing a full clone of the submodule along the way if it is
+	entirely absent.
+	* bootstrap: Regenerate.
+
+	configury: don't install .la files for Lua modules.
+	* Makefile.am (remove-luaexec-lafiles): New install hook for
+	removing .la files for Lua modules.
+	(install_exec_hooks): Add remove-luaexec-lafiles rule.
+	* NEWS: Updated.
+
+	configury: lua modules should install to luaexec_LTLIBRARIES.
+	* Makefile.am (luaexec_LTLIBRARIES): Set this for appending to
+	from included make fragments, because we want `make install` to
+	put modules into e.g. /usr/local/lib/lua/5.3, not /usr/local/lib.
+	* NEWS: Updated.
+	Reported by Dennis Schridde <devurandom@gmx.net>
+
+	configury: reset release version to 8.0.0:
+	* configure.ac (AC_INIT): Reset release version to 8.0.0.  The
+	most recent pre-semantic versioning release was 7.
+	* build-aux/merge-sections: Regenerate.
+
+2014-12-17  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: always run `git submodule update -- slingshot`.
+	If we are in a git directory, and there is a git executable in
+	the user's PATH, then always synchronize the slingshot submodule
+	in case we changed revisions since the last bootstrap run.
+	* build-aux/bootstrap.slingshot
+	(slingshot_require_slingshot_submodule): Move the $GIT calls and
+	dependencies out of the inner if, so that it always triggers
+	when we have a git binary.
+	* bootstrap: Regenerate.
+
+	travis: remove sudo owned directories from luarocks make.
+	* travis.yml.in (install): Remove root owned compiler objects.
+	(script): Rebuild user owned compiler objects.
+	* .travis.yml: Regenerate.
+
+	do-release-commit-and-tag: fix version order check.
+	* build-aux/do-release-commit-and-tag (func_lt_ver): Check the
+	first version given is older than the second.
+	Use it instead of a case and tr combo.
+
+	do-release-commit-and-tag: simplify func_sort_ver.
+	* build-aux/do-release-commit-and-tag (func_sort_ver): Use
+	simpler definition from bootstrap.
+
+	travis: link luajit header into /usr/local/include.
+	* travis.yml.in (before_install): Link luajit headers into
+	/usr/local/include.
+	* .travis.yml: Regenerate.
+
+	travis: use libtool --quiet mode.
+	* travis.yml.in (env): Use libtool --quiet mode.
+	* .travis.yml: Regenerate.
+
+	travis: fix directory change for luajit.
+	* travis.yml.in (before_install): Fix directory change for luajit.
+	* .travis.yml: Regenerate.
+
+	travis: don't forget to bootstrap and configure.
+	* travis.yml.in (install): Don't forget to bootstrap and configure.
+	* .travis.yml: Regenerate.
+
+	travis: fix url for luajit.
+	* travis.yml.in: Fix url for luajit download.
+	* .travis.yml: Regenerate.
+
+	maint: remove trailing whitespace.
+	* travis.yml.in: Remove trailing whitespace.
+
+	travis: replace another shell && operation.
+	* travis.yml.in (before_insta[[): Replace another shell &&
+	operation with an equivalent if statement.
+	* .travis.yml: Regenerate.
+
+	travis: don't use $CC, travis overwrites it.
+	* travis.yml.in (CC, LD): Rename from these...
+	(COMPILE, LINK): ...to these, respectively. Adjust all callers.
+	* .travis.yml: Regenerate.
+
+	travis: regenerate .travis.yml
+
+	travis: debug failing source compilations.
+
+	travis: be wary of && shell operator return status.
+	* travis.yml.in: Be wary of && shell operator return status.
+	* .travis.yml: Regenerate.
+
+	travis: insert missing semicolons.
+	* travis.yml.in: Insert missing semicolons.
+	* .travis.yml: Regenerate.
+
+	travis: regenerate .travis.yml.
+	* .travis.yml: Regenerate.
+
+	travis: merge .travis/* into travis.yaml.in.
+	* .travis/platform.sh: Remove.
+	* .travis/setup_lua.sh: Remove, but move content from here...
+	* travis.yml.in: ...to here, reformat and simplify.
+
+	travis: revert removal of CI syntax checks.
+	* travis.yml.in (script): Reinstate accidentally removed CI
+	syntax checks.
+
+	travis: fix test_double_equal syntax-check failures.
+	* .travis/setup_lua.sh: Use portable "test x = y" expressions.
+
+	configury: adopt semantic versioning.
+	* configure.ac (AC_INIT): Bump version to 9.0.0.
+	* build-aux/merge-sections: Regenerate.
+
+	specs: remove debug code.
+	* specs/mkrockspecs_spec.yaml: Remove debug code.
+
+	specs: don't rely on possibly missing doc directory.
+	* specs/mkrockspecs_spec.yaml: Use m4 as a temporary directory
+	with no other `.lua` files in it.
+
+	travis: install Lua header files.
+	* .travis/setup_lua.sh: Install Lua header files.
+
+	travis: spell $PLATFORM correctly.
+	* .travis/setup_lua.sh ($PLATFORM): not $platform.
+
+	travis: make sure we build dynamic liblua.
+	* .travis/setup_lua.sh: Instead of relying on the upstream Lua
+	Makefile, which has no shared library targets, call libtool
+	directly to perform the compilations, linking and installation.
+
+2014-12-16  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: ensure /usr/local/bin/$LUA is available.
+	* .travis/setup_lua.sh: Make a $LUA link in /usr/local/bin for
+	subsequent scripts that treat $LUA as the user override.
+
+	travis: set LUAROCKS for setup_lua.sh.
+	* travis.yml.in (LUAROCKS_BASE): Rename from this...
+	(LUAROCKS): ...to this.
+	* .travis.yml: Regenerate.
+
+	travis: support Lua 5.3 matrix.
+	* .travis/platform.sh, .travis/setup_lua.sh: New scripts to setup
+	lua and luarocks on travis, from luafilesystem project.
+	* travis.yml.in: Simplify accordingly.
+	(matrix): Add Lua 5.3.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): Generate EXTRA_ROCKS to
+	match simplified .travis.yml.
+	* .travis.yml: Regenerate.
+
+	maint: preliminary Lua 5.3.x compatibility.
+	* configure.ac (AX_PROG_LUA): Accept Lua 5.3 interpreters.
+	* src/merge-sections.in, src/mkrockspecs.in: Search for lua5.3 or
+	lua53 when re-executing with shell preamble.
+	* build-aux/merge-sections: Regenerate.
+
+	doc: don't carry upstream bootstrap.texi.
+	* docs/bootstrap.texi: Remove.
+	* README.md: Add reference to upstream project for latest docs,
+	and remove reference to local copy.
+	* src/src.mk (man_MANS): Generate mkrockspecs.1 in standard 'doc'
+	subdirectory.
+	(EXTRA_DIST, CLEANFILES): Update accordingly.
+	* specs/mkrockspecs_spec.yaml: Adjust 'docs' references
+	accordingly.
+
+	bootstrap: sync with upstream.
+	Pick up recent fixes and improvements to bootstrap.
+	* build-aux/bootstrap.in: Copy latest bootstrap script from
+	https://github.com/gvvaughan/bootstrap.
+	* bootstrap: Regenerate.
+
+	travis: unpack the correct luarocks tarball name.
+	* travis.yml.in (install): Use the correct tarball name for
+	github luarocks releases.
+	* .travis.yml: Regenerate.
+
+	travis: fetch github releases of luarocks.
+	luarocks.org has intermittent downtime, which makes slingshot
+	using github projects fail CI checks. Use the github releases
+	of luarocks for Travis instead, which has much better uptime
+	ratios.
+	* .travis.yml (env): Add LUAROCKS_RELEASE.
+	(install): Fetch luarocks tarball from github.
+	* .travis.yml: Regenerate.
+
+	travis: don't overwrite user local-checks-to-skip setting.
+	* travis.yml.in (script): Append to local-checks-to-skip if that
+	variable is already set in sanity-cfg.mk.
+
+2014-11-05  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in: Sync with upstream.
+	* bootstrap: Regenerate.
+
+2014-10-25  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in: Fetch latest upstream.
+	* build-aux/boostrap.slingshot (func_require_slingshot_module):
+	Add slingshot_path argument to git submodule init invocation.
+	* bootstrap: Regenerate.
+	From Pádraig Brady
+
+2014-10-19  Gary V. Vaughan  <gary@gnu.org>
+
+	bootstrap: sync with upstream.
+	* build-aux/bootstrap.in (func_require_gnulib_submodule): Add
+	gnulib_path argument to prevent updating all submodules.
+	* build-aux/boostrap.slingshot (func_require_slingshot_submodule):
+	Likewise for slingshot submodule updates.
+	* bootstrap: Regenerate.
+	* NEWS: Update.
+	Reported by Reuben Thomas
+
+2014-10-09  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: quote colons in yaml.
+	* travis.yml.in (script): Escape : meta-character with quotes.
+	* .travis.yml: Regenerate.
+
+	travis: run sanity checks during CI.
+	* travis.yml.in (script): Run sanity checks on CI server.
+
+	mkrockspecs: fix unterminated string.
+	* src/mkrockspecs.in (default_build): Add missing quote.
+
+	mkrockspecs: set luaexecdir at install-time.
+	* src/mkrockspecs.in (default_build): Set luaexecdir at install
+	time.
+	* NEWS: Update.
+
+2014-09-25  Gary V. Vaughan  <gary@gnu.org>
+
+	specl: pass useful directories in SPECL_ENV.
+	* Makefile.am (SPECL_ENV): Initialise to empty.
+	* build-aux/specl.mk (SPECL_ENV): Add various useful directories.
+	(specl-check-local): Simplify accordingly.
+	* NEWS: Update.
+
+2014-08-17  Gary V. Vaughan  <gary@gnu.org>
+
+	travis: update to latest luarocks 2.2.0 release.
+	* travis.yml.in (LUAROCKS_BASE): Set to luarocks-2.2.0.
+	(install): Use it.
+	* .travis.yml: Regenerate.
+
+	travis: support slack.com notifications.
+	* m4/slingshot.m4 (SS_CONFIG_TRAVIS): If there is a .slackid
+	file, use it to append a slack notification to .travis.yml.
+	* .slackid: New file.
+	* .travis.yml: Regenerate.
+	* NEWS: Update.
+
+2014-08-03  Gary V. Vaughan  <gary@gnu.org>
+
+	m4: sync ax_lua.m4 with upstream.
+	* m4/ax_lua.m4: Sync with upstream.
+
+2014-08-02  Gary V. Vaughan  <gary@gnu.org>
+
+	m4: *really* fix one argument AX_PROG_LUA invocation.
+	* m4/ax_lua.m4 (_AX_LUA_CHK_VER): If version pattern match fails
+	return nil, to trigger `math.huge` toobig comparison.
+
+	m4: fix one argument AX_PROG_LUA invocation.
+	* m4/ax_lua.m4 (_AX_LUA_CHK_VER): If toobig parameter is not
+	passed, default to `math.huge`.
+
 2014-07-31  Gary V. Vaughan  <gary@gnu.org>
+
+	maint: regenerate merge-sections.
+	* build-aux/merge-sections: Regenerate.
+
+	maint: post-release administrivia.
+	* NEWS: Add header line for next release.
+	* .prev-version: Record previous version.
+	* configure.ac (AC_INIT): Bump version number to 8.
+	* local.mk (old_NEWS_hash): Auto-update.
 
 	Release version 7
 	* NEWS: Record release date.

@@ -19,7 +19,7 @@ dnl along with this program.  If not, see <http://www.gnu.org/licenses/>.
 AC_PREREQ([2.68])
 
 dnl Initialise autoconf and automake
-AC_INIT([Slingshot], [7], [http://github.com/gvvaughan/slingshot/issues])
+AC_INIT([Slingshot], [8.0.0], [http://github.com/gvvaughan/slingshot/issues])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -32,12 +32,11 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 dnl Check for programs
 AC_PATH_PROG([HELP2MAN], [help2man], [false])
 AC_PATH_PROG([SPECL], [specl], [false])
-AX_PROG_LUA([5.1], [5.3])
+AX_PROG_LUA([5.1], [5.4])
 AC_PROG_EGREP
 AC_PROG_SED
 
 dnl Generate output files
-SS_CONFIG_TRAVIS([specl])
 AC_CONFIG_FILES([build-aux/merge-sections:src/merge-sections.in],
                 [chmod 555 build-aux/merge-sections])
 AC_CONFIG_FILES([build-aux/mkrockspecs:src/mkrockspecs.in],

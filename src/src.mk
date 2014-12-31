@@ -23,10 +23,10 @@
 
 bin_SCRIPTS += build-aux/mkrockspecs
 
-man_MANS += docs/mkrockspecs.1
+man_MANS += doc/mkrockspecs.1
 
-docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
-	@test -d docs || mkdir docs
+doc/mkrockspecs.1: build-aux/mkrockspecs Makefile
+	@test -d doc || mkdir doc
 ## Exit gracefully if mkrockspecs.1 is not writeable, such as during distcheck!
 	$(AM_V_GEN)if ( touch $@.w && rm -f $@.w; ) >/dev/null 2>&1; \
 	then						\
@@ -46,7 +46,7 @@ docs/mkrockspecs.1: build-aux/mkrockspecs Makefile
 EXTRA_DIST +=						\
 	build-aux/merge-sections			\
 	build-aux/mkrockspecs				\
-	docs/mkrockspecs.1				\
+	doc/mkrockspecs.1				\
 	$(NOTHING_ELSE)
 
 
@@ -55,5 +55,5 @@ EXTRA_DIST +=						\
 ## ------------ ##
 
 CLEANFILES +=						\
-	docs/mkrockspecs.1				\
+	doc/mkrockspecs.1				\
 	$(NOTHING_ELSE)

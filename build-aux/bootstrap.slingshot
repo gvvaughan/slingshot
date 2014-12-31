@@ -334,6 +334,7 @@ slingshot_copy_files ()
       $require_slingshot_submodule
 
       # Make sure we have the latest mkrockspecs
+      # (the rebootstrap rule in slingshot/GNUmakefile autoruns).
       make -C slingshot build-aux/mkrockspecs
 
       # Update in-tree links.
@@ -363,6 +364,65 @@ slingshot_ensure_changelog ()
     return 0
 }
 func_add_hook func_prep slingshot_ensure_changelog
+
+
+# slingshot_update_travis_yml
+# ---------------------------
+# When 'travis.yml.in' is listed in $slingshot_files, complain if
+# regenerating '.travis.yml' would change it.
+slingshot_update_travis_yml ()
+{
+    $debug_cmd
+
+    $require_git
+
+    _G_travis_yml_in=travis.yml.in
+    _G_travis_yml_out=.travis.yml
+
+    rm -f "$_G_travis_yml_out.new"
+
+    test true = "$GIT" || {
+      case " "`echo $slingshot_files`" " in
+      *" travis.yml.in "*)
+        # Remove trailing blanks so as not to trip sc_trailing_blank in syntax check
+        test -f "$_G_travis_yml_in" && {
+          $slingshot_require_travis_extra_rocks
+
+          eval `grep '^ *PACKAGE=' configure | sed 1q`
+          eval `grep '^ *VERSION=' configure | sed 1q`
+
+          cat "$_G_travis_yml_in" |
+          sed 's|  *$||' |
+          sed "s|@EXTRA_ROCKS@|`echo $travis_extra_rocks`|g" |
+          sed "s|@PACKAGE@|$PACKAGE|g" |
+          sed "s|@VERSION@|$VERSION|g"
+
+          if test -f .slackid; then
+            read slackid < .slackid
+            printf '%s\n' '' 'notifications:' "  slack: $slackid"
+          fi
+        } > "$_G_travis_yml_out.new"
+
+        if test -f "$_G_travis_yml_out"; then
+          if func_cmp_s "$_G_travis_yml_out" "$_G_travis_yml_out.new"; then
+	    func_verbose "$_G_travis_yml_out is up to date"
+            rm -f "$_G_travis_yml_out.new"
+          else
+            func_warning upgrade "\
+An updated $_G_travis_yml_out script is ready for you in
+'$_G_travis_yml_out.new'.  After you've verified that you want
+the changes, you can update with:
+    mv -f $_G_travis_yml_out.new $_G_travis_yml_out"
+          fi
+        else
+	  func_verbose "creating '$_G_travis_yml_out'"
+          mv -f "$_G_travis_yml_out.new" "$_G_travis_yml_out"
+        fi
+        ;;
+      esac
+    }
+}
+func_add_hook func_fini slingshot_update_travis_yml
 
 
 # slingshot_check_rockstree_path
@@ -508,35 +568,79 @@ slingshot_require_slingshot_submodule ()
     else
       $require_slingshot_dotgitmodules
 
-      if test -f .gitmodules && test -f "slingshot/src/mkrockspecs.in"
-      then
-        : All present and correct.
-
-      else
+      if test -f .gitmodules; then
         $require_slingshot_path
         $require_slingshot_url
 
-        trap slingshot_cleanup 1 2 13 15
+        if test -f "slingshot/src/mkrockspecs.in"; then
+          : All present and correct.
 
-        shallow=
-        $GIT clone -h 2>&1 |func_grep_q -- --depth \
-            && shallow='--depth 365'
+        else
+          trap slingshot_cleanup 1 2 13 15
 
-        func_show_eval "$GIT clone $shallow '$slingshot_url' '$slingshot_path'" \
-          slingshot_cleanup
+          shallow=
+          $GIT clone -h 2>&1 |func_grep_q -- --depth \
+              && shallow='--depth 365'
 
-        # FIXME: Solaris /bin/sh will try to execute '-' if any of
-        #        these signals are caught after this.
-        trap - 1 2 13 15
+          func_show_eval "$GIT clone $shallow '$slingshot_url' '$slingshot_path'" \
+            slingshot_cleanup
+
+          # FIXME: Solaris /bin/sh will try to execute '-' if any of
+          #        these signals are caught after this.
+          trap - 1 2 13 15
+        fi
 
         # Make sure we've checked out the correct revision of slingshot.
-        func_show_eval "$GIT submodule init" \
-          && func_show_eval "$GIT submodule update" \
+        func_show_eval "$GIT submodule init -- $slingshot_path" \
+          && func_show_eval "$GIT submodule update -- $slingshot_path" \
           || func_fatal_error "Unable to update slingshot submodule."
       fi
     fi
 
     require_slingshot_submodule=:
+}
+
+
+# require_bootstrap_uptodate
+# --------------------------
+# Complain if the version of bootstrap in the build-aux directory differs
+# from the one we are running.
+require_bootstrap_uptodate=slingshot_require_bootstrap_uptodate
+slingshot_require_bootstrap_uptodate ()
+{
+    $debug_cmd
+
+    $require_slingshot_submodule
+
+    _G_slingshot_bootstrap=slingshot/bootstrap
+
+    rm -f $progname.new
+
+    if test -f "$_G_slingshot_bootstrap"; then
+      if func_cmp_s "$progpath" "$_G_slingshot_bootstrap"; then
+	func_verbose "bootstrap script up to date"
+      else
+        cp -f $_G_slingshot_bootstrap $progname.new
+        func_warning upgrade "\
+An updated slingshot bootstrap script is ready for you in
+'$progname.new'.  After you've verified that you want the
+changes, you can update with:
+    mv -f $progname.new $progname
+    ./$progname
+
+Or you can disable this check permanently by adding the
+following to 'bootstrap.conf':
+    require_bootstrap_uptodate=:"
+      fi
+    else
+      func_warning upgrade "\
+Your slingshot submodule appears to be damagedi, so I can't tell
+whether your bootstrap has gone out of sync.  Please check for
+and undo any local changes, or revert to the slingshot revision
+you were using previously, and rerun this script."
+    fi
+
+    require_bootstrap_uptodate=:
 }
 
 
