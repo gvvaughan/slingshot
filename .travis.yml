@@ -113,7 +113,7 @@ install:
 
   # Clean up files created by root
   - sudo git clean -dfx
-  - sudo rm -rf slingshot
+  - sudo rm -rf slingshot /tmp/ldoc
 
 
 script:
