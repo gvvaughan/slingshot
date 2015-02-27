@@ -2,6 +2,11 @@
 
 ## Noteworthy changes in release ?.? (????-??-??) [?]
 
+### Bug Fixes
+
+  - Travis now builds lua with LUA_COMPAT_5_2 defined for maximum
+    backwards compatibility in Lua 5.3 builds.
+
 
 ## Noteworthy changes in release 8.0.0 (2014-12-31) [stable]
 
