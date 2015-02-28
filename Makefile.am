@@ -96,9 +96,9 @@ uninstall-hook: $(uninstall_hooks)
 # We removed the .la files from luaexecdir, so the standard uninstall,
 # with libtool --mode=uninstall, can't find everything anymore.
 uninstall-luaexec-modules:
-	@for la in $(luaexec_LTLIBRARIES); do	\
-	  base=`echo "$$la"			\
-		|sed 's|^.*/\(.*\)\.la|\1|'`;	\
-	  echo rm -f $(luaexecdir)/$$base.so;	\
-	  rm -f $(luaexecdir)/$$base.so;	\
+	@for la in $(luaexec_LTLIBRARIES); do		\
+	  base=`echo "$$la"				\
+		|sed 's|^.*/\(.*\)\.la|\1|'`;		\
+	  echo rm -f $(DESTDIR)$(luaexecdir)/$$base.so;	\
+	  rm -f $(DESTDIR)$(luaexecdir)/$$base.so;	\
 	done
