@@ -2,6 +2,21 @@
 
 ## Noteworthy changes in release ?.? (????-??-??) [?]
 
+### New Features
+
+  - Support for automated `make installcheck` rules to make sure both
+    LuaRocks and configured installations are not borked.
+
+    Be careful not to undermine these rules by putting any `package.path`
+    and `package.cpath` munging designed to point specl an the uninstalled
+    tree inside a guard such as:
+
+    ```lua
+       if os.getenv "installcheck" == nil then
+         -- add build-tree directories to package.path et. al.
+       end
+    ```
+
 ### Bug Fixes
 
   - Travis now builds lua with LUA_COMPAT_5_2 defined for maximum
