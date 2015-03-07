@@ -86,35 +86,29 @@ describe mkrockspecs:
         should_match_output 'build_command = ".*%./bootstrap .*",?\n'
 
 - context for a luarocks builtin install:
+  - before:
+      tmpdir = Tmpdir "specltmp"
+  - after:
+      tmpdir:remove ()
+
   - it sets build.type to builtin:
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+      expect (parse {"-m specltmp", "check", "0"; stdin = conf}).
         should_match_output '%stype = "builtin",?\n'
   - it creates a build.modules sub-key:
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
+      expect (parse {"-m specltmp", "check", "0"; stdin = conf}).
         should_match_output '%smodules = {'
   - it adds only files with .lua extension to modules sub-table: |
-      name = "doc/spec_check.lua"
-      f = io.open (name, "w")
-      f:write "os.exit (1)"
-      f:close ()
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
-        should_contain_output 'spec_check = "doc/spec_check.lua",\n'
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
-        should_not_contain_output "mkrockspecs"
-      os.remove (name)
+      tmpdir:open ("spec_uscore.lua", "w", "os.exit (1)")
+      tmpdir:open ("random_file", "w", "nothing to see")
+      expect (parse {"-m specltmp", "check", "0"; stdin = conf}).
+        should_contain_output 'spec_uscore = "specltmp/spec_uscore.lua",\n'
+      expect (parse {"-m specltmp", "check", "0"; stdin = conf}).
+        should_not_contain_output "random_file"
   - it adds quoted module keys with non-symbol characters in module path: |
-      name = "doc/spec-check.lua"
-      f = io.open (name, "w")
-      f:write "os.exit (1)"
-      f:close ()
-      expect (parse {"-m doc", "check", "0"; stdin = conf}).
-      should_contain_output '["spec-check"] = "doc/spec-check.lua",\n'
-      os.remove (name)
+      tmpdir:open ("spec-hyphen.lua", "w", "os.exit (1)")
+      expect (parse {"-m specltmp", "check", "0"; stdin = conf}).
+      should_contain_output '["spec-hyphen"] = "specltmp/spec-hyphen.lua",\n'
   - it adds quoted module keys with '.' separators for sub-directories: |
-      name = "doc/spec_check.lua"
-      f = io.open (name, "w")
-      f:write "os.exit (1)"
-      f:close ()
+      tmpdir:open ("spec_subdir.lua", "w", "os.exit (1)")
       expect (parse {"-m .", "check", "0"; stdin = conf}).
-        should_contain_output '["doc.spec_check"] = "doc/spec_check.lua",\n'
-      os.remove (name)
+        should_contain_output '["specltmp.spec_subdir"] = "specltmp/spec_subdir.lua",\n'
