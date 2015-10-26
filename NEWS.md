@@ -22,6 +22,9 @@
   - Travis now builds lua with LUA_COMPAT_5_2 defined for maximum
     backwards compatibility in Lua 5.3 builds.
 
+  - Don't clobber release directory link when unpacking dist tarball
+    during check-in-release-branch.
+
 
 ## Noteworthy changes in release 8.0.0 (2014-12-31) [stable]
 
