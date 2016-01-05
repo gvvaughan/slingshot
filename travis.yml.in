@@ -1,6 +1,11 @@
 language: c
 
-env:
+addons:
+  apt:
+    packages:
+      - help2man
+
+ env:
   global:
     - _COMPILE="libtool --mode=compile --tag=CC gcc"
     - _CFLAGS="-O2 -Wall -DLUA_COMPAT_ALL -DLUA_COMPAT_5_2 -DLUA_USE_LINUX"
@@ -22,12 +27,13 @@ env:
     - LUA=lua5.1
     - LUA=luajit
 
+sudo: required
+
 
 before_install:
   # Put back the links for libyaml, which are missing on recent Travis VMs
   - test -f /usr/lib/libyaml.so ||
     sudo find /usr/lib -name 'libyaml*' -exec ln -s {} /usr/lib \;
-  - sudo apt-get install help2man
 
   # Fetch Lua sources.
   - cd $TRAVIS_BUILD_DIR
