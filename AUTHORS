@@ -22,3 +22,5 @@ and suggestions.
    Simon Josefsson <simon@josefsson.org>:
    Authors of upstream release rules in gnulib `maint.mk`, adapted as
    `release.mk` and `sanity.mk` in Slingshot.
+ * Simon Josefsson <simon@josefsson.org>:
+   Wrote upstream gnulib versions of `warnings.m4` and `manywarnings.m4`

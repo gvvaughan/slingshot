@@ -49,6 +49,12 @@ about automatically keeping them in sync with future releases):
    adapted from the [GNU Gnulib][] project, with changes for portability
    and applicability to a Lua based project.
 
+ * `warnings.m4`, `manywarnings.m4`:
+
+   taken directly from [GNU Gnulib][] project, so they can be used
+   without checking out the entire gnulib repository just to add some
+   extra warning flags to compiler invocations from `make`.
+
  * `ax_lua.m4`:
 
    taken from the [GNU Autoconf Archive][], to help autoconf discover
